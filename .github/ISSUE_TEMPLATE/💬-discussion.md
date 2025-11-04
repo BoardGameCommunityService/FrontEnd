@@ -2,7 +2,7 @@
 name: "\U0001F4AC Discussion"
 about: 프론트엔드 기능 구현, 버그 수정, 리팩터링 등 개발 전반의 작업 방향을 논의하고 기록하는 공간입니다.
 title: "[Discussion] 주제 요약"
-labels: ''
+labels: 'discussion'
 assignees: ''
 
 ---
