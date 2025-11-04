@@ -1,0 +1,99 @@
+{
+  // 에디터 기본 설정 (Prettier가 처리하지 않는 부분)
+  "editor.detectIndentation": false,
+
+  // 파일 저장 시 자동 액션
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+
+  // 기본 포맷터 설정
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // ESLint 설정
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+  "eslint.workingDirectories": ["./"],
+
+  // TypeScript 설정 (개발 컨벤션 반영)
+  "typescript.suggest.autoImports": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.preferences.includePackageJsonAutoImports": "auto",
+
+  // 파일 관리 설정
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+
+  // 탐색기 파일 중첩 설정
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "*.ts": "${capture}.js, ${capture}.d.ts.map, ${capture}.d.ts, ${capture}.js.map",
+    "*.tsx": "${capture}.js, ${capture}.jsx",
+    "package.json": "package-lock.json, pnpm-lock.yaml, yarn.lock",
+    "tailwind.config.*": "tailwind.config*, postcss.config*",
+    "next.config.*": "next-env.d.ts",
+    ".eslintrc.*": ".eslintignore, .eslintrc*, eslint.config.*",
+    ".prettierrc.*": ".prettierignore, .prettierrc*"
+  },
+
+  // Git 설정
+  "git.ignoreLimitWarning": true,
+  "git.autofetch": true,
+
+  // 에디터 UI 설정
+  "editor.guides.bracketPairs": "active",
+  "editor.bracketPairColorization.enabled": true,
+  "editor.minimap.enabled": false,
+  "editor.wordWrap": "on",
+  "editor.rulers": [120], // 개발 컨벤션: 최대 줄 길이 120자
+
+  // 자동 완성 설정
+  "editor.suggest.insertMode": "replace",
+  "editor.acceptSuggestionOnCommitCharacter": false,
+
+  // 검색 제외 설정
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/*.code-search": true,
+    "**/.next": true,
+    "**/build": true,
+    "**/out": true,
+    "**/.git": true
+  },
+
+  // 파일 연결 설정 (Next.js/React 프로젝트에 유용)
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+
+  // Emmet 설정 (React/TSX 지원)
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact",
+    "typescript": "typescriptreact"
+  },
+  "emmet.triggerExpansionOnTab": true,
+
+  // 개발 컨벤션: 함수 선언문 사용 권장을 위한 설정
+  "typescript.suggest.completeFunctionCalls": true,
+
+  // React 개발을 위한 설정
+  "typescript.preferences.importModuleSpecifier": "relative"
+}

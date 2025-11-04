@@ -1,0 +1,17 @@
+{
+  "tabWidth": 2,
+  "semi": true,
+  "singleQuote": true,
+  "printWidth": 120,
+  "trailingComma": "es5",
+  "endOfLine": "lf",
+  "insertFinalNewline": true,
+  "overrides": [
+    {
+      "files": "*.{ts,tsx}",
+      "options": {
+        "singleQuote": false
+      }
+    }
+  ]
+}
