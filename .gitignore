@@ -1,0 +1,54 @@
+# VScode
+
+# Next.js
+/.next/
+/out/
+/build
+.next
+
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+
+# Production
+/dist
+
+# Misc
+.DS_Store
+*.pem
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local env files
+.env*.local
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# VS Code 전용
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+
+# JetBrains IDEs (WebStorm, IntelliJ 등)
+.idea/
+*.iml
+*.iws
+*.ipr
+.idea_modules/
