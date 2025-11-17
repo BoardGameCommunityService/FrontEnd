@@ -18,8 +18,8 @@ export default function Button({
   text,
   textSize = "16px",
   py = "py-4",
-  bgColor = "#EEF0F7",
-  textColor = "#767676",
+  bgColor = "bg-[#EEF0F7]",
+  textColor = "text-[#767676]",
   icon,
   gap = "gap-[4px]",
   onClick,
@@ -27,7 +27,7 @@ export default function Button({
   return (
     <button
       type={type}
-      className={`flex justify-center ${gap} rounded-lg bg-[${bgColor}] ${py} font-semibold text-[${textSize}] ${textColor} cursor-pointer`}
+      className={`flex justify-center ${gap} rounded-lg ${bgColor} ${py} font-semibold text-[${textSize}] ${textColor} cursor-pointer`}
       onClick={onClick}
     >
       {icon}
