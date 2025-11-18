@@ -11,10 +11,9 @@ export default function Signup() {
         <Image src="/icons/ic_close.svg" alt="닫기 버튼" width={24} height={24} />
       </Link>
 
-      <h2 className="mt-4 font-semibold text-2xl text-[#161616]">회원 정보를 입력해주세요</h2>
-
-      <form className="flex flex-col mt-10 justify-between flex-1">
+      <form className="flex flex-col justify-between flex-1">
         <div>
+        <h2 className="mt-4 mb-10 font-semibold text-2xl text-[#161616]">회원 정보를 입력해주세요</h2>
           <fieldset>
           <TextInput label="닉네임" name="nickname" placeholder="닉네임을 입력해주세요" />
             <div className="flex items-center gap-1 mt-2">
