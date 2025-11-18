@@ -36,7 +36,7 @@ export default function Button({
   return (
     <button
       type={type}
-      className={`flex justify-center ${btnResultSize} ${outlineResult} py-3.5 ${gap} rounded-lg ${bgColor} ${btnSize} font-semibold ${textColor} cursor-pointer`}
+      className={`flex justify-center ${btnResultSize} ${outlineResult} ${gap} rounded-lg ${bgColor} ${btnSize} font-semibold ${textColor} cursor-pointer`}
       onClick={onClick}
     >
       {icon}
