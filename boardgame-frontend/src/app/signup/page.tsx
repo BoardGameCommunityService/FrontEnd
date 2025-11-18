@@ -42,7 +42,7 @@ export default function Signup() {
           </fieldset>
         </div>
 
-        <Button type="submit" text="다음" />
+        <Button type="submit" text="다음" btnSize="large" />
       </form>
     </>
   );
