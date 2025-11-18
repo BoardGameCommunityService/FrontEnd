@@ -30,7 +30,7 @@ export default function Login() {
           className="w-[355px] h-14 bg-[#FEE500] rounded-full py-3 px-4 flex items-center justify-center relative"
           aria-label="카카오로 로그인"
         >
-          <Image src="/kakao.svg" alt="" width={22} height={21} className="absolute left-4" aria-hidden="true" />
+          <Image src="/kakao.svg" alt="" width={32} height={32} className="absolute left-4" aria-hidden="true" />
           <span className="text-[16px]">카카오로 로그인</span>
         </button>
         <button
@@ -38,7 +38,7 @@ export default function Login() {
           className="w-[355px] h-14 border border-[#E9E9ED] rounded-full py-3 px-4 flex items-center justify-center relative"
           aria-label="구글로 로그인"
         >
-          <Image src="/google.svg" alt="" width={22} height={22} className="absolute left-4" aria-hidden="true" />
+          <Image src="/google.svg" alt="" width={32} height={32} className="absolute left-4" aria-hidden="true" />
           <span className="text-[16px] font-medium">구글로 로그인</span>
         </button>
       </section>
