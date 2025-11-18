@@ -15,14 +15,14 @@ export default function Signup() {
         <Button type="submit" text="현재 위치로 찾기" btnSize="medium" bgColor="bg-[#06E393]" icon={<Image src="/icons/ic_gps.svg" alt="버튼" width={20} height={20} />} textColor="text-black"/>
       </form>
 
-      <div className='mt-6 text-[#999999]'>
+      <section className='mt-6 text-[#999999]'>
         <h3 className='text-xs'>검색 결과</h3>
         <ul>
           <li className='my-3 text-[#161616]'>
             <button type="button">서울특별시 강남구</button>
           </li>
         </ul>
-      </div>
+      </section>
     </>
   );
 }
