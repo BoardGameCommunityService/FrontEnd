@@ -11,6 +11,7 @@ interface ButtonType {
   gap?: string;
   handleSubmit?: () => void;
   onClick?: () => void;
+  disabled?: boolean;
 }
 
 export default function Button({
@@ -23,6 +24,7 @@ export default function Button({
   icon,
   gap = "gap-[4px]",
   onClick,
+  disabled,
 }: ButtonType) {
   const mediumSize = "py-3.5 text-sm"; //14px 14px
   const largeSize = "py-4 text-base"; //16px 16px
@@ -38,6 +40,7 @@ export default function Button({
       type={type}
       className={`flex justify-center ${btnResultSize} ${outlineResult} ${gap} rounded-lg ${bgColor} ${btnSize} font-semibold ${textColor} cursor-pointer`}
       onClick={onClick}
+      disabled={disabled}
     >
       {icon}
       {text}
