@@ -1,11 +1,40 @@
+"use client";
+
 import Button from "@/components/common/Button";
 import TextInput from '@/components/common/TextInput';
 import Image from "next/image";
 import Link from "next/link";
-export default function Signup() {
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+
+export default function SignupLocation() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [selectedLocation, setSelectedLocation] = useState("");
+
+  // 이전 페이지에서 전달받은 값들
+  const nickname = searchParams.get("nickname") || "";
+  const gender = searchParams.get("gender") || "";
+
+  const handleLocationSelect = (location: string) => {
+    setSelectedLocation(location);
+
+    // 이전 값들과 함께 다시 전달
+    const params = new URLSearchParams();
+    if (nickname) params.set("nickname", nickname);
+    if (gender) params.set("gender", gender);
+    params.set("location", location);
+
+    router.push(`/signup?${params.toString()}`);
+  };
+  const handleCurrentLocation = (e: React.MouseEvent<HTMLButtonElement>) => {
+    // 현재 위치 찾기 로직
+    const location = e.currentTarget.textContent || "";
+handleLocationSelect(location);
+  };
   return (
     <>
-        <Link href="/signup">
+        <Link href={`/signup?${searchParams.toString()}`}>
           <Image src="/icons/ic_back.svg" alt="뒤로가기 버튼" width={24} height={24} />
         </Link>
 
@@ -19,7 +48,7 @@ export default function Signup() {
         <h3 className='text-xs'>검색 결과</h3>
         <ul>
           <li className='my-3 text-[#161616]'>
-            <button type="button">서울특별시 강남구</button>
+            <button type="button" onClick={handleCurrentLocation}>서울특별시 강남구</button>
           </li>
         </ul>
       </section>
