@@ -7,6 +7,7 @@ interface ButtonType {
   outline?: "default" | "selected";
   bgColor?: string;
   textColor?: string;
+  fontWeight?: string;
   icon?: React.ReactNode;
   gap?: string;
   handleSubmit?: () => void;
@@ -21,6 +22,7 @@ export default function Button({
   outline,
   bgColor = "bg-[#EEF0F7]",
   textColor = "text-[#767676]",
+  fontWeight = "font-semibold",
   icon,
   gap = "gap-[4px]",
   onClick,
@@ -38,7 +40,7 @@ export default function Button({
   return (
     <button
       type={type}
-      className={`flex justify-center ${btnResultSize} ${outlineResult} ${gap} rounded-lg ${bgColor} ${btnSize} font-semibold ${textColor} cursor-pointer`}
+      className={`flex justify-center w-full ${btnResultSize} ${outlineResult} ${gap} rounded-lg ${bgColor} ${btnSize} ${fontWeight} ${textColor} cursor-pointer`}
       onClick={onClick}
       disabled={disabled}
     >
