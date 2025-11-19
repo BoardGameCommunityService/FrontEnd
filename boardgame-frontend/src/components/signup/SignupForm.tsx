@@ -3,11 +3,11 @@
 import TextInput from "@/components/common/TextInput";
 import Image from "next/image";
 import GenderRadio from "@/components/signup/GenderRadio";
-import Link from "next/link";
 import Button from "@/components/common/Button";
 import { useForm } from "react-hook-form";
 import { SearchFormValueType } from "@/types/SearchFormValueType";
 import { useRouter } from "next/navigation";
+import React from "react";
 
 export default function SignupForm({ nickname, gender, location }: SearchFormValueType) {
   const router = useRouter();
@@ -16,6 +16,7 @@ export default function SignupForm({ nickname, gender, location }: SearchFormVal
     register,
     handleSubmit,
     formState: { errors, isValid },
+    getValues,
   } = useForm<SearchFormValueType>({
     defaultValues: {
       nickname: nickname,
@@ -29,6 +30,17 @@ export default function SignupForm({ nickname, gender, location }: SearchFormVal
     const filteredData = Object.entries(data).filter(([_, v]) => v);
     const params = new URLSearchParams(filteredData);
     router.push(`/agreement?${params.toString()}`);
+  };
+
+  const handleLocationClick = () => {
+    const currentFormData = getValues();
+    const params = new URLSearchParams({
+      nickname: currentFormData.nickname || "",
+      gender: currentFormData.gender || "",
+      location: currentFormData.location || "",
+    });
+
+    router.push(`/signup/location?${params.toString()}`);
   };
 
   return (
@@ -91,13 +103,19 @@ export default function SignupForm({ nickname, gender, location }: SearchFormVal
 
         <fieldset className="mt-8">
           <legend className="block font-medium text-sm text-[#363636]">지역</legend>
-          <Link
-            className="flex items-center justify-between mt-3 text-sm text-[#767676] border border-[#E9E9ED] rounded-xl py-3.5 pl-3 pr-3.5"
-            href="/signup/location"
+          <button
+            type="button"
+            className={`flex ${location ? "justify-center" : "justify-between"} w-full mt-3 text-sm text-[${location ? "#161616" : "#767676"}] border border-[${location ? "#161616" : "#E9E9ED"}] rounded-xl py-3.5 pl-3 pr-3.5`}
+            onClick={handleLocationClick}
+            {...register("location", { required: true })}
           >
-            활동 지역을 선택해주세요
-            <Image src="/icons/ic_chevron_right_icon.svg" alt="" width={20} height={20} />
-          </Link>
+            {location || (
+              <>
+                활동 지역을 선택해주세요
+                <Image src="/icons/ic_chevron_right_icon.svg" alt="" width={20} height={20} />
+              </>
+            )}
+          </button>
         </fieldset>
       </div>
 
