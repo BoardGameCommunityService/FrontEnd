@@ -7,10 +7,12 @@ interface ButtonType {
   outline?: "default" | "selected";
   bgColor?: string;
   textColor?: string;
+  fontWeight?: string;
   icon?: React.ReactNode;
   gap?: string;
   handleSubmit?: () => void;
   onClick?: () => void;
+  disabled?: boolean;
 }
 
 export default function Button({
@@ -20,9 +22,11 @@ export default function Button({
   outline,
   bgColor = "bg-[#EEF0F7]",
   textColor = "text-[#767676]",
+  fontWeight = "font-semibold",
   icon,
   gap = "gap-[4px]",
   onClick,
+  disabled,
 }: ButtonType) {
   const mediumSize = "py-3.5 text-sm"; //14px 14px
   const largeSize = "py-4 text-base"; //16px 16px
@@ -36,8 +40,9 @@ export default function Button({
   return (
     <button
       type={type}
-      className={`flex justify-center ${btnResultSize} ${outlineResult} ${gap} rounded-lg ${bgColor} ${btnSize} font-semibold ${textColor} cursor-pointer`}
+      className={`flex justify-center w-full ${btnResultSize} ${outlineResult} ${gap} rounded-lg ${bgColor} ${btnSize} ${fontWeight} ${textColor} cursor-pointer`}
       onClick={onClick}
+      disabled={disabled}
     >
       {icon}
       {text}
