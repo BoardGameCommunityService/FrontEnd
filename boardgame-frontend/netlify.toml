@@ -1,5 +1,4 @@
 [build]
-  base = "boardgame-frontend"
   command = "pnpm build"
   publish = ".next"
 
