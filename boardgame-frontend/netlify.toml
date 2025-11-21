@@ -1,7 +1,10 @@
-# netlify.toml
 [build]
-  command = "pnpm run build"
+  base = "boardgame-frontend"
+  command = "pnpm build"
   publish = ".next"
+
+[build.environment]
+  PNPM_VERSION = "9"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
