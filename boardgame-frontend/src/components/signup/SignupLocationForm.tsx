@@ -4,26 +4,21 @@ import Button from "@/components/common/Button";
 import TextInput from "@/components/common/TextInput";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function SignupLocationForm() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [selectedLocation, setSelectedLocation] = useState("");
-
-  const nickname = searchParams.get("nickname") || "";
-  const gender = searchParams.get("gender") || "";
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLocationSelect = (location: string) => {
     setSelectedLocation(location);
 
-    const params = new URLSearchParams();
-    if (nickname) params.set("nickname", nickname);
-    if (gender) params.set("gender", gender);
-    params.set("location", location);
+    // sessionStorage에 location 저장
+    sessionStorage.setItem("signupLocation", location);
 
-    router.push(`/signup?${params.toString()}`);
+    router.push("/signup");
   };
 
   const handleCurrentLocation = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -33,11 +28,11 @@ export default function SignupLocationForm() {
 
   return (
     <>
-      <Link href={`/signup?${searchParams.toString()}`}>
+      <Link href="/signup">
         <Image src="/icons/ic_back.svg" alt="뒤로가기 버튼" width={24} height={24} />
       </Link>
 
-      <form action="/signup/location" className="flex flex-col">
+      <form className="flex flex-col">
         <h2 className="mt-4 font-semibold text-2xl text-[#161616]">활동 지역을 선택해주세요</h2>
         <TextInput
           label="활동지역"
@@ -46,7 +41,7 @@ export default function SignupLocationForm() {
           isHidden={true}
         />
         <Button
-          type="submit"
+          type="button"
           text="현재 위치로 찾기"
           btnSize="medium"
           bgColor="bg-[#06E393]"
