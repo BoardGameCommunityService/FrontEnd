@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div>
+    <div className="flex flex-col items-center h-[100vh] bg-[#F5F6FA]">
         
 
           <Header/>
