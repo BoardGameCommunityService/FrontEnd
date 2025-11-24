@@ -1,0 +1,77 @@
+"use client";
+
+import { LocationResult } from "@/types/location";
+import { useState } from "react";
+
+export function useLocation() {
+  const [searchResults, setSearchResults] = useState<LocationResult[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const getCurrentLocation = async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+        if (!navigator.geolocation) {
+          reject(new Error("위치 서비스를 지원하지 않는 브라우저입니다"));
+          return;
+        }
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+      });
+
+      const { latitude, longitude } = position.coords;
+
+      // 카카오 API : 좌표 → 주소 변환
+      const response = await fetch(`/api/location/coord2region?x=${longitude}&y=${latitude}`);
+
+      if (!response.ok) {
+        throw new Error("위치 정보를 가져올 수 없습니다");
+      }
+
+      const data = await response.json();
+      setSearchResults(data.documents || []);
+
+      return data.documents;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "위치 정보를 가져올 수 없습니다";
+      setError(errorMessage);
+      alert(errorMessage + "\n권한을 확인해주세요.");
+      return [];
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const searchAddress = async (locationInput: string) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(`/api/location/search?query=${encodeURIComponent(locationInput)}`);
+
+      if (!response.ok) {
+        throw new Error("검색에 실패했습니다");
+      }
+
+      const data = await response.json();
+      setSearchResults(data.documents || []);
+
+      return data.documents;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "검색에 실패했습니다";
+      setError(errorMessage);
+      return [];
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return {
+    searchResults,
+    isLoading,
+    error,
+    getCurrentLocation,
+    searchAddress,
+  };
+}
