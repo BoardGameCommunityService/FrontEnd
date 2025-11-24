@@ -27,6 +27,8 @@ interface CardProps {
 export default function Card({ id, location, title, currentMember, maxMember, games, meetingDate }: CardProps) {
   const posting = "/";
   const postingId = id;
+  const { month, day, weekday, hours, minutes } = dateFormatter(meetingDate);
+  const dateFormat = `${month}/${day}(${weekday}) ${hours}:${minutes}`;
   return (
     <article className="w-[335px] h-[116px] rounded-2xl p-4 bg-white">
       <Link href={posting} className="flex flex-col gap-2">
@@ -35,7 +37,7 @@ export default function Card({ id, location, title, currentMember, maxMember, ga
             <Image src={mapPin} alt="위치" width={18} height={18} />
             <span className="font-medium text-[13px] text-[#767676]">{location}</span>
           </div>
-          <Badge>{dateFormatter(meetingDate)}</Badge>
+          <Badge>{dateFormat}</Badge>
         </div>
         <h2 className="font-medium text-[15px] text-[#161616]">{title}</h2>
         <ul className="flex gap-1">
