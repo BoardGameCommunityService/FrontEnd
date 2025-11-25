@@ -5,10 +5,12 @@ interface TextInputProps {
   label?: string;
   placeholder?: string;
   isHidden?: boolean;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 function TextInput(
-  { name, label, placeholder, isHidden, ...rest }: TextInputProps,
+  { name, label, placeholder, isHidden, value, onChange, ...rest }: TextInputProps,
   ref: React.ForwardedRef<HTMLInputElement>
 ) {
   return (
@@ -23,6 +25,8 @@ function TextInput(
         placeholder={placeholder}
         type="text"
         maxLength={10}
+        value={value}
+        onChange={onChange}
         {...rest}
         ref={ref}
       />
