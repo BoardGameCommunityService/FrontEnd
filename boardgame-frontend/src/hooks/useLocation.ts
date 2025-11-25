@@ -13,17 +13,16 @@ export function useLocation() {
     setError(null);
 
     try {
+      if (!navigator.geolocation) {
+        throw new Error("위치 서비스를 지원하지 않는 브라우저입니다");
+      }
+
       const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-        if (!navigator.geolocation) {
-          reject(new Error("위치 서비스를 지원하지 않는 브라우저입니다"));
-          return;
-        }
         navigator.geolocation.getCurrentPosition(resolve, reject);
       });
 
       const { latitude, longitude } = position.coords;
 
-      // 카카오 API : 좌표 → 주소 변환
       const response = await fetch(`/api/location/coord2region?x=${longitude}&y=${latitude}`);
 
       if (!response.ok) {
@@ -37,13 +36,19 @@ export function useLocation() {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "위치 정보를 가져올 수 없습니다";
       setError(errorMessage);
-      alert(errorMessage + "\n권한을 확인해주세요.");
+      alert(errorMessage);
       return [];
     } finally {
       setIsLoading(false);
     }
   };
+
   const searchAddress = async (locationInput: string) => {
+    if (!locationInput.trim()) {
+      setSearchResults([]);
+      return [];
+    }
+
     setIsLoading(true);
     setError(null);
 
