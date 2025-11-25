@@ -1,71 +1,46 @@
-"use client";
-
-import Button from "@/components/common/Button";
-import TextInput from "@/components/common/TextInput";
+import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
 
-export default function SignupLocation() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [selectedLocation, setSelectedLocation] = useState("");
+export const metadata: Metadata = {
+  title: "소셜 로그인",
+  // 더 좋은 멘트 있으면 추천 부탁드립니다.
+  description: "보드메이트에 소셜아이디로 가입하고 새로운 친구들을 만나보세요!",
+};
 
-  // 이전 페이지에서 전달받은 값들
-  const nickname = searchParams.get("nickname") || "";
-  const gender = searchParams.get("gender") || "";
-
-  const handleLocationSelect = (location: string) => {
-    setSelectedLocation(location);
-
-    // 이전 값들과 함께 다시 전달
-    const params = new URLSearchParams();
-    if (nickname) params.set("nickname", nickname);
-    if (gender) params.set("gender", gender);
-    params.set("location", location);
-
-    router.push(`/signup?${params.toString()}`);
-  };
-  const handleCurrentLocation = (e: React.MouseEvent<HTMLButtonElement>) => {
-    // 현재 위치 찾기 로직
-    const location = e.currentTarget.textContent || "";
-    handleLocationSelect(location);
-  };
+export default function Login() {
   return (
-    <>
-      <Link href={`/signup?${searchParams.toString()}`}>
-        <Image src="/icons/ic_back.svg" alt="뒤로가기 버튼" width={24} height={24} />
-      </Link>
-
-      <form action="/signup/location" className="flex flex-col">
-        <h2 className="mt-4 font-semibold text-2xl text-[#161616]">활동 지역을 선택해주세요</h2>
-        <TextInput
-          label="활동지역"
-          name="userLocation"
-          placeholder="지역구를 입력해주세요.(ex.강남구, 서초구)"
-          isHidden={true}
-        />
-        <Button
-          type="submit"
-          text="현재 위치로 찾기"
-          btnSize="medium"
-          bgColor="bg-[#06E393]"
-          icon={<Image src="/icons/ic_gps.svg" alt="버튼" width={20} height={20} />}
-          textColor="text-black"
-        />
-      </form>
-
-      <section className="mt-6 text-[#999999]">
-        <h3 className="text-xs">검색 결과</h3>
-        <ul>
-          <li className="my-3 text-[#161616]">
-            <button type="button" onClick={handleCurrentLocation}>
-              서울특별시 강남구
-            </button>
-          </li>
-        </ul>
+    <main className="min-h-screen flex flex-col items-center justify-center gap-6">
+      <section className="w-full max-w-[375px] h-[524px] flex flex-col gap-6 items-center justify-center">
+        {/* 말풍선 */}
+        <div className="flex flex-col items-center">
+          <div className="w-[118px] h-[52px] rounded-xl px-3 py-2 bg-[#161616]">
+            <h2 className="m-0 font-semibold text-[13px] leading-[140%] tracking-[-0.02em] text-center text-[#FAFAFA] whitespace-pre">
+              함께하면 더 즐거운{"\n"}보드게임 라이프!
+            </h2>
+          </div>
+          <Image src="/bubbleTriangle.svg" alt="" aria-hidden="true" width={14} height={8} />
+        </div>
+        {/* 로고 */}
+        <Image src="/logo.svg" alt="보드메이트 로고" width={140} height={140} priority />
       </section>
-    </>
+      <section className="flex flex-col gap-3" aria-label="소셜 로그인">
+        <button
+          type="button"
+          className="w-[355px] h-14 bg-[#FEE500] rounded-2xl py-3 px-4 flex items-center justify-center relative"
+          aria-label="카카오로 로그인"
+        >
+          <Image src="/kakao.svg" alt="" width={32} height={32} className="absolute left-4" aria-hidden="true" />
+          <span className="text-[16px]">카카오로 로그인</span>
+        </button>
+        <button
+          type="button"
+          className="w-[355px] h-14 border border-[#E9E9ED] rounded-2xl py-3 px-4 flex items-center justify-center relative"
+          aria-label="구글로 로그인"
+        >
+          <Image src="/google.svg" alt="" width={22} height={22} className="absolute left-4" aria-hidden="true" />
+          <span className="text-[16px] font-medium">구글로 로그인</span>
+        </button>
+      </section>
+    </main>
   );
 }
