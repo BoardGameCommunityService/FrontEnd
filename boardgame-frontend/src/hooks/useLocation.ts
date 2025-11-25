@@ -52,6 +52,8 @@ export function useLocation() {
     setIsLoading(true);
     setError(null);
 
+    const minLoadingTime = new Promise((resolve) => setTimeout(resolve, 500));
+
     try {
       const response = await fetch(`/api/location/search?query=${encodeURIComponent(locationInput)}`);
 
@@ -60,6 +62,7 @@ export function useLocation() {
       }
 
       const data = await response.json();
+      await minLoadingTime; // 최소 로딩 시간 대기
       setSearchResults(data.documents || []);
 
       return data.documents;
