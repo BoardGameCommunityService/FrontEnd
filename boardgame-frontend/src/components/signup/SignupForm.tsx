@@ -5,11 +5,18 @@ import Image from "next/image";
 import GenderRadio from "@/components/signup/GenderRadio";
 import Button from "@/components/common/Button";
 import { useForm } from "react-hook-form";
-import { SearchFormValueType } from "@/types/SearchFormValueType";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getSessionValue } from "@/util/getSession";
 
-export default function SignupForm({ nickname, gender, location }: SearchFormValueType) {
+interface SearchFormValueType {
+  nickname?: string;
+  gender?: string;
+  location?: string;
+}
+
+export default function SignupForm() {
+  const [location, setLocation] = useState("");
   const router = useRouter();
 
   const {
@@ -19,29 +26,37 @@ export default function SignupForm({ nickname, gender, location }: SearchFormVal
     getValues,
   } = useForm<SearchFormValueType>({
     defaultValues: {
-      nickname: nickname,
-      gender: gender,
-      location: location,
+      nickname: getSessionValue("nickname") || "",
+      gender: getSessionValue("gender") || "",
+      location: getSessionValue("location") || "",
     },
     mode: "onChange",
   });
 
-  const onSubmit = (data: SearchFormValueType) => {
-    const filteredData = Object.entries(data).filter(([_, v]) => v);
-    const params = new URLSearchParams(filteredData);
-    router.push(`/agreement?${params.toString()}`);
+  const saveFormDataToSession = () => {
+    const { nickname = "", gender = "", location = "" } = getValues();
+
+    sessionStorage.setItem("nickname", nickname);
+    sessionStorage.setItem("gender", gender);
+    sessionStorage.setItem("location", location);
+  };
+
+  const onSubmit = () => {
+    saveFormDataToSession();
+
+    router.push(`/agreement`);
   };
 
   const handleLocationClick = () => {
-    const currentFormData = getValues();
-    const params = new URLSearchParams({
-      nickname: currentFormData.nickname || "",
-      gender: currentFormData.gender || "",
-      location: currentFormData.location || "",
-    });
+    saveFormDataToSession();
 
-    router.push(`/signup/location?${params.toString()}`);
+    router.push("/signup/location");
   };
+
+  useEffect(() => {
+    //TODO: 임시코드이며 추후 session에서 zustand로 변경 예정
+    Promise.resolve(getSessionValue("location")).then((data) => setLocation(data));
+  }, []);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col justify-between flex-1">
