@@ -42,7 +42,14 @@ export async function GET(request: NextRequest) {
       })
       .filter((item: any) => item.region_1depth_name && item.region_2depth_name);
 
-    return NextResponse.json({ documents: filteredResults });
+    //주소 중복제거
+    const uniqueResults = Array.from(
+      new Map(
+        filteredResults.map((item: any) => [`${item.region_1depth_name}-${item.region_2depth_name}`, item])
+      ).values()
+    );
+
+    return NextResponse.json({ documents: uniqueResults });
   } catch (error) {
     console.error("Search API Error:", error);
     return NextResponse.json({ error: "검색에 실패했습니다" }, { status: 500 });
