@@ -26,7 +26,7 @@ export default function SignupLocationForm() {
 
   const handleLocationSelect = (location: string) => {
     // sessionStorage에 location 저장
-    sessionStorage.setItem("signupLocation", location);
+    sessionStorage.setItem("location", location);
     router.push("/signup");
   };
 
@@ -58,7 +58,7 @@ export default function SignupLocationForm() {
 
         <Button
           type="button"
-          text={isLoading ? "위치 확인 중..." : "현재 위치로 찾기"}
+          text={"현재 위치로 찾기"}
           btnSize="medium"
           bgColor="bg-[#06E393]"
           icon={<Image src="/icons/ic_gps.svg" alt="버튼" width={20} height={20} />}
