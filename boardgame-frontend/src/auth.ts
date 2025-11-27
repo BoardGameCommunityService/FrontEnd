@@ -12,31 +12,42 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async jwt({ token, account, profile, user }) {
       if (account?.provider === "kakao" && profile) {
         //TODO: API 경로 수정 필요
-        const res = await fetch(`${process.env.API_SERVER_HOST}/api/accounts/social`, {
+        const res = await fetch(`${process.env.API_SERVER_HOST}/api/auth/sync-from-nextauth`, {
           method: "POST",
           headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
+            "Content-Type": "application/json",
             "Cache-Control": "no-store",
           },
-          body: new URLSearchParams({ email: profile.kakao_account.email }),
+          body: JSON.stringify({
+            provider: "kakao",
+            socialId: String(profile.id),
+            email: profile.kakao_account.email,
+            nickname: profile.kakao_account.profile?.nickname ?? "",
+            profileImageUrl: profile.kakao_account.profile?.profile_image_url ?? "",
+          }),
         });
 
         const result = (await res.json()) as {
+          userId: number;
           email: string;
-          role: string;
           nickname: string;
+          role: string;
+          profileCompleted: boolean;
           accessToken: string;
           refreshToken: string;
+          accessTokenExpiresAt: number;
         };
 
+        console.log("백단에서 받은 데이터:", result);
+
         token.id = result.email;
-        token.role = result.role;
         token.email = result.email;
         token.name = result.nickname;
-
+        token.role = result.role;
+        token.profileCompleted = result.profileCompleted;
         token.accessToken = result.accessToken;
         token.refreshToken = result.refreshToken;
-        token.accessTokenExpires = Date.now() + 1000 * 60 * 60; //1h
+        token.accessTokenExpires = result.accessTokenExpiresAt;
       }
 
       return token;
@@ -46,15 +57,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.user.role = token.role;
       session.user.email = token.email;
       session.user.name = token.name;
-
+      session.user.profileCompleted = token.profileCompleted;
       session.user.accessToken = token.accessToken;
       session.user.refreshToken = token.refreshToken;
-      session.user.expireTime = Date.now() + 1000 * 60 * 60; //1h
+      session.user.expireTime = token.accessTokenExpires;
       return session;
     },
   },
   pages: {
-    // signIn: "/signin",
+    signIn: "/login",
     // signOut: "/signout",
   },
 });
