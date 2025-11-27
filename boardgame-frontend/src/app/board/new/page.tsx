@@ -7,7 +7,7 @@ import Image from "next/image";
 export default function New() {
   return (
     <div className="flex justify-center">
-      <div className="w-[355px]">
+      <div className="w-[375px] flex flex-col ">
         <Header />
         <input
           type="text"
