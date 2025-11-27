@@ -16,7 +16,7 @@ export default function Calendar() {
   const dates = getDatesForMonth();
 
   return (
-    <ul className="w-full overflow-x-scroll [&::-webkit-scrollbar]:hidden flex my-4">
+    <ul className="w-[335px]  overflow-x-scroll [&::-webkit-scrollbar]:hidden flex self-start my-4">
       {dates.map((date, index) => {
         const dateNum = date.getDate();
         const dayName = week[date.getDay()];
