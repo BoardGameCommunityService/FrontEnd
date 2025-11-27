@@ -23,9 +23,17 @@ export default function Calendar() {
 
         return (
           <li key={index}>
-            <button className="flex flex-col w-[42px] h-[56px] justify-center">
-              <span>{dateNum}</span>
-              <span>{dayName}</span>
+            <button className="w-[42px] h-[56px]">
+              <p
+                className={
+                  dayName === "일"
+                    ? "text-[#FC3B45] flex flex-col justify-center"
+                    : "text-[#161616] flex flex-col justify-center"
+                }
+              >
+                <span>{dateNum}</span>
+                <span>{dayName}</span>
+              </p>
             </button>
           </li>
         );
