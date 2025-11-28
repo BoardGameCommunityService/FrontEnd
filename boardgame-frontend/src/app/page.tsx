@@ -17,7 +17,7 @@ export default function Home() {
           <section>
             <Banner />
           </section>
-          <section>
+          <section className="my-4">
             <Calendar />
           </section>
           <section>
