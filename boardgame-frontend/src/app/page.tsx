@@ -4,22 +4,44 @@ import CardList from "@/components/common/CardList";
 import Header from "@/components/common/Header";
 import Link from "next/link";
 
+import Image from "next/image";
+import bottomLogo from "../../public/bottomLogo.svg";
+import plusIcon from "../../public/icons/ic_plus.svg";
+
 export default function Home() {
   return (
-    <div className="flex flex-col h-screen bg-[#F5F6FA] items-center">
-      <Header />
-      <main>
-        <section>
-          <Banner />
-        </section>
-        <section>
-          <Calendar />
-        </section>
-        <section>
-          <CardList />
-        </section>
-        <Link href="/board/new">+ 모임만들기</Link>
-      </main>
+    <div className="flex justify-center">
+      <div className="w-[375px] min-h-screen flex flex-col items-center bg-[#F5F6FA] relative">
+        <Header />
+        <main>
+          <section>
+            <Banner />
+          </section>
+          <section>
+            <Calendar />
+          </section>
+          <section>
+            <CardList />
+          </section>
+          <div className="flex justify-center mt-6 mb-[60px]">
+            <Image
+              src={bottomLogo}
+              alt="함께하면 더 즐거운 보드게임 라이프!"
+              width={120}
+              height={110}
+              className="mt-6 mb-[60px]"
+            />
+          </div>
+        </main>
+        <Link href="/board/new">
+          <div className="fixed bottom-10 right-[max(20px,calc(50%-167.5px))] w-[123px] h-12 rounded-[40px] py-3 pl-3 pr-4 bg-[#06E393] shadow-[0px_4px_16px_0px_#00000040]">
+            <div className="flex gap-1 items-center">
+              <Image src={plusIcon} alt="" width={18} height={18} />
+              <span className="font-semibold text-[16px] text-[#161616]">모임만들기</span>
+            </div>
+          </div>
+        </Link>
+      </div>
     </div>
   );
 }
