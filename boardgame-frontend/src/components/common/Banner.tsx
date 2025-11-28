@@ -112,12 +112,12 @@ export default function Banner() {
       <div className="w-full relative">
         <ul
           ref={dragRef}
-          className={`flex select-none ${isDragging || !isTransitioning ? "duration-0" : "duration-500"} transition-transform`}
+          className={`flex select-none touch-none ${isDragging || !isTransitioning ? "duration-0" : "duration-500"} transition-transform`}
           style={{ transform: `translateX(${translateX})` }}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseLeave}
+          onPointerDown={handleMouseDown}
+          onPointerMove={handleMouseMove}
+          onPointerUp={handleMouseUp}
+          onPointerLeave={handleMouseLeave}
         >
           {extendedBanners.map((banner, idx) => (
             <li className="flex-shrink-0 w-full aspect-[335/100] relative" key={`${banner.id}-${idx}`}>
