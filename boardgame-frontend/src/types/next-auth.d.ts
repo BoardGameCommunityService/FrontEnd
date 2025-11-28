@@ -32,6 +32,7 @@ declare module "next-auth" {
       role: string;
       email: string;
       name: string;
+      profileCompleted: boolean;
       accessToken: string;
       refreshToken: string;
       expireTime: number;
@@ -63,6 +64,7 @@ declare module "next-auth/jwt" {
     role: string;
     email: string;
     name: string;
+    profileCompleted: boolean;
     accessToken: string;
     refreshToken: string;
     accessTokenExpires: number;
