@@ -1,12 +1,12 @@
-import Header from "@/components/common/Header";
 import Banner from "@/components/common/Banner";
 import Calendar from "@/components/common/Calendar";
 import CardList from "@/components/common/CardList";
+import Header from "@/components/common/Header";
 import Link from "next/link";
 
-import plusIcon from "../../public/icons/ic_plus.svg";
-import bottomLogo from "../../public/bottomLogo.svg";
 import Image from "next/image";
+import bottomLogo from "../../public/bottomLogo.svg";
+import plusIcon from "../../public/icons/ic_plus.svg";
 
 export default function Home() {
   return (
@@ -17,7 +17,7 @@ export default function Home() {
           <section className="w-full flex flex-col items-center">
             <Banner />
           </section>
-          <section>
+          <section className="my-4">
             <Calendar />
           </section>
           <section>
