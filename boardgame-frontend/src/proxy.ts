@@ -1,20 +1,21 @@
 import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 
-export default auth((req) => {
+export const proxy = auth((req) => {
   const { pathname } = req.nextUrl;
   const session = req.auth;
 
-  const publicPaths = ["/login", "/api/auth"];
+  if (pathname.startsWith("/api/auth")) {
+    return NextResponse.next();
+  }
 
-  // /board/{id} 패턴 체크 (숫자 ID만 허용)
-  const isBoardDetailPage = /^\/board\/\d+$/.test(pathname);
-
-  const isPublicPath = pathname === "/" || isBoardDetailPage || publicPaths.some((path) => pathname.startsWith(path));
-
-  if (session?.user && session.user.profileCompleted === false && pathname !== "/signup") {
+  if (session?.user && session.user.profileCompleted === false && !pathname.startsWith("/signup")) {
     return NextResponse.redirect(new URL("/signup", req.url));
   }
+
+  const publicPaths = ["/login"];
+  const isBoardDetailPage = /^\/board\/\d+$/.test(pathname);
+  const isPublicPath = pathname === "/" || isBoardDetailPage || publicPaths.some((path) => pathname.startsWith(path));
 
   if (isPublicPath) {
     return NextResponse.next();
