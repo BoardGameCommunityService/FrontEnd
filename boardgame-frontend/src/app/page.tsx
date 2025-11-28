@@ -11,7 +11,7 @@ import Image from "next/image";
 export default function Home() {
   return (
     <div className="flex justify-center">
-      <div className="w-[375px] h-full  flex flex-col items-center bg-[#F5F6FA] relative">
+      <div className="w-[375px] min-h-screen flex flex-col items-center bg-[#F5F6FA] relative">
         <Header />
         <main>
           <section>
