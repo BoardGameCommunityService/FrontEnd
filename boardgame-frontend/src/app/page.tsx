@@ -14,7 +14,7 @@ export default function Home() {
       <div className="w-[375px] min-h-screen flex flex-col items-center bg-[#F5F6FA] relative">
         <Header />
         <main>
-          <section>
+          <section className="w-full flex flex-col items-center">
             <Banner />
           </section>
           <section>
