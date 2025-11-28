@@ -16,7 +16,7 @@ export default function New() {
         />
         <textarea
           placeholder="모임 소개글을 입력해주세요."
-          className="mt-4 resize-none w-full min-h-60 px-3 py-3 bg-white rounded-xl border border-[#DEE1E6] text-[12px] placeholder:text-[#767676] field-sizing:content"
+          className="mt-4 resize-none w-full min-h-60 px-3 py-3 bg-white rounded-xl border border-[#DEE1E6] text-[12px] placeholder:text-[#767676] field-sizing-content"
         />
         <h3 className="font-medium text-[14px] text-[#363636] mt-[25px]">게임 지정</h3>
         <h3 className="font-medium text-[14px] text-[#363636] mt-[31px]">인원</h3>
