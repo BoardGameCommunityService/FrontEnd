@@ -1,6 +1,11 @@
+"use client";
+
+import { useState } from "react";
+import DateItem from "./DateItem";
+
 export default function Calendar() {
   const today = new Date();
-  const week = ["일", "월", "화", "수", "목", "금", "토"];
+  const [selectedDate, setSelectedDate] = useState<Date>(today);
 
   // 오늘부터 30일간의 날짜 배열 생성
   const getDatesForMonth = () => {
@@ -15,29 +20,25 @@ export default function Calendar() {
 
   const dates = getDatesForMonth();
 
-  return (
-    <ul className="w-[335px]  overflow-x-scroll [&::-webkit-scrollbar]:hidden flex self-start my-4">
-      {dates.map((date, index) => {
-        const dateNum = date.getDate();
-        const dayName = week[date.getDay()];
+  // 날짜 비교 함수 (년-월-일만 비교)
+  const isSameDate = (date1: Date, date2: Date) => {
+    return (
+      date1.getFullYear() === date2.getFullYear() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getDate() === date2.getDate()
+    );
+  };
 
-        return (
-          <li key={index}>
-            <button className="w-[42px] h-[56px]">
-              <p
-                className={
-                  dayName === "일"
-                    ? "text-[#FC3B45] flex flex-col justify-center"
-                    : "text-[#161616] flex flex-col justify-center"
-                }
-              >
-                <span>{dateNum}</span>
-                <span>{dayName}</span>
-              </p>
-            </button>
-          </li>
-        );
-      })}
+  return (
+    <ul className="w-[375px] overflow-x-scroll [&::-webkit-scrollbar]:hidden flex self-start pl-5">
+      {dates.map((date, index) => (
+        <DateItem
+          key={index}
+          date={date}
+          isSelected={isSameDate(date, selectedDate)}
+          onClick={() => setSelectedDate(date)}
+        />
+      ))}
     </ul>
   );
 }
