@@ -11,7 +11,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async jwt({ token, account, profile, user }) {
       if (account?.provider === "kakao" && profile) {
-        //TODO: API 경로 수정 필요
         const res = await fetch(`${process.env.API_SERVER_HOST}/api/auth/sync-from-nextauth`, {
           method: "POST",
           headers: {
@@ -37,8 +36,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           refreshToken: string;
           accessTokenExpiresAt: number;
         };
-
-        console.log("백단에서 받은 데이터:", result);
 
         token.id = result.email;
         token.email = result.email;
