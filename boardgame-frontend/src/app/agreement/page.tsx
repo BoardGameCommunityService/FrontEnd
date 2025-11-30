@@ -54,6 +54,14 @@ export default function Agreement() {
       const gender = sessionStorage.getItem("gender");
       const region = sessionStorage.getItem("region");
 
+      // 세션 값이 비었을 경우 처리
+      if (!nickname || !gender || !region) {
+        setLoading(false);
+        alert("회원가입 정보가 누락되었습니다. 다시 입력해주세요.");
+        router.push("/signup");
+        return;
+      }
+
       // consent는 프론트에서 boolean 값만 전송 (agreedAt은 서버에서 기록)
       const consent = { service: check.service, privacy: check.privacy, location: check.location };
 
@@ -86,6 +94,7 @@ export default function Agreement() {
       alert("회원가입 완료!");
     } catch (err) {
       console.error("complete-signup error:", err);
+      alert("회원가입 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
     } finally {
       setLoading(false);
     }
