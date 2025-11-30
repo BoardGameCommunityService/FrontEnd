@@ -5,7 +5,17 @@ export const proxy = auth((req) => {
   const { pathname } = req.nextUrl;
   const session = req.auth;
 
-  if (pathname.startsWith("/api/auth")) {
+  if (pathname.startsWith("/api")) {
+    return NextResponse.next();
+  }
+
+  if (pathname.startsWith("/agreement")) {
+    if (!session?.user) {
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
+    if (session.user.profileCompleted === true) {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
     return NextResponse.next();
   }
 
