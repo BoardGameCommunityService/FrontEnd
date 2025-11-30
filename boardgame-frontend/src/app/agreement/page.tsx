@@ -42,15 +42,53 @@ export default function Agreement() {
     setIsOpen((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
+  // 회원 가입 (세션 정보 가져와서 합쳐서 서버로 요청)
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const handleNext = () => {
+  const handleNext = async () => {
     if (!allChecked || loading) return;
     setLoading(true);
-    const CONSENT_KEY = "consent";
-    const consent = { service: check.service, privacy: check.privacy, location: check.location };
-    sessionStorage.setItem(CONSENT_KEY, JSON.stringify(consent));
-    router.push("/signup/location");
+    try {
+      // 기존 signup 단계에서 저장한 사용자 정보 불러오기 (키 이름이 프로젝트와 일치하는지 확인)
+      const nickname = sessionStorage.getItem("nickname");
+      const gender = sessionStorage.getItem("gender");
+      const region = sessionStorage.getItem("region");
+
+      // consent는 프론트에서 boolean 값만 전송 (agreedAt은 서버에서 기록)
+      const consent = { service: check.service, privacy: check.privacy, location: check.location };
+
+      const payload = {
+        user: {
+          nickname,
+          gender,
+          region,
+          consent,
+        },
+      };
+
+      const res = await fetch("/api/auth/complete-signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        throw new Error(`서버 응답 에러: ${res.status}`);
+      }
+
+      // 성공 시 세션에 남은 임시 가입 데이터 정리
+      sessionStorage.removeItem("nickname");
+      sessionStorage.removeItem("gender");
+      sessionStorage.removeItem("region");
+
+      // 가입 완료 후 홈으로 이동
+      router.push("/");
+      alert("회원가입 완료!");
+    } catch (err) {
+      console.error("complete-signup error:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -136,7 +174,7 @@ export default function Agreement() {
             disabled={!allChecked || loading}
             className={`w-[335px] h-14 rounded-2xl font-semibold text-[16px] cursor-pointer ${allChecked ? "bg-[#06E393] text-[#161616]" : "bg-[#EEF0F7]  text-[#767676]"} `}
           >
-            {loading ? "처리중..." : "다음"}
+            {loading ? "처리중..." : "가입하기"}
           </button>
         </footer>
       </main>
