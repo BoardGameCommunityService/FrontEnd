@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { TERMS } from "../../content/terms/terms";
+import { useRouter } from "next/navigation";
 
 export default function Agreement() {
   // 동의 체크박스
@@ -39,6 +40,17 @@ export default function Agreement() {
   // 더보기 핸들러
   const handleOpen = (key: keyof typeof isOpen) => {
     setIsOpen((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const handleNext = () => {
+    if (!allChecked || loading) return;
+    setLoading(true);
+    const CONSENT_KEY = "consent";
+    const consent = { service: check.service, privacy: check.privacy, location: check.location };
+    sessionStorage.setItem(CONSENT_KEY, JSON.stringify(consent));
+    router.push("/signup/location");
   };
 
   return (
@@ -120,10 +132,11 @@ export default function Agreement() {
         <footer className="mb-12 mt-12">
           <button
             type="button"
-            disabled={!allChecked}
+            onClick={handleNext}
+            disabled={!allChecked || loading}
             className={`w-[335px] h-14 rounded-2xl font-semibold text-[16px] cursor-pointer ${allChecked ? "bg-[#06E393] text-[#161616]" : "bg-[#EEF0F7]  text-[#767676]"} `}
           >
-            다음
+            {loading ? "처리중..." : "다음"}
           </button>
         </footer>
       </main>
