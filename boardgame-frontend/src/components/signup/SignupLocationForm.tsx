@@ -26,7 +26,7 @@ export default function SignupLocationForm() {
 
   const handleLocationSelect = (location: string) => {
     // sessionStorage에 location 저장
-    sessionStorage.setItem("location", location);
+    sessionStorage.setItem("region", location);
     router.push("/signup");
   };
 

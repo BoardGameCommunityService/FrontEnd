@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
       `https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURIComponent(query)}`,
       {
         headers: {
-          Authorization: `KakaoAK ${process.env.KAKAO_REST_API_KEY}`,
+          Authorization: `KakaoAK ${process.env.KAKAO_CLIENT_ID}`,
         },
       }
     );

@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "좌표 정보가 필요합니다" }, { status: 400 });
     }
 
-    const apiKey = process.env.KAKAO_REST_API_KEY;
+    const apiKey = process.env.KAKAO_CLIENT_ID;
     console.log("API 키 존재:", !!apiKey);
     console.log("API 키 길이:", apiKey?.length);
 
