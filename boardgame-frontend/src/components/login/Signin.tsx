@@ -8,6 +8,9 @@ export default function Signin() {
   const handleClickKakao = () => {
     signIn("kakao", { redirectTo: "/" });
   };
+  const handleClickGoogle = () => {
+    signIn("google", { redirectTo: "/" });
+  };
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center gap-6">
@@ -38,6 +41,7 @@ export default function Signin() {
           type="button"
           className="w-[355px] h-14 border border-[#E9E9ED] rounded-2xl py-3 px-4 flex items-center justify-center relative"
           aria-label="구글로 로그인"
+          onClick={handleClickGoogle}
         >
           <Image src="/google.svg" alt="" width={22} height={22} className="absolute left-4" aria-hidden="true" />
           <span className="text-[16px] font-medium">구글로 로그인</span>
