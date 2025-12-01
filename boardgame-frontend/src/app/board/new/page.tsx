@@ -7,7 +7,7 @@ import calendarIcon from "../../../../public/icons/ic_calendor.svg";
 
 import Image from "next/image";
 import { useState } from "react";
-import PeopleSelector from "@/components/PeopleSelector";
+import PeopleSelector from "@/components/common/PeopleSelector";
 
 export default function New() {
   // textarea 글자수 카운터
@@ -16,6 +16,7 @@ export default function New() {
     setInputCount(e.target.value.length);
   };
 
+  //인원수
   const [people, setPeople] = useState<number | "무제한">(2);
 
   return (
