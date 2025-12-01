@@ -66,14 +66,11 @@ export default function Agreement() {
       const consent = { service: check.service, privacy: check.privacy, location: check.location };
 
       const payload = {
-        user: {
-          nickname,
-          gender,
-          region,
-          consent,
-        },
+        nickname,
+        gender,
+        region,
+        consent,
       };
-
       const res = await fetch("/api/auth/complete-signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
