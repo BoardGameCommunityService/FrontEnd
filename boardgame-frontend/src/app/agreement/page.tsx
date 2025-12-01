@@ -63,15 +63,19 @@ export default function Agreement() {
       }
 
       // consent는 프론트에서 boolean 값만 전송 (agreedAt은 서버에서 기록)
-      const consent = { service: check.service, privacy: check.privacy, location: check.location };
 
+      const consentService = check.service;
+      const consentPrivacy = check.privacy;
+      const consentLocation = check.location;
       const payload = {
         nickname,
         gender,
         region,
-        consent,
+        consentService,
+        consentPrivacy,
+        consentLocation,
       };
-      const res = await fetch("/api/auth/complete-signup", {
+      const res = await fetch(`${process.env.API_SERVER_HOST}/api/auth/complete-signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
