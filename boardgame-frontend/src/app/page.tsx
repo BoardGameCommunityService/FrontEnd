@@ -7,6 +7,8 @@ import Link from "next/link";
 import Image from "next/image";
 import bottomLogo from "../../public/bottomLogo.svg";
 import plusIcon from "../../public/icons/ic_plus.svg";
+import BottomSheet from "@/components/common/BottomSheet";
+import React from "react";
 
 export default function Home() {
   return (
@@ -32,6 +34,7 @@ export default function Home() {
               className="mt-6 mb-[60px]"
             />
           </div>
+          <BottomSheet />
         </main>
         <Link href="/board/new">
           <div className="fixed bottom-10 right-[max(20px,calc(50%-167.5px))] w-[123px] h-12 rounded-[40px] py-3 pl-3 pr-4 bg-[#06E393] shadow-[0px_4px_16px_0px_#00000040]">
