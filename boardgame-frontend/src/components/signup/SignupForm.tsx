@@ -1,13 +1,13 @@
 "use client";
 
-import TextInput from "@/components/common/TextInput";
-import Image from "next/image";
-import GenderRadio from "@/components/signup/GenderRadio";
 import Button from "@/components/common/Button";
-import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import TextInput from "@/components/common/TextInput";
+import GenderRadio from "@/components/signup/GenderRadio";
 import { getSessionValue } from "@/util/getSession";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 
 interface SearchFormValueType {
   nickname?: string;
@@ -28,7 +28,7 @@ export default function SignupForm() {
     defaultValues: {
       nickname: getSessionValue("nickname") || "",
       gender: getSessionValue("gender") || "",
-      location: getSessionValue("location") || "",
+      location: getSessionValue("region") || "",
     },
     mode: "onChange",
   });
@@ -38,7 +38,7 @@ export default function SignupForm() {
 
     sessionStorage.setItem("nickname", nickname);
     sessionStorage.setItem("gender", gender);
-    sessionStorage.setItem("location", location);
+    sessionStorage.setItem("region", location);
   };
 
   const onSubmit = () => {
@@ -55,7 +55,7 @@ export default function SignupForm() {
 
   useEffect(() => {
     //TODO: 임시코드이며 추후 session에서 zustand로 변경 예정
-    Promise.resolve(getSessionValue("location")).then((data) => setLocation(data));
+    Promise.resolve(getSessionValue("region")).then((data) => setLocation(data));
   }, []);
 
   return (
