@@ -9,7 +9,7 @@ export default function GameSelect() {
   const { setClose } = useBottomSheetStore();
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full relative">
       {/* 상단 고정: 검색 */}
       <div className="flex gap-3 pb-4">
         <div className="flex w-full relative">
@@ -57,6 +57,14 @@ export default function GameSelect() {
       <div className="mt-3 pt-4 border-t border-[#F1F1F4] bg-white">
         <Button type="button" text="선택 완료" btnSize="medium" />
       </div>
+
+      <ul className="flex flex-col justify-between items-center fixed right-2 top-[76px] bg-[#F5F6FA] p-1 w-5 max-h-[465px] h-full rounded-[1000000000px]">
+        {BoardGames.map((k) => (
+          <li key={k.initial} className="text-[13px] leading-5 text-[#767676] rounde">
+            <button className="cursor-pointer">{k.initial}</button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
