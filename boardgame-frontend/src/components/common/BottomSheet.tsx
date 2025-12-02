@@ -13,7 +13,7 @@ export default function BottomSheet() {
         }`}
       />
       <div
-        className={`w-full p-5 absolute bottom-0 h-5/6 bg-white rounded-t-2xl overflow-y-auto transition-transform duration-400 ${
+        className={`w-full p-5 absolute bottom-0 h-5/6 bg-white rounded-t-2xl overflow-hidden transition-transform duration-400 ${
           isOpen ? "translate-y-0" : "translate-y-full"
         }`}
       >
