@@ -31,7 +31,7 @@ export default function GameSelect() {
           />
         </div>
         <button className="cursor-pointer" aria-label="닫기" onClick={setClose}>
-          <Image src="/icons/ic_close.svg" alt="" width={24} height={24} />
+          <Image src="/icons/ic_close_gray.svg" alt="" width={24} height={24} />
         </button>
       </div>
 
