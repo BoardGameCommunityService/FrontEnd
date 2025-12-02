@@ -13,8 +13,12 @@ export default function RootLayout({
     <html lang="ko">
       <body className="flex justify-center">
         <Providers>
-          <div className="w-[375px]">{children}</div>
-          <BottomSheet />
+          <div className="w-[375px] relative">
+            <div className="w-full">
+              {children}
+              <BottomSheet />
+            </div>
+          </div>
         </Providers>
       </body>
     </html>

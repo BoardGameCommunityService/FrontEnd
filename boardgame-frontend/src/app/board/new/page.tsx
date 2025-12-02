@@ -20,7 +20,7 @@ export default function New() {
   const [people, setPeople] = useState<number | "무제한">(2);
 
   return (
-    <div className="flex justify-center">
+    <div id="page-container" className="flex justify-center relative">
       <div className="w-[335px] flex flex-col">
         <header className="h-[52px] py-3 flex gap-0.5 items-center">
           <Link href="/login">
@@ -54,10 +54,10 @@ export default function New() {
               <span className="font-medium text-[14px] text-[#999999]">(선택)</span>
             </div>
 
-            <div className="min-w-[335px] h-10 rounded-lg border border-[#DEE1E6] p-3 flex justify-between items-center">
+            <button className="min-w-[335px] h-10 rounded-lg border border-[#DEE1E6] p-3 flex justify-between items-center">
               <span className="font-normal text-sm text-[#767676]">원하는 게임을 지정해주세요(최대 3개)</span>
               <Image src={nextIcon} alt="" width={20} height={20} />
-            </div>
+            </button>
           </div>
 
           {/* 장소 지정 */}
