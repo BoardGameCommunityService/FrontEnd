@@ -16,7 +16,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async jwt({ token, account, profile, user }) {
       if (account?.provider === "kakao" && profile) {
-        const res = await fetch(`${process.env.API_SERVER_HOST}/api/auth/sync-from-nextauth`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/auth/sync-from-nextauth`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -54,7 +54,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       if (account?.provider === "google" && profile) {
         const socialId = String(profile.sub ?? profile.id ?? "");
-        const res = await fetch(`${process.env.API_SERVER_HOST}/api/auth/sync-from-nextauth`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/auth/sync-from-nextauth`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

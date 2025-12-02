@@ -75,7 +75,7 @@ export default function Agreement() {
         consentPrivacy,
         consentLocation,
       };
-      const res = await fetch(`${process.env.API_SERVER_HOST}/api/auth/complete-signup`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/auth/complete-signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
