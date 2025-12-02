@@ -6,13 +6,13 @@ import nextIcon from "../../../../public/icons/ic_chevron_right_icon.svg";
 import calendarIcon from "../../../../public/icons/ic_calendor.svg";
 
 import Image from "next/image";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import PeopleSelector from "@/components/common/PeopleSelector";
 
 export default function New() {
   // textarea 글자수 카운터
   const [inputCount, setInputCount] = useState(0);
-  const handleInputCount = (e) => {
+  const handleInputCount = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInputCount(e.target.value.length);
   };
 
@@ -37,7 +37,7 @@ export default function New() {
           <div className="flex flex-col gap-1">
             <textarea
               placeholder="모임 소개글을 입력해주세요.(최대 300자)"
-              minLength={300}
+              maxLength={300}
               onChange={handleInputCount}
               className="mt-3 resize-none min-w-[335px] min-h-60 px-3 py-3 bg-white rounded-xl border border-[#DEE1E6] text-[12px] placeholder:text-[#767676] field-sizing-content"
             />
