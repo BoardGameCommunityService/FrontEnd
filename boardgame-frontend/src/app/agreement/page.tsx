@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { TERMS } from "../../content/terms/terms";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 export default function Agreement() {
   // 동의 체크박스
@@ -44,21 +45,33 @@ export default function Agreement() {
 
   // 회원 가입 (세션 정보 가져와서 합쳐서 서버로 요청)
   const router = useRouter();
+  const { data: session, status, update } = useSession();
   const [loading, setLoading] = useState(false);
   const handleNext = async () => {
     if (!allChecked || loading) return;
     setLoading(true);
     try {
-      // 기존 signup 단계에서 저장한 사용자 정보 불러오기 (키 이름이 프로젝트와 일치하는지 확인)
+      // 세션 로딩/인증 확인 (로딩 중엔 처리하지 않음)
+      if (status === "loading") {
+        setLoading(false);
+        return;
+      }
+      if (status !== "authenticated") {
+        setLoading(false);
+        alert("소셜 로그인이 필요합니다. 다시 시도해주세요.");
+        router.push("/login");
+        return;
+      }
+
+      // 이전 signup 페이지에서 sessionStorage에 저장한 값 가져오기
       const nickname = sessionStorage.getItem("nickname");
       const gender = sessionStorage.getItem("gender");
       const region = sessionStorage.getItem("region");
 
-      // 세션 값이 비었을 경우 처리
       if (!nickname || !gender || !region) {
         setLoading(false);
-        alert("회원가입 정보가 누락되었습니다. 다시 입력해주세요.");
-        router.push("/signup");
+        alert("추가 회원정보가 없어 소셜 로그인으로 이동합니다.");
+        router.push("/api/auth/signin");
         return;
       }
 
@@ -75,9 +88,25 @@ export default function Agreement() {
         region,
         consent,
       };
+
+      // 인증 토큰은 useSession에서 읽기 (간단 타입 사용)
+      const user = session?.user as { accessToken?: string } | undefined;
+      const token = user?.accessToken as string | undefined;
+      if (!token) {
+        setLoading(false);
+        alert("세션에 인증 토큰이 없습니다. 다시 로그인해주세요.");
+        router.push("/login");
+        return;
+      }
+
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/auth/complete-signup`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify(payload),
       });
 
@@ -89,6 +118,9 @@ export default function Agreement() {
       sessionStorage.removeItem("nickname");
       sessionStorage.removeItem("gender");
       sessionStorage.removeItem("region");
+
+      // 세션 갱신
+      await update();
 
       // 가입 완료 후 홈으로 이동
       router.push("/");
