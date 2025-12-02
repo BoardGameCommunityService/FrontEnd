@@ -63,17 +63,17 @@ export default function Agreement() {
       }
 
       // consent는 프론트에서 boolean 값만 전송 (agreedAt은 서버에서 기록)
+      const consent = {
+        service: check.service,
+        privacy: check.privacy,
+        location: check.location,
+      };
 
-      const consentService = check.service;
-      const consentPrivacy = check.privacy;
-      const consentLocation = check.location;
       const payload = {
         nickname,
         gender,
         region,
-        consentService,
-        consentPrivacy,
-        consentLocation,
+        consent,
       };
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/auth/complete-signup`, {
         method: "POST",
