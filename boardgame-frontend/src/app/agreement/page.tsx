@@ -119,8 +119,8 @@ export default function Agreement() {
       sessionStorage.removeItem("gender");
       sessionStorage.removeItem("region");
 
-      // 세션 갱신
-      await update();
+      // profileCompleted 값을 true로 session 갱신
+      await update({ profileCompleted: true });
 
       // 가입 완료 후 홈으로 이동
       router.push("/");
