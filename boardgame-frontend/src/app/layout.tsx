@@ -10,8 +10,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body>
-        <Providers>{children}</Providers>
+      <body className="flex justify-center">
+        <Providers>
+          <div className="w-[375px]">{children}</div>
+        </Providers>
       </body>
     </html>
   );

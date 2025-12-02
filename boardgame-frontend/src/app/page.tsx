@@ -13,7 +13,7 @@ import React from "react";
 export default function Home() {
   return (
     <div className="flex justify-center">
-      <div className="w-[375px] min-h-screen flex flex-col items-center bg-[#F5F6FA] relative">
+      <div className="w-full min-h-screen flex flex-col items-center bg-[#F5F6FA] relative">
         <Header />
         <main>
           <section className="w-full flex flex-col items-center">
