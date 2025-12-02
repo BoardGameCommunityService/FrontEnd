@@ -40,7 +40,7 @@ export default function GameSelect() {
         <ul className="flex flex-col gap-3 ">
           {BoardGames.map((k: { initial: string; games: Array<string> }) => (
             <li key={k.initial} className="text-[#767676] text-[13px] leading-5">
-              <p className="border-b border-[#F1F1F4]">{k.initial}</p>
+              <p className="pb-1 border-b border-[#F1F1F4]">{k.initial}</p>
               <ul className="mt-3 flex gap-2 flex-wrap">
                 {k.games.map((game) => (
                   <li key={k.initial + game} className="border border-[#DEE1E6] rounded-[34px]">
