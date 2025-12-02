@@ -14,7 +14,7 @@ function TextInput(
   ref: React.ForwardedRef<HTMLInputElement>
 ) {
   return (
-    <div className="mt-[40px] text-sm flex flex-col">
+    <div className="text-sm flex flex-col">
       <label htmlFor={name} className={isHidden ? "sr-only" : ""}>
         {label}
       </label>

@@ -45,7 +45,7 @@ export default function SignupLocationForm() {
       </Link>
 
       <div className="flex flex-col">
-        <h2 className="mt-4 font-semibold text-2xl text-[#161616]">활동 지역을 선택해주세요</h2>
+        <h2 className="mt-4 mb-[40px]  font-semibold text-2xl text-[#161616]">활동 지역을 선택해주세요</h2>
 
         <TextInput
           label="활동지역"
