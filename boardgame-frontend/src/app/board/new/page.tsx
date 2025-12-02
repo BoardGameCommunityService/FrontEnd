@@ -8,6 +8,8 @@ import calendarIcon from "../../../../public/icons/ic_calendor.svg";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import PeopleSelector from "@/components/common/PeopleSelector";
+import useBottomSheetStore from "@/stores/useBottomSheetStore";
+import GameSelect from "@/components/bottom-sheet/GameSelect";
 
 export default function New() {
   // textarea 글자수 카운터
@@ -18,6 +20,11 @@ export default function New() {
 
   //인원수
   const [people, setPeople] = useState<number | "무제한">(2);
+  const { setOpen } = useBottomSheetStore();
+
+  const handleGameSelect = () => {
+    setOpen(<GameSelect />);
+  };
 
   return (
     <div id="page-container" className="flex justify-center relative">
@@ -54,7 +61,10 @@ export default function New() {
               <span className="font-medium text-[14px] text-[#999999]">(선택)</span>
             </div>
 
-            <button className="min-w-[335px] h-10 rounded-lg border border-[#DEE1E6] p-3 flex justify-between items-center">
+            <button
+              className="min-w-[335px] h-10 rounded-lg border border-[#DEE1E6] p-3 flex justify-between items-center cursor-pointer"
+              onClick={handleGameSelect}
+            >
               <span className="font-normal text-sm text-[#767676]">원하는 게임을 지정해주세요(최대 3개)</span>
               <Image src={nextIcon} alt="" width={20} height={20} />
             </button>
