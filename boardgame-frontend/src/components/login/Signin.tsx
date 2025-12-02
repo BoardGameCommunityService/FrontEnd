@@ -14,7 +14,7 @@ export default function Signin() {
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center gap-6">
-      <section className="w-full max-w-[375px] h-[524px] flex flex-col gap-6 items-center justify-center">
+      <section className="w-full h-[524px] flex flex-col gap-6 items-center justify-center">
         {/* 말풍선 */}
         <div className="flex flex-col items-center">
           <div className="w-[118px] h-[52px] rounded-xl px-3 py-2 bg-[#161616]">
