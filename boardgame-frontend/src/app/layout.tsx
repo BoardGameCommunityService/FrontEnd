@@ -2,6 +2,7 @@ import "./globals.css";
 
 import React from "react";
 import Providers from "@/components/Providers";
+import BottomSheet from "@/components/common/BottomSheet";
 
 export default function RootLayout({
   children,
@@ -10,8 +11,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body>
-        <Providers>{children}</Providers>
+      <body className="flex justify-center">
+        <Providers>
+          <div className="w-[375px] relative">
+            <div className="w-full">
+              {children}
+              <BottomSheet />
+            </div>
+          </div>
+        </Providers>
       </body>
     </html>
   );
