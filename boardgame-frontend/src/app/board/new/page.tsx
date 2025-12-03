@@ -104,7 +104,7 @@ export default function New() {
                   >
                     <button className="flex gap-1 cursor-pointer" onClick={() => handleGameDelete(game)}>
                       {game}
-                      <Image src="/icons/ic_close.svg" alt="삭제" width={16} height={16} />
+                      <Image className="w-4 h-4" src="/icons/ic_close.svg" alt="삭제" width={16} height={16} />
                     </button>
                   </li>
                 ))}

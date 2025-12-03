@@ -6,6 +6,7 @@ import { BoardGames } from "@/content/games/games";
 import Button from "@/components/common/Button";
 import { useRef, useState } from "react";
 import useGameStore from "@/stores/post/useGameStore";
+import React from "react";
 
 export default function GameSelect() {
   const { setClose } = useBottomSheetStore();
@@ -67,13 +68,14 @@ export default function GameSelect() {
           className={`${search ? "flex flex-wrap gap-2 text-[#767676] text-[13px] leading-[18px] font-medium" : "flex flex-col gap-3"}`}
         >
           {BoardGames.map((k: { initial: string; games: Array<string> }) => (
-            <>
+            <React.Fragment key={k.initial}>
+              {/* 검색한 게임 목록 */}
               {search ? (
                 k.games
                   .filter((game: string) => game.includes(search))
                   .map((game) => (
                     <li
-                      key={k.initial + game}
+                      key={game}
                       className={`border ${selectGames.has(game) ? "border-[#161616] text-[#161616] font-semibold" : "border-[#DEE1E6]"} rounded-[34px]`}
                     >
                       <button className="py-2 px-2.5 w-full cursor-pointer" onClick={() => handleSelect(game)}>
@@ -83,6 +85,7 @@ export default function GameSelect() {
                   ))
               ) : (
                 <li key={k.initial} className="text-[#767676] text-[13px] leading-5">
+                  {/* 전체 게임 목록 */}
                   <p
                     className="pb-1 border-b border-[#F1F1F4]"
                     ref={(el: HTMLElement | null) => {
@@ -94,7 +97,7 @@ export default function GameSelect() {
                   <ul className="mt-3 flex gap-2 flex-wrap">
                     {k.games.map((game) => (
                       <li
-                        key={k.initial + game}
+                        key={game}
                         className={`border ${selectGames.has(game) ? "border-[#161616] text-[#161616] font-semibold" : "font-medium border-[#DEE1E6]"} rounded-[34px]`}
                       >
                         <button className="py-2 px-2.5 w-full cursor-pointer" onClick={() => handleSelect(game)}>
@@ -105,7 +108,7 @@ export default function GameSelect() {
                   </ul>
                 </li>
               )}
-            </>
+            </React.Fragment>
           ))}
         </ul>
       </div>
@@ -120,7 +123,7 @@ export default function GameSelect() {
             >
               <button className="flex gap-1 cursor-pointer" onClick={() => handleSelect(game)}>
                 {game}
-                <Image src="/icons/ic_close.svg" alt="삭제" width={16} height={16} />
+                <Image className="w-4 h-4" src="/icons/ic_close.svg" alt="삭제" width={16} height={16} />
               </button>
             </li>
           ))}
