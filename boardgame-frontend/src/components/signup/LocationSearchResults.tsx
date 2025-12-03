@@ -31,7 +31,7 @@ export default function LocationSearchResults({ results, onSelect, isLoading }: 
               <button
                 type="button"
                 onClick={() => onSelect(locationString)}
-                className="w-full text-left hover:text-[#06E393] transition-colors"
+                className="w-full text-left transition-colors cursor-pointer"
               >
                 {locationString}
               </button>
