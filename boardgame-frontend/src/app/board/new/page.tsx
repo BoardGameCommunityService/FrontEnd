@@ -6,7 +6,7 @@ import nextIcon from "../../../../public/icons/ic_chevron_right_icon.svg";
 import calendarIcon from "../../../../public/icons/ic_calendor.svg";
 
 import Image from "next/image";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import PeopleSelector from "@/components/common/PeopleSelector";
 import useBottomSheetStore from "@/stores/useBottomSheetStore";
 import GameSelect from "@/components/bottom-sheet/GameSelect";
@@ -15,15 +15,14 @@ import useDateStore from "@/stores/post/useDateStore";
 import useGameStore from "@/stores/post/useGameStore";
 
 export default function New() {
-  const { setOpen } = useBottomSheetStore();
-  const { selectedDate } = useDateStore();
-  const { games, setGames } = useGameStore();
-
   // textarea 글자수 카운터
   const [inputCount, setInputCount] = useState(0);
   //인원수
   const [people, setPeople] = useState<number | "무제한">(2);
-  const [selectGames, setSelectGames] = useState(games);
+
+  const { setOpen } = useBottomSheetStore();
+  const { selectedDate } = useDateStore();
+  const { games, setGames } = useGameStore();
 
   const handleInputCount = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInputCount(e.target.value.length);
@@ -38,17 +37,8 @@ export default function New() {
   };
 
   const handleGameDelete = (game: string) => {
-    setSelectGames((prev) => {
-      const gameSet = new Set(prev);
-      gameSet.delete(game);
-      setGames([...gameSet]);
-      return [...gameSet];
-    });
+    setGames(games.filter((g) => g !== game));
   };
-
-  useEffect(() => {
-    setSelectGames(games);
-  }, [games]);
 
   return (
     <div id="page-container" className="flex justify-center relative">
@@ -85,7 +75,7 @@ export default function New() {
                 <h3 className="font-medium text-[14px] leading-[22px] text-[#363636]">게임</h3>
                 <span className="font-normal text-[12px] text-[#999999]">(선택)</span>
               </div>
-              {selectGames.length > 0 && (
+              {games.length > 0 && (
                 <button
                   className="text-[13px] text-[#767676] leading-5 underline underline-offset-[2px] font-normal cursor-pointer"
                   onClick={handleGameSelect}
@@ -95,9 +85,9 @@ export default function New() {
               )}
             </div>
 
-            {selectGames.length ? (
+            {games.length ? (
               <ul className="flex flex-wrap gap-2">
-                {selectGames.map((game: string) => (
+                {games.map((game: string) => (
                   <li
                     key={game}
                     className="text-[13px] text-[#161616] font-semibold border border-[#161616] rounded-[34px] leading-[18px] px-2.5 py-2"
