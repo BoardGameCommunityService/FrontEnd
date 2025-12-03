@@ -13,7 +13,7 @@ export default function RootLayout({
     <html lang="ko">
       <body className="flex justify-center">
         <Providers>
-          <div className="w-[375px] relative">
+          <div className="w-[375px] min-h-dvh relative overflow-hidden">
             <div className="w-full">
               {children}
               <BottomSheet />
