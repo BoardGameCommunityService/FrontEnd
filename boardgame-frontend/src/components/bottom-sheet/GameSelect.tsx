@@ -9,6 +9,7 @@ import useGameStore from "@/stores/post/useGameStore";
 
 export default function GameSelect() {
   const [selectGames, setSelectGames] = useState<Array<string>>([]);
+  const [search, setSearch] = useState("");
   const indexRefs = useRef<Map<string, HTMLElement>>(new Map());
 
   const { setClose } = useBottomSheetStore();
@@ -56,6 +57,8 @@ export default function GameSelect() {
             type="text"
             id="search"
             placeholder="게임을 검색해주세요."
+            onChange={(e) => setSearch(e.target.value)}
+            value={search}
           />
         </div>
         <button className="cursor-pointer" aria-label="닫기" onClick={setClose}>
@@ -65,30 +68,49 @@ export default function GameSelect() {
 
       {/* 중간 스크롤: 게임 리스트 */}
       <div className="flex-1 overflow-y-auto scrollbar-hide">
-        <ul className="flex flex-col gap-3 ">
+        <ul
+          className={`${search ? "flex flex-wrap gap-2 text-[#767676] text-[13px] leading-[18px] font-medium" : "flex flex-col gap-3"}`}
+        >
           {BoardGames.map((k: { initial: string; games: Array<string> }) => (
-            <li key={k.initial} className="text-[#767676] text-[13px] leading-5">
-              <p
-                className="pb-1 border-b border-[#F1F1F4]"
-                ref={(el: HTMLElement | null) => {
-                  if (el) indexRefs.current.set(k.initial, el);
-                }}
-              >
-                {k.initial}
-              </p>
-              <ul className="mt-3 flex gap-2 flex-wrap">
-                {k.games.map((game) => (
-                  <li
-                    key={k.initial + game}
-                    className={`border ${selectGames.filter((v) => v === game).length ? "border-[#161616] text-[#161616] font-semibold" : "border-[#DEE1E6]"} rounded-[34px]`}
+            <>
+              {search ? (
+                k.games
+                  .filter((game: string) => game.includes(search))
+                  .map((game) => (
+                    <li
+                      key={k.initial + game}
+                      className={`border ${selectGames.filter((v) => v === game).length ? "border-[#161616] text-[#161616] font-semibold" : "border-[#DEE1E6]"} rounded-[34px]`}
+                    >
+                      <button className="py-2 px-2.5 w-full cursor-pointer" onClick={() => handleSelect(game)}>
+                        {game}
+                      </button>
+                    </li>
+                  ))
+              ) : (
+                <li key={k.initial} className="text-[#767676] text-[13px] leading-5">
+                  <p
+                    className="pb-1 border-b border-[#F1F1F4]"
+                    ref={(el: HTMLElement | null) => {
+                      if (el) indexRefs.current.set(k.initial, el);
+                    }}
                   >
-                    <button className="py-2 px-2.5 w-full cursor-pointer" onClick={() => handleSelect(game)}>
-                      {game}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </li>
+                    {k.initial}
+                  </p>
+                  <ul className="mt-3 flex gap-2 flex-wrap">
+                    {k.games.map((game) => (
+                      <li
+                        key={k.initial + game}
+                        className={`border ${selectGames.filter((v) => v === game).length ? "border-[#161616] text-[#161616] font-semibold" : "font-medium border-[#DEE1E6]"} rounded-[34px]`}
+                      >
+                        <button className="py-2 px-2.5 w-full cursor-pointer" onClick={() => handleSelect(game)}>
+                          {game}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              )}
+            </>
           ))}
         </ul>
       </div>
@@ -119,18 +141,20 @@ export default function GameSelect() {
         />
       </div>
 
-      <ul className="flex flex-col justify-between items-center fixed right-2 top-[76px] bg-[#F5F6FA] p-1 w-5 max-h-[465px] h-full rounded-[1000000000px]">
-        {BoardGames.map((k) => (
-          <li key={k.initial} className="text-[13px] leading-5 text-[#767676] rounde">
-            <button
-              className="cursor-pointer"
-              onClick={() => indexRefs.current.get(k.initial)?.scrollIntoView({ behavior: "smooth", block: "start" })}
-            >
-              {k.initial}
-            </button>
-          </li>
-        ))}
-      </ul>
+      {!search && (
+        <ul className="flex flex-col justify-between items-center fixed right-2 top-[76px] bg-[#F5F6FA] p-1 w-5 max-h-[465px] h-full rounded-[1000000000px]">
+          {BoardGames.map((k) => (
+            <li key={k.initial} className="text-[13px] leading-5 text-[#767676] rounde">
+              <button
+                className="cursor-pointer"
+                onClick={() => indexRefs.current.get(k.initial)?.scrollIntoView({ behavior: "smooth", block: "start" })}
+              >
+                {k.initial}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
