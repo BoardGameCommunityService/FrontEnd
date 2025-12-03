@@ -4,11 +4,13 @@ import Image from "next/image";
 import useBottomSheetStore from "@/stores/useBottomSheetStore";
 import { BoardGames } from "@/content/games/games";
 import Button from "@/components/common/Button";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useGameStore from "@/stores/post/useGameStore";
 
 export default function GameSelect() {
   const [selectGames, setSelectGames] = useState<Array<string>>([]);
+  const indexRefs = useRef<Map<string, HTMLElement>>(new Map());
+
   const { setClose } = useBottomSheetStore();
   const { setGames, games } = useGameStore();
 
@@ -66,7 +68,14 @@ export default function GameSelect() {
         <ul className="flex flex-col gap-3 ">
           {BoardGames.map((k: { initial: string; games: Array<string> }) => (
             <li key={k.initial} className="text-[#767676] text-[13px] leading-5">
-              <p className="pb-1 border-b border-[#F1F1F4]">{k.initial}</p>
+              <p
+                className="pb-1 border-b border-[#F1F1F4]"
+                ref={(el: HTMLElement | null) => {
+                  if (el) indexRefs.current.set(k.initial, el);
+                }}
+              >
+                {k.initial}
+              </p>
               <ul className="mt-3 flex gap-2 flex-wrap">
                 {k.games.map((game) => (
                   <li
@@ -113,7 +122,12 @@ export default function GameSelect() {
       <ul className="flex flex-col justify-between items-center fixed right-2 top-[76px] bg-[#F5F6FA] p-1 w-5 max-h-[465px] h-full rounded-[1000000000px]">
         {BoardGames.map((k) => (
           <li key={k.initial} className="text-[13px] leading-5 text-[#767676] rounde">
-            <button className="cursor-pointer">{k.initial}</button>
+            <button
+              className="cursor-pointer"
+              onClick={() => indexRefs.current.get(k.initial)?.scrollIntoView({ behavior: "smooth", block: "start" })}
+            >
+              {k.initial}
+            </button>
           </li>
         ))}
       </ul>
