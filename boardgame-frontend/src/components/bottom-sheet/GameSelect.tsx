@@ -136,10 +136,11 @@ export default function GameSelect() {
         />
       </div>
 
+      {/* 인덱스 */}
       {!search && (
         <ul className="flex flex-col justify-between items-center fixed right-2 top-[76px] bg-[#F5F6FA] p-1 w-5 max-h-[465px] h-full rounded-[1000000000px]">
           {BoardGames.map((k) => (
-            <li key={k.initial} className="text-[13px] leading-5 text-[#767676] rounde">
+            <li key={k.initial} className="text-[13px] leading-5 text-[#767676]">
               <button
                 className="cursor-pointer"
                 onClick={() => indexRefs.current.get(k.initial)?.scrollIntoView({ behavior: "smooth", block: "start" })}
