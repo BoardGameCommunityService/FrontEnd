@@ -14,14 +14,14 @@ function TextInput(
   ref: React.ForwardedRef<HTMLInputElement>
 ) {
   return (
-    <div className="mt-[40px] text-sm flex flex-col">
+    <div className="text-sm flex flex-col">
       <label htmlFor={name} className={isHidden ? "sr-only" : ""}>
         {label}
       </label>
       <input
         name={name}
         id={name}
-        className="my-[12px] p-3 border rounded-xl border-[#161616] outline-none"
+        className="my-[12px] p-3 border rounded-xl border-[#E9E9ED] outline-none focus:border-[#161616] [&:not(:placeholder-shown)]:border-[#161616]"
         placeholder={placeholder}
         type="text"
         maxLength={10}
