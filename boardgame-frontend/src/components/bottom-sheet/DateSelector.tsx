@@ -7,7 +7,7 @@ import { useState } from "react";
 
 import Image from "next/image";
 import useBottomSheetStore from "@/stores/useBottomSheetStore";
-import useDateStore from "@/stores/useDateStore";
+import useDateStore from "@/stores/post/useDateStore";
 
 export default function DateSelector() {
   const { setClose } = useBottomSheetStore();
