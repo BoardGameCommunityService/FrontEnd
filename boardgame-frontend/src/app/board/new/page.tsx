@@ -10,6 +10,8 @@ import { ChangeEvent, useState } from "react";
 import PeopleSelector from "@/components/common/PeopleSelector";
 import useBottomSheetStore from "@/stores/useBottomSheetStore";
 import GameSelect from "@/components/bottom-sheet/GameSelect";
+import DateSelector from "@/components/bottom-sheet/DateSelector";
+import useDateStore from "@/stores/useDateStore";
 
 export default function New() {
   // textarea 글자수 카운터
@@ -21,9 +23,14 @@ export default function New() {
   //인원수
   const [people, setPeople] = useState<number | "무제한">(2);
   const { setOpen } = useBottomSheetStore();
+  const { selectedDate } = useDateStore();
 
   const handleGameSelect = () => {
-    setOpen(<GameSelect />);
+    setOpen(<GameSelect />, "fixed");
+  };
+
+  const handleDateSelect = () => {
+    setOpen(<DateSelector />, "auto");
   };
 
   return (
@@ -63,6 +70,7 @@ export default function New() {
 
             <button
               className="min-w-[335px] h-10 rounded-lg border border-[#DEE1E6] p-3 flex justify-between items-center cursor-pointer"
+              type="button"
               onClick={handleGameSelect}
             >
               <span className="font-normal text-sm text-[#767676]">원하는 게임을 지정해주세요(최대 3개)</span>
@@ -84,10 +92,16 @@ export default function New() {
           <div className="mt-8 flex flex-col gap-2">
             <h3 className="font-medium text-[14px] text-[#363636]">날짜</h3>
 
-            <div className="min-w-[335px] h-10 rounded-lg border border-[#DEE1E6] p-3 flex justify-between items-center">
-              <span className="font-normal text-sm text-[#767676]">25.11.27</span>
+            <button
+              className="min-w-[335px] h-10 rounded-lg border border-[#DEE1E6] p-3 flex justify-between items-center"
+              type="button"
+              onClick={handleDateSelect}
+            >
+              <span className="font-normal text-sm text-[#767676]">
+                {selectedDate ? selectedDate.toLocaleDateString() : "날짜를 선택해주세요."}
+              </span>
               <Image src={calendarIcon} alt="" width={20} height={20} />
-            </div>
+            </button>
           </div>
 
           {/* 인원 지정 */}
