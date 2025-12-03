@@ -130,8 +130,9 @@ export default function GameSelect() {
           type="button"
           text="선택 완료"
           btnSize="medium"
-          bgColor={`${selectGames.size ? "bg-[#06E393]" : "bg-[#EEF0F7]"}`}
-          textColor={`${selectGames.size ? "text-[#161616]" : "text-[#767676]"}`}
+          bgColor={selectGames.size ? "bg-[#06E393]" : "bg-[#EEF0F7]"}
+          textColor={selectGames.size ? "text-[#161616]" : "text-[#767676]"}
+          disabled={!selectGames.size}
           onClick={handleSelectGames}
         />
       </div>
