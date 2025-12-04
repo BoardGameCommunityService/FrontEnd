@@ -69,7 +69,6 @@ export default function Page() {
             </div>
             <div>
               {/* 카카오 맵 */}
-              {/*<Image className="rounded-b-xl" src="/temp_map.png" alt="" width={335} height={160} />*/}
               <Script
                 src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_JAVASCRIPT_KEY}&libraries=services&autoload=false`}
                 strategy="beforeInteractive"
