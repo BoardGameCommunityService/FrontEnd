@@ -64,7 +64,7 @@ export default function Page() {
             </div>
           </div>
         </section>
-        <div className="h-2.5 bg-[#F5F6FA] mt-5"></div>
+        <div className="h-2.5 bg-[#F5F6FA] mt-5" role="separator" aria-hidden="true"></div>
         <section className="px-5 mt-5 pb-3">
           <h2 className="text-sm leading-[22px] font-semibold text-[#363636]">멤버</h2>
           <ul className="mt-4 flex flex-col gap-5">
