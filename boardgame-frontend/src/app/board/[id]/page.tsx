@@ -50,7 +50,7 @@ export default function Page() {
         </section>
         <section className="px-5 mt-6">
           <h2 className="text-sm text-[#363636] font-semibold leading-[22px]">날짜</h2>
-          <div className="flex gap-2 mt-2 border border-[#DEE1E6] rounded-lg py-[9px]">
+          <div className="flex items-center gap-2 mt-2 border border-[#DEE1E6] rounded-lg py-[9px]">
             <Image className="ml-3 w-4 h-4" src="/icons/ic_calendar.svg" alt="" width={16} height={16} />
             <time className="text-sm leading-[22px] font-semibold" dateTime={dateTime}>
               {displayDateTime}
