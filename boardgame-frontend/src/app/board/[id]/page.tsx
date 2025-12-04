@@ -21,10 +21,10 @@ export default function Page() {
   return (
     <div>
       <header className="px-5 flex justify-between items-center h-12">
-        <Link href="/">
+        <Link href="/" className="cursor-pointer">
           <Image src="/icons/ic_back.svg" alt="뒤로가기 버튼" width={24} height={24} />
         </Link>
-        <button>
+        <button className="cursor-pointer">
           <Image src="/icons/ic_share.svg" alt="공유하기 버튼" width={24} height={24} />
         </button>
       </header>
@@ -85,7 +85,7 @@ export default function Page() {
         </section>
       </main>
       <div className="px-5 mt-4">
-        <button className="w-full bg-[#06E393] text-sm leading-[22px] text-[#161616] font-semibold py-[11px] rounded-[10px]">
+        <button className="w-full bg-[#06E393] text-sm leading-[22px] text-[#161616] font-semibold py-[11px] rounded-[10px] cursor-pointer">
           참가 신청
         </button>
       </div>
