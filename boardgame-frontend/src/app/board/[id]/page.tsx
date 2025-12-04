@@ -11,15 +11,15 @@ export default function Page() {
   const date = "25.11.27 오후 2:00";
 
   return (
-    <div className="px-5">
-      <header className="flex justify-between items-center h-12">
+    <div>
+      <header className="px-5 flex justify-between items-center h-12">
         <Link href="/">
           <Image src="/icons/ic_back.svg" alt="뒤로가기 버튼" width={24} height={24} />
         </Link>
         <Image src="/icons/ic_share.svg" alt="공유하기 버튼" width={24} height={24} />
       </header>
       <main>
-        <section className="mt-2.5">
+        <section className="px-5 mt-2.5">
           <h1 className="text-[20px] leading-7 font-bold">{title}</h1>
           <ul className="flex gap-1 text-[13px] text-[#767676] font-medium leading-5 mt-3">
             {options.map((v) => (
@@ -30,14 +30,14 @@ export default function Page() {
           </ul>
           <p className="whitespace-pre-line mt-4 bg-[#F5F6FA] rounded-[12px] p-3 text-sm leading-[22px]">{content}</p>
         </section>
-        <section className="mt-6">
+        <section className="px-5 mt-6">
           <h2 className="text-sm text-[#363636] font-semibold leading-[22px]">날짜</h2>
           <div className="flex gap-2 mt-2 border border-[#DEE1E6] rounded-lg py-[9px]">
             <Image className="ml-3" src="/icons/ic_calendar.svg" alt="" width={16} height={16} />
             <span className="text-sm leading-[22px] font-semibold">{date}</span>
           </div>
         </section>
-        <section className="mt-6">
+        <section className="px-5 mt-6">
           <h2 className="text-sm text-[#363636] font-semibold leading-[22px]">장소</h2>
           <div className="mt-2 border border-[#DEE1E6] rounded-xl">
             <div className="flex gap-[5px] px-3 py-[9px]">
@@ -52,8 +52,40 @@ export default function Page() {
             </div>
           </div>
         </section>
+        <div className="h-2.5 bg-[#F5F6FA] mt-5"></div>
+        <section className="px-5 mt-5">
+          <h2 className="text-sm leading-[22px] font-semibold text-[#363636]">멤버</h2>
+          <ul className="mt-4 flex flex-col gap-5">
+            <li className="flex items-center gap-3">
+              <Image src="/temp_profile.svg" alt="" width={32} height={32} />
+              <div>
+                <span className="text-base text-[#121212] leading-[26px] font-medium">즐겜러</span>
+                <span className="ml-2 text-[13px] text-[#10C584] font-medium leading-5 bg-[#D1FAEB] rounded-md px-1 py-0.5 inline-block">
+                  호스트
+                </span>
+              </div>
+            </li>
+            <li className="flex items-center gap-3">
+              <Image src="/temp_profile.svg" alt="" width={32} height={32} />
+              <div>
+                <span className="text-base text-[#121212] leading-[26px] font-medium">주사위빌런</span>
+              </div>
+            </li>
+            <li className="flex items-center gap-3">
+              <Image src="/temp_profile.svg" alt="" width={32} height={32} />
+              <div>
+                <span className="text-base text-[#121212] leading-[26px] font-medium">보드겜린이</span>
+              </div>
+            </li>
+            <li className="flex items-center gap-3">
+              <Image src="/temp_profile.svg" alt="" width={32} height={32} />
+              <div>
+                <span className="text-base text-[#121212] leading-[26px] font-medium">한판만</span>
+              </div>
+            </li>
+          </ul>
+        </section>
       </main>
-      <footer></footer>
     </div>
   );
 }
