@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import dateFormatter from "@/util/dateFormatter";
 
 export default function Page() {
   // dummy data
@@ -9,7 +10,9 @@ export default function Page() {
                   루미큐브, 다빈치코드 외에도 다양하게 게임할 예정입니다.
                   성별은 무관
                   노쇼 X, 지각 X`;
-  const date = "25.11.27 오후 2:00";
+  const dateTime = "2025-11-27T14:00:00";
+  const { year, month, day, hours, minutes } = dateFormatter(dateTime);
+  const displayDateTime = `${year}.${month}.${day} ${Number(hours) >= 12 ? "오후" : "오전"} ${Number(hours) > 12 ? Number(hours) - 12 : hours}:${minutes}`;
   const members = [
     { profile: "/temp_profile.svg", nickname: "즐겜러", isHost: true },
     { profile: "/temp_profile.svg", nickname: "주사위빌런", isHost: false },
@@ -46,7 +49,9 @@ export default function Page() {
           <h2 className="text-sm text-[#363636] font-semibold leading-[22px]">날짜</h2>
           <div className="flex gap-2 mt-2 border border-[#DEE1E6] rounded-lg py-[9px]">
             <Image className="ml-3" src="/icons/ic_calendar.svg" alt="" width={16} height={16} />
-            <span className="text-sm leading-[22px] font-semibold">{date}</span>
+            <time className="text-sm leading-[22px] font-semibold" dateTime={dateTime}>
+              {displayDateTime}
+            </time>
           </div>
         </section>
         <section className="px-5 mt-6">
