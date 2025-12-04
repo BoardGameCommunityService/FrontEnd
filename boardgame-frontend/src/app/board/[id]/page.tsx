@@ -1,6 +1,8 @@
+import Script from "next/script";
 import Image from "next/image";
 import Link from "next/link";
 import dateFormatter from "@/util/dateFormatter";
+import KakaoMap from "@/components/board/KakaoMap";
 
 export default function Page() {
   // dummy data
@@ -19,10 +21,11 @@ export default function Page() {
     { profile: "/temp_profile.svg", nickname: "보드겜린이", isHost: false },
     { profile: "/temp_profile.svg", nickname: "한판만", isHost: false },
   ];
+  const address = "경기 성남시 분당구 서현로210번길 16 유성트윈프라자1차 4층 404, 405호";
   // dummy data end
 
   return (
-    <div>
+    <>
       <header className="px-5 flex justify-between items-center h-12">
         <Link href="/" className="cursor-pointer">
           <Image src="/icons/ic_back.svg" alt="뒤로가기 버튼" width={24} height={24} />
@@ -65,7 +68,13 @@ export default function Page() {
               </div>
             </div>
             <div>
-              <Image className="rounded-b-xl" src="/temp_map.png" alt="" width={335} height={160} />
+              {/* 카카오 맵 */}
+              {/*<Image className="rounded-b-xl" src="/temp_map.png" alt="" width={335} height={160} />*/}
+              <Script
+                src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_JAVASCRIPT_KEY}&libraries=services&autoload=false`}
+                strategy="beforeInteractive"
+              />
+              <KakaoMap address={address} />
             </div>
           </address>
         </section>
@@ -95,6 +104,6 @@ export default function Page() {
           참가 신청
         </button>
       </div>
-    </div>
+    </>
   );
 }
