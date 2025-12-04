@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function Page() {
+  // dummy data
   const title = "퇴근 후 루미큐브, 다빈치코드 초보 고수 모두 환영";
   const options = ["4/6", "루미큐브", "다빈치코드"];
   const content = `퇴근 후 강남역 ㅇㅇ보드게임 카페에서 루미큐브, 다빈치 코드 할 사람 모두 모여!
@@ -9,6 +10,13 @@ export default function Page() {
                   성별은 무관
                   노쇼 X, 지각 X`;
   const date = "25.11.27 오후 2:00";
+  const members = [
+    { profile: "/temp_profile.svg", nickname: "즐겜러", isHost: true },
+    { profile: "/temp_profile.svg", nickname: "주사위빌런", isHost: false },
+    { profile: "/temp_profile.svg", nickname: "보드겜린이", isHost: false },
+    { profile: "/temp_profile.svg", nickname: "한판만", isHost: false },
+  ];
+  // dummy data end
 
   return (
     <div>
@@ -58,33 +66,19 @@ export default function Page() {
         <section className="px-5 mt-5 pb-3">
           <h2 className="text-sm leading-[22px] font-semibold text-[#363636]">멤버</h2>
           <ul className="mt-4 flex flex-col gap-5">
-            <li className="flex items-center gap-3">
-              <Image src="/temp_profile.svg" alt="" width={32} height={32} />
-              <div>
-                <span className="text-base text-[#121212] leading-[26px] font-medium">즐겜러</span>
-                <span className="ml-2 text-[13px] text-[#10C584] font-medium leading-5 bg-[#D1FAEB] rounded-md px-1 py-0.5 inline-block">
-                  호스트
-                </span>
-              </div>
-            </li>
-            <li className="flex items-center gap-3">
-              <Image src="/temp_profile.svg" alt="" width={32} height={32} />
-              <div>
-                <span className="text-base text-[#121212] leading-[26px] font-medium">주사위빌런</span>
-              </div>
-            </li>
-            <li className="flex items-center gap-3">
-              <Image src="/temp_profile.svg" alt="" width={32} height={32} />
-              <div>
-                <span className="text-base text-[#121212] leading-[26px] font-medium">보드겜린이</span>
-              </div>
-            </li>
-            <li className="flex items-center gap-3">
-              <Image src="/temp_profile.svg" alt="" width={32} height={32} />
-              <div>
-                <span className="text-base text-[#121212] leading-[26px] font-medium">한판만</span>
-              </div>
-            </li>
+            {members.map((m, index) => (
+              <li key={index} className="flex items-center gap-3">
+                <Image src={m.profile} alt={`${m.nickname} 프로필 이미지`} width={32} height={32} />
+                <div>
+                  <span className="text-base text-[#121212] leading-[26px] font-medium">{m.nickname}</span>
+                  {m.isHost && (
+                    <span className="ml-2 text-[13px] text-[#10C584] font-medium leading-5 bg-[#D1FAEB] rounded-md px-1 py-0.5 inline-block">
+                      호스트
+                    </span>
+                  )}
+                </div>
+              </li>
+            ))}
           </ul>
         </section>
       </main>
