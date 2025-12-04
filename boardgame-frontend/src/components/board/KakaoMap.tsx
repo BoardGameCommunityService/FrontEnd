@@ -31,25 +31,23 @@ export default function KakaoMap({ address }: { address: string }) {
         // 정상적으로 검색이 완료됐으면
         if (status === window.kakao.maps.services.Status.OK) {
           const coords = new window.kakao.maps.LatLng(result[0].y, result[0].x);
+          const imageSrc = "/icons/ic_marker.svg"; // 마커이미지의 주소입니다
+          const imageSize = new window.kakao.maps.Size(32, 32);
+          const markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize);
 
           // 결과값으로 받은 위치를 마커로 표시합니다
-          const marker = new window.kakao.maps.Marker({
+          new window.kakao.maps.Marker({
+            image: markerImage,
             map: map,
             position: coords,
           });
-
-          // 인포윈도우로 장소에 대한 설명을 표시합니다
-          // const infowindow = new window.kakao.maps.InfoWindow({
-          //   content: '<div style="width:150px;text-align:center;padding:6px 0;">모임장소</div>',
-          // });
-          // infowindow.open(map, marker);
 
           // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
           map.setCenter(coords);
         }
       });
     });
-  }, []);
+  }, [address]);
 
   return (
     <>
