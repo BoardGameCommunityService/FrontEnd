@@ -51,7 +51,7 @@ export default function Page() {
         </section>
         <section className="px-5 mt-6">
           <h2 className="text-sm text-[#363636] font-semibold leading-[22px]">장소</h2>
-          <div className="mt-2 border border-[#DEE1E6] rounded-xl">
+          <address className="mt-2 border border-[#DEE1E6] rounded-xl not-italic">
             <div className="flex gap-[5px] px-3 py-[9px]">
               <Image className="self-start" src="/icons/ic_black_marker.svg" alt="" width={16} height={16} />
               <div className="flex flex-col">
@@ -62,7 +62,7 @@ export default function Page() {
             <div>
               <Image className="rounded-b-xl" src="/temp_map.png" alt="" width={335} height={160} />
             </div>
-          </div>
+          </address>
         </section>
         <div className="h-2.5 bg-[#F5F6FA] mt-5" role="separator" aria-hidden="true"></div>
         <section className="px-5 mt-5 pb-3">
