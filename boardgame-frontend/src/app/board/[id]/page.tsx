@@ -21,6 +21,7 @@ export default function Page() {
     { profile: "/temp_profile.svg", nickname: "보드겜린이", isHost: false },
     { profile: "/temp_profile.svg", nickname: "한판만", isHost: false },
   ];
+  const placeName = "OO보드게임카페 강남역점";
   const address = "경기 성남시 분당구 서현로210번길 16 유성트윈프라자1차 4층 404, 405호";
   // dummy data end
 
@@ -61,10 +62,10 @@ export default function Page() {
           <h2 className="text-sm text-[#363636] font-semibold leading-[22px]">장소</h2>
           <address className="mt-2 border border-[#DEE1E6] rounded-xl not-italic">
             <div className="flex gap-[5px] px-3 py-[9px]">
-              <Image className="self-start" src="/icons/ic_black_marker.svg" alt="" width={16} height={16} />
+              <Image className="self-start mt-[3px]" src="/icons/ic_black_marker.svg" alt="" width={16} height={16} />
               <div className="flex flex-col">
-                <h3 className="text-sm text-[#161616] font-semibold leading-[22px]">OO보드게임카페 강남역점</h3>
-                <span className="text-xs text-[#767676] leading-[18px]">서울시 강남구 OO동 123-12</span>
+                <h3 className="text-sm text-[#161616] font-semibold leading-[22px]">{placeName}</h3>
+                <span className="text-xs text-[#767676] leading-[18px]">{address}</span>
               </div>
             </div>
             <div>
