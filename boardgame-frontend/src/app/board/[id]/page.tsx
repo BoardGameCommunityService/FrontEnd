@@ -31,7 +31,7 @@ export default function Page() {
           <Image src="/icons/ic_share.svg" alt="공유하기 버튼" width={24} height={24} />
         </button>
       </header>
-      <main>
+      <main className="pb-[60px]">
         <section className="px-5 mt-2.5">
           <h1 className="text-[20px] leading-7 font-bold">{title}</h1>
           <ul className="flex gap-1 text-[13px] text-[#767676] font-medium leading-5 mt-3">
@@ -89,7 +89,8 @@ export default function Page() {
           </ul>
         </section>
       </main>
-      <div className="px-5 mt-4">
+
+      <div className="mb-1.5 fixed bottom-0 right-0 left-1/2 -translate-x-1/2 w-full max-w-[335px]">
         <button className="w-full bg-[#06E393] text-sm leading-[22px] text-[#161616] font-semibold py-[11px] rounded-[10px] cursor-pointer">
           참가 신청
         </button>
