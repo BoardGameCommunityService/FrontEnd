@@ -53,7 +53,7 @@ export default function Page() {
           </div>
         </section>
         <div className="h-2.5 bg-[#F5F6FA] mt-5"></div>
-        <section className="px-5 mt-5">
+        <section className="px-5 mt-5 pb-3">
           <h2 className="text-sm leading-[22px] font-semibold text-[#363636]">멤버</h2>
           <ul className="mt-4 flex flex-col gap-5">
             <li className="flex items-center gap-3">
@@ -86,6 +86,11 @@ export default function Page() {
           </ul>
         </section>
       </main>
+      <div className="px-5 mt-4">
+        <button className="w-full bg-[#06E393] text-sm leading-[22px] text-[#161616] font-semibold py-[11px] rounded-[10px]">
+          참가 신청
+        </button>
+      </div>
     </div>
   );
 }
