@@ -28,7 +28,9 @@ export default function Page() {
               </li>
             ))}
           </ul>
-          <p className="whitespace-pre-line mt-4 bg-[#F5F6FA] rounded-[12px] p-3 text-sm leading-[22px]">{content}</p>
+          <p className="whitespace-pre-line mt-4 bg-[#F5F6FA] rounded-[12px] p-3 text-sm text-[#161616] leading-[22px]">
+            {content}
+          </p>
         </section>
         <section className="px-5 mt-6">
           <h2 className="text-sm text-[#363636] font-semibold leading-[22px]">날짜</h2>
