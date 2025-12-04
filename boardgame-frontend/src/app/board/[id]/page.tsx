@@ -24,7 +24,9 @@ export default function Page() {
         <Link href="/">
           <Image src="/icons/ic_back.svg" alt="뒤로가기 버튼" width={24} height={24} />
         </Link>
-        <Image src="/icons/ic_share.svg" alt="공유하기 버튼" width={24} height={24} />
+        <button>
+          <Image src="/icons/ic_share.svg" alt="공유하기 버튼" width={24} height={24} />
+        </button>
       </header>
       <main>
         <section className="px-5 mt-2.5">
