@@ -2,18 +2,13 @@
 
 import Button from "@/components/common/Button";
 import TextInput from "@/components/common/TextInput";
-import GenderRadio from "@/components/signup/GenderRadio";
+import GenderRadio from "@/components/common/GenderRadio";
 import { getSessionValue } from "@/util/getSession";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-
-interface SearchFormValueType {
-  nickname?: string;
-  gender?: string;
-  location?: string;
-}
+import { FormValueType } from "@/types/SignupFormType";
 
 export default function SignupForm() {
   const [location, setLocation] = useState("");
@@ -24,7 +19,7 @@ export default function SignupForm() {
     handleSubmit,
     formState: { errors, isValid },
     getValues,
-  } = useForm<SearchFormValueType>({
+  } = useForm<FormValueType>({
     defaultValues: {
       nickname: getSessionValue("nickname") || "",
       gender: getSessionValue("gender") || "",
@@ -96,7 +91,7 @@ export default function SignupForm() {
 
         <fieldset className="w-full mt-8">
           <legend className="text-sm font-medium text-[#363636]">성별</legend>
-          <div className="flex gap-2 mt-3 ">
+          <div className="flex gap-2 mt-3">
             <GenderRadio
               id="man"
               label="남성"
