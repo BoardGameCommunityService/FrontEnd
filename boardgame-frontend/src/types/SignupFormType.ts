@@ -1,5 +1,5 @@
 export interface FormValueType {
   nickname?: string;
-  gender?: string;
+  gender?: "male" | "female";
   location?: string;
 }
