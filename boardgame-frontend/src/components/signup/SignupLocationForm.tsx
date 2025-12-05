@@ -27,7 +27,7 @@ export default function SignupLocationForm() {
   const handleLocationSelect = (location: string) => {
     // sessionStorage에 location 저장
     sessionStorage.setItem("region", location);
-    router.push("/signup");
+    router.back();
   };
 
   const handleCurrentLocationClick = async () => {
@@ -41,9 +41,9 @@ export default function SignupLocationForm() {
   return (
     <>
       <header>
-        <Link href="/signup">
+        <button onClick={() => router.back()}>
           <Image src="/icons/ic_back.svg" alt="뒤로가기 버튼" width={24} height={24} />
-        </Link>
+        </button>
       </header>
 
       <main>
