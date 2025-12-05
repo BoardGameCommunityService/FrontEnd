@@ -8,6 +8,7 @@ export default function Page() {
   return (
     <>
       <NavigationBar
+        href="/"
         title="마이페이지"
         elements={
           <button className="cursor-pointer relative">
