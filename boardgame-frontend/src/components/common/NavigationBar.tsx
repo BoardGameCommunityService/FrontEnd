@@ -7,7 +7,7 @@ export default function NavigationBar({ title, elements }: { title: string; elem
     <header className="px-5 flex justify-between items-center h-12">
       <div className="flex items-center gap-0.5">
         <Link href="/public" className="cursor-pointer">
-          <Image src="/icons/ic_back.svg" alt="뒤로가기 버튼" width={24} height={24} />
+          <Image src="/icons/ic_back.svg" alt="뒤로가기" width={24} height={24} />
         </Link>
         <h1 className="text-[#161616] font-bold text-[20px] leading-7">{title}</h1>
       </div>
