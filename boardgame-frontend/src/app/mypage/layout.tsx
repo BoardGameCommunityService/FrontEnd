@@ -5,5 +5,5 @@ export default function Layout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <div className="bg-[#F5F6FA] pb-[234px]">{children}</div>;
+  return <div className="bg-[#F5F6FA] min-h-screen">{children}</div>;
 }
