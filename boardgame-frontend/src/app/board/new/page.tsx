@@ -10,9 +10,10 @@ import { ChangeEvent, useState } from "react";
 import PeopleSelector from "@/components/common/PeopleSelector";
 import useBottomSheetStore from "@/stores/useBottomSheetStore";
 import GameSelect from "@/components/bottom-sheet/GameSelect";
-import DateSelector from "@/components/bottom-sheet/DateSelector";
+import DateTimeSelector from "@/components/bottom-sheet/TimeSelect";
 import useDateStore from "@/stores/post/useDateStore";
 import useGameStore from "@/stores/post/useGameStore";
+import { formatDateTime } from "@/util/dateFormatter";
 
 export default function New() {
   // textarea 글자수 카운터
@@ -33,7 +34,7 @@ export default function New() {
   };
 
   const handleDateSelect = () => {
-    setOpen(<DateSelector />, "auto");
+    setOpen(<DateTimeSelector />, "auto");
   };
 
   const handleGameDelete = (game: string) => {
@@ -130,8 +131,8 @@ export default function New() {
               type="button"
               onClick={handleDateSelect}
             >
-              <span className="font-normal text-sm text-[#767676]">
-                {selectedDate ? selectedDate.toLocaleDateString() : "날짜를 선택해주세요."}
+              <span className={`font-normal text-sm ${selectedDate ? "text-[#161616]" : "text-[#767676]"}`}>
+                {selectedDate ? formatDateTime(selectedDate) : "날짜를 선택해주세요."}
               </span>
               <Image src={calendarIcon} alt="" width={20} height={20} />
             </button>
