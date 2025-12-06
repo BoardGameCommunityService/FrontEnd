@@ -46,17 +46,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           role: string;
           profileCompleted: boolean;
           accessToken: string;
-          refreshToken: string;
           accessTokenExpiresAt: number;
         };
 
-        token.id = result.email;
+        token.id = result.userId;
         token.email = result.email;
         token.name = result.nickname;
         token.role = result.role;
         token.profileCompleted = result.profileCompleted;
         token.accessToken = result.accessToken;
-        token.refreshToken = result.refreshToken;
         token.accessTokenExpires = result.accessTokenExpiresAt;
       }
 
@@ -85,31 +83,28 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           role: string;
           profileCompleted: boolean;
           accessToken: string;
-          refreshToken: string;
           accessTokenExpiresAt: number;
         };
 
-        token.id = result.email;
+        token.id = result.userId;
         token.email = result.email;
         token.name = result.nickname;
         token.role = result.role;
         token.profileCompleted = result.profileCompleted;
         token.accessToken = result.accessToken;
-        token.refreshToken = result.refreshToken;
         token.accessTokenExpires = result.accessTokenExpiresAt;
       }
 
       return token;
     },
     async session({ session, token }) {
-      session.user.id = token.id;
+      session.user.id = String(token.id);
       session.user.role = token.role;
       session.user.email = token.email;
       session.user.name = token.name;
       session.user.profileCompleted = token.profileCompleted;
       session.user.accessToken = token.accessToken;
-      session.user.refreshToken = token.refreshToken;
-      session.user.expireTime = token.accessTokenExpires;
+      session.user.accessTokenExpiresAt = token.accessTokenExpires;
       return session;
     },
   },
