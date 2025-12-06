@@ -55,7 +55,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.role = result.role;
         token.profileCompleted = result.profileCompleted;
         token.accessToken = result.accessToken;
-        token.accessTokenExpires = result.accessTokenExpiresAt;
+        token.accessTokenExpiresAt = result.accessTokenExpiresAt;
       }
 
       if (account?.provider === "google" && profile) {
@@ -92,7 +92,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.role = result.role;
         token.profileCompleted = result.profileCompleted;
         token.accessToken = result.accessToken;
-        token.accessTokenExpires = result.accessTokenExpiresAt;
+        token.accessTokenExpiresAt = result.accessTokenExpiresAt;
       }
 
       return token;
@@ -104,7 +104,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.user.name = token.name;
       session.user.profileCompleted = token.profileCompleted;
       session.user.accessToken = token.accessToken;
-      session.user.accessTokenExpiresAt = token.accessTokenExpires;
+      session.user.accessTokenExpiresAt = token.accessTokenExpiresAt;
       return session;
     },
   },

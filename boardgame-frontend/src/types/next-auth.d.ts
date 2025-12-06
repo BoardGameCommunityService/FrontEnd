@@ -64,6 +64,6 @@ declare module "next-auth/jwt" {
     name: string;
     profileCompleted: boolean;
     accessToken: string;
-    accessTokenExpires: number;
+    accessTokenExpiresAt: number;
   }
 }
