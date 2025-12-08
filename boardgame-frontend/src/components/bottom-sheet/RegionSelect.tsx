@@ -1,9 +1,11 @@
 import { useDebounce } from "@/hooks/useDebounce";
 import { useRegion } from "@/hooks/useRegion";
+import useBottomSheetStore from "@/stores/useBottomSheetStore";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export default function RegionSelect() {
+  const { setClose } = useBottomSheetStore();
   const [keyword, setKeyword] = useState("");
   const debouncedSearch = useDebounce(keyword, 500);
   const { places, isLoading, error, searchPlaces } = useRegion();
@@ -37,7 +39,7 @@ export default function RegionSelect() {
             className="outline-none text-[14px] flex-1"
           />
         </div>
-        <button type="button" onClick={() => setKeyword("")}>
+        <button className="cursor-pointer" aria-label="닫기" onClick={setClose}>
           <Image src="/icons/ic_close_gray.svg" width={24} height={24} alt="검색창 초기화"></Image>
         </button>
       </form>
@@ -45,9 +47,16 @@ export default function RegionSelect() {
       {!isLoading && !error && places.length > 0 && (
         <ul className="flex flex-1 flex-col gap-4 mt-4 pb-6 h-full overflow-y-scroll scrollbar-hide">
           {places.map((place) => (
-            <li key={place.id} onClick={handleMeetingRegion} className="pb-4 border-b border-[#E3E5E9]">
-              <h4 className="font-medium text-[16px] text-[#161616]">{place.place_name}</h4>
-              <p className="mt-1 font-normal text-[14px] text-[#767676]">{place.address_name}</p>
+            <li
+              key={place.id}
+              onClick={handleMeetingRegion}
+              className="pb-4 border-b border-[#E3E5E9] flex gap-[5px] items-start cursor-pointer"
+            >
+              <Image src="/icons/ic_marker_outline.svg" width={16} height={16} alt="" className="mt-[3px]"></Image>
+              <div className="flex-col">
+                <h4 className="text-base font-semibold text-[16px] text-[#161616]">{place.place_name}</h4>
+                <p className="mt-1 text-sm font-normal text-[14px] text-[#767676]">{place.address_name}</p>
+              </div>
             </li>
           ))}
         </ul>
