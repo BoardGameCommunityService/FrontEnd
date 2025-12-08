@@ -27,6 +27,7 @@ declare module "next-auth" {
    * Session 타입 확장
    */
   interface Session {
+    error?: string;
     user: {
       id: string;
       role: string;
@@ -65,5 +66,7 @@ declare module "next-auth/jwt" {
     profileCompleted: boolean;
     accessToken: string;
     accessTokenExpiresAt: number;
+    refreshToken?: string;
+    error?: string;
   }
 }

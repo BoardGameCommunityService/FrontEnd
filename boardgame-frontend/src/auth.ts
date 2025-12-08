@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import Kakao from "next-auth/providers/kakao";
 import Google from "next-auth/providers/google";
+import { JWT } from "next-auth/jwt";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -56,6 +57,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.profileCompleted = result.profileCompleted;
         token.accessToken = result.accessToken;
         token.accessTokenExpiresAt = result.accessTokenExpiresAt;
+        const setCookie = res.headers.get("set-cookie");
+        token.refreshToken = setCookie?.match(/refreshToken=([^;]+)/)?.[1];
       }
 
       if (account?.provider === "google" && profile) {
@@ -93,9 +96,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.profileCompleted = result.profileCompleted;
         token.accessToken = result.accessToken;
         token.accessTokenExpiresAt = result.accessTokenExpiresAt;
+        const setCookie = res.headers.get("set-cookie");
+        token.refreshToken = setCookie?.match(/refreshToken=([^;]+)/)?.[1];
       }
 
-      return token;
+      if (token.accessTokenExpiresAt && Date.now() < token.accessTokenExpiresAt) {
+        return token;
+      }
+
+      return refreshAccessToken(token);
     },
     async session({ session, token }) {
       session.user.id = String(token.id);
@@ -105,6 +114,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.user.profileCompleted = token.profileCompleted;
       session.user.accessToken = token.accessToken;
       session.user.accessTokenExpiresAt = token.accessTokenExpiresAt;
+      if (token.error) {
+        session.error = token.error;
+      } else {
+        if (session.error) delete session.error;
+      }
+
       return session;
     },
   },
@@ -113,3 +128,69 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     // signOut: "/signout",
   },
 });
+
+// 동시 요청 방지를 위한 Promise 캐시
+let refreshPromise: Promise<JWT> | null = null;
+let currentRefreshToken: string | null = null;
+
+async function refreshAccessToken(token: JWT) {
+  // 이미 같은 refreshToken으로 갱신 중이면 해당 Promise 재사용
+  if (refreshPromise && currentRefreshToken === token.refreshToken) {
+    return refreshPromise;
+  }
+
+  currentRefreshToken = token.refreshToken ?? null;
+
+  refreshPromise = (async () => {
+    try {
+      return await performRefresh(token);
+    } finally {
+      // 현재 갱신이 완료되면 캐시 초기화
+      if (currentRefreshToken === token.refreshToken) {
+        refreshPromise = null;
+        currentRefreshToken = null;
+      }
+    }
+  })();
+
+  return refreshPromise;
+}
+
+async function performRefresh(token: JWT) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/auth/refresh`, {
+    method: "POST",
+    headers: {
+      Cookie: `refreshToken=${token.refreshToken}`,
+    },
+  });
+
+  const result = (await res.json()) as {
+    errorCode?: "INVALID_REFRESH_TOKEN" | "REFRESH_TOKEN_NOT_FOUND";
+    accessToken: string;
+    accessTokenExpiresAt: number;
+  };
+
+  if (!res.ok || result.errorCode) {
+    return { ...token, error: "RefreshTokenExpired" };
+  }
+
+  token.accessToken = result.accessToken;
+  token.accessTokenExpiresAt = result.accessTokenExpiresAt;
+
+  const setCookie = res.headers.get("set-cookie");
+  if (setCookie) {
+    const newRefreshToken = setCookie?.match(/refreshToken=([^;]+)/)?.[1];
+    if (newRefreshToken) {
+      token.refreshToken = newRefreshToken;
+      console.log("refreshToken 갱신됨");
+    } else {
+      console.log("refreshToken 파싱 실패");
+    }
+  } else {
+    console.log("Set-Cookie 헤더 없음 - 이전 refreshToken 유지");
+  }
+
+  if (token.error) delete token.error;
+
+  return token;
+}

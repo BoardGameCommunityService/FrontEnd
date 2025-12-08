@@ -22,7 +22,7 @@ export default function SignupForm() {
   } = useForm<FormValueType>({
     defaultValues: {
       nickname: getSessionValue("nickname") || "",
-      gender: getSessionValue("gender") || "",
+      gender: (getSessionValue("gender") as "male" | "female") || undefined,
       location: getSessionValue("region") || "",
     },
     mode: "onChange",
