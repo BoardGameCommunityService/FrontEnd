@@ -2,16 +2,17 @@
 
 import Link from "next/link";
 
-import nextIcon from "../../../../public/icons/ic_chevron_right_icon.svg";
 import calendarIcon from "../../../../public/icons/ic_calendor.svg";
+import nextIcon from "../../../../public/icons/ic_chevron_right_icon.svg";
 
-import Image from "next/image";
-import { ChangeEvent, useState } from "react";
+import DateSelector from "@/components/bottom-sheet/DateSelector";
+import GameSelect from "@/components/bottom-sheet/GameSelect";
+import RegionSelect from "@/components/bottom-sheet/RegionSelect";
 import PeopleSelector from "@/components/common/PeopleSelector";
 import useBottomSheetStore from "@/stores/useBottomSheetStore";
-import GameSelect from "@/components/bottom-sheet/GameSelect";
-import DateSelector from "@/components/bottom-sheet/DateSelector";
 import useDateStore from "@/stores/useDateStore";
+import Image from "next/image";
+import { ChangeEvent, useState } from "react";
 
 export default function New() {
   // textarea 글자수 카운터
@@ -31,6 +32,10 @@ export default function New() {
 
   const handleDateSelect = () => {
     setOpen(<DateSelector />, "auto");
+  };
+
+  const handleRegionSelect = () => {
+    setOpen(<RegionSelect />, "fixed");
   };
 
   return (
@@ -82,10 +87,14 @@ export default function New() {
           <div className="mt-8 flex flex-col gap-2">
             <h3 className="font-medium text-[14px] text-[#363636]">장소</h3>
 
-            <div className="min-w-[335px] h-10 rounded-lg border border-[#DEE1E6] p-3 flex justify-between items-center">
+            <button
+              className="min-w-[335px] h-10 rounded-lg border border-[#DEE1E6] p-3 flex justify-between items-center"
+              type="button"
+              onClick={handleRegionSelect}
+            >
               <span className="font-normal text-sm text-[#767676]">모임 장소를 정해주세요.</span>
               <Image src={nextIcon} alt="" width={20} height={20} />
-            </div>
+            </button>
           </div>
 
           {/* 날짜 지정 */}
