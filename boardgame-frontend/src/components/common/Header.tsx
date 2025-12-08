@@ -103,8 +103,8 @@ export default function Header() {
         <Link href="/board/search" className="m-[6px]">
           <Image src="/icons/ic_search.svg" alt="검색페이지로 이동" width={24} height={24} />
         </Link>
-        <Link href="/profile" className="m-[6px]">
-          <Image src="/icons/ic_profile.svg" alt="내 프로필로 이동" width={24} height={24} />
+        <Link href="/mypage" className="m-[6px]">
+          <Image src="/icons/ic_profile.svg" alt="마이페이지 이동" width={24} height={24} />
         </Link>
       </nav>
     </header>

@@ -9,6 +9,20 @@ export const proxy = auth((req) => {
     return NextResponse.next();
   }
 
+  // public 경로는 먼저 허용
+  const publicPaths = ["/login"];
+  const isBoardDetailPage = /^\/board\/\d+$/.test(pathname);
+  const isPublicPath = pathname === "/" || isBoardDetailPage || publicPaths.some((path) => pathname.startsWith(path));
+
+  if (isPublicPath) {
+    return NextResponse.next();
+  }
+
+  // protected 경로에서만 토큰 에러 체크
+  if (session?.error === "RefreshTokenExpired") {
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
+
   if (pathname.startsWith("/agreement")) {
     if (!session?.user) {
       return NextResponse.redirect(new URL("/login", req.url));
@@ -21,14 +35,6 @@ export const proxy = auth((req) => {
 
   if (session?.user && session.user.profileCompleted === false && !pathname.startsWith("/signup")) {
     return NextResponse.redirect(new URL("/signup", req.url));
-  }
-
-  const publicPaths = ["/login"];
-  const isBoardDetailPage = /^\/board\/\d+$/.test(pathname);
-  const isPublicPath = pathname === "/" || isBoardDetailPage || publicPaths.some((path) => pathname.startsWith(path));
-
-  if (isPublicPath) {
-    return NextResponse.next();
   }
 
   if (!session?.user) {

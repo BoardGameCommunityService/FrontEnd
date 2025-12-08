@@ -27,7 +27,7 @@ export default function SignupLocationForm() {
   const handleRegionSelect = (region: string) => {
     // sessionStorage에 region 저장
     sessionStorage.setItem("region", region);
-    router.push("/signup");
+    router.back();
   };
 
   const handleCurrentRegionClick = async () => {
@@ -47,28 +47,30 @@ export default function SignupLocationForm() {
       <div className="flex flex-col">
         <h2 className="mt-4 mb-[40px]  font-semibold text-2xl text-[#161616]">활동 지역을 선택해주세요</h2>
 
-        <TextInput
-          label="활동지역"
-          name="userRegion"
-          placeholder="지역구를 입력해주세요.(ex.강남구, 서초구)"
-          isHidden={true}
-          value={regionInput}
-          onChange={handleSearchChange}
-        />
+          <div className="mt-7">
+            <TextInput
+              label="활동지역"
+              name="userRegion"
+              placeholder="지역구를 입력해주세요.(ex.강남구, 서초구)"
+              isHidden={true}
+              value={regionInput}
+              onChange={handleSearchChange}
+            />
+          </div>
+          <Button
+            type="button"
+            text={"현재 위치로 찾기"}
+            btnSize="medium"
+            bgColor="bg-[#06E393]"
+            icon={<Image src="/icons/ic_gps.svg" alt="버튼" width={20} height={20} />}
+            textColor="text-black"
+            onClick={handleCurrentRegionClick}
+            disabled={isLoading}
+          />
+        </section>
 
-        <Button
-          type="button"
-          text={"현재 위치로 찾기"}
-          btnSize="medium"
-          bgColor="bg-[#06E393]"
-          icon={<Image src="/icons/ic_gps.svg" alt="버튼" width={20} height={20} />}
-          textColor="text-black"
-          onClick={handleCurrentRegionClick}
-          disabled={isLoading}
-        />
-      </div>
-
-      <LocationSearchResults results={searchResults} onSelect={handleRegionSelect} isLoading={isLoading} />
+        <LocationSearchResults results={searchResults} onSelect={handleRegionSelect} isLoading={isLoading} />
+      </main>
     </>
   );
 }

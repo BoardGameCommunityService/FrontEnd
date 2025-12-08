@@ -45,7 +45,7 @@ export default function Agreement() {
 
   // 회원 가입 (세션 정보 가져와서 합쳐서 서버로 요청)
   const router = useRouter();
-  const { status, update } = useSession();
+  const { data: session, status, update } = useSession();
   const [loading, setLoading] = useState(false);
   const handleNext = async () => {
     if (!allChecked || loading) return;
@@ -89,15 +89,24 @@ export default function Agreement() {
         consent,
       };
 
+      // 인증 토큰은 useSession에서 읽기 (간단 타입 사용)
+      const user = session?.user as { accessToken?: string } | undefined;
+      const token = user?.accessToken as string | undefined;
+      if (!token) {
+        setLoading(false);
+        alert("세션에 인증 토큰이 없습니다. 다시 로그인해주세요.");
+        router.push("/login");
+        return;
+      }
       const headers: Record<string, string> = {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       };
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/auth/complete-signup`, {
         method: "POST",
         headers,
         body: JSON.stringify(payload),
-        credentials: "include", // httpOnly 토큰 적용
       });
 
       if (!res.ok) {
