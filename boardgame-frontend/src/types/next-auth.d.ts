@@ -27,6 +27,7 @@ declare module "next-auth" {
    * Session 타입 확장
    */
   interface Session {
+    error?: string;
     user: {
       id: string;
       role: string;
@@ -34,8 +35,7 @@ declare module "next-auth" {
       name: string;
       profileCompleted: boolean;
       accessToken: string;
-      refreshToken: string;
-      expireTime: number;
+      accessTokenExpiresAt: number;
     } & DefaultSession["user"];
   }
 
@@ -46,7 +46,6 @@ declare module "next-auth" {
     role: string;
     nickname: string;
     accessToken: string;
-    refreshToken: string;
   }
 
   /**
@@ -60,13 +59,14 @@ declare module "next-auth/jwt" {
    * JWT 타입 확장
    */
   interface JWT extends DefaultJWT {
-    id: string;
+    id: number;
     role: string;
     email: string;
     name: string;
     profileCompleted: boolean;
     accessToken: string;
-    refreshToken: string;
-    accessTokenExpires: number;
+    accessTokenExpiresAt: number;
+    refreshToken?: string;
+    error?: string;
   }
 }
