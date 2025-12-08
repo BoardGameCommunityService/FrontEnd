@@ -1,7 +1,7 @@
 "use client";
 
 import { LocationResult } from "@/types/location";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Place {
   id: string;
@@ -18,10 +18,11 @@ interface Place {
 interface KeywordSearchResult {
   meta: {
     total_count: number;
-    pageable_count: number;
     is_end: boolean;
   };
-  documents: Place[];
+  documents: {
+    documents: Place[];
+  };
 }
 
 export function useRegion() {
@@ -29,7 +30,7 @@ export function useRegion() {
   const [places, setPlaces] = useState<Place[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [totalCount, setTotalCount] = useState(0);
+  // const [totalCount, setTotalCount] = useState(0);
   const [isEnd, setIsEnd] = useState(false);
 
   // 현재 위치 가져오기
@@ -147,11 +148,12 @@ export function useRegion() {
 
       const data: KeywordSearchResult = await response.json();
 
-      setPlaces(data.documents);
-      setTotalCount(data.meta.total_count);
-      setIsEnd(data.meta.is_end);
+      setPlaces(data.documents.documents);
 
-      return data.documents;
+      // setTotalCount(data.meta.total_count);
+      // setIsEnd(data.meta.is_end);
+
+      return data.documents.documents;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "알 수 없는 오류가 발생했습니다.";
       setError(errorMessage);
@@ -162,6 +164,10 @@ export function useRegion() {
     }
   };
 
+  useEffect(() => {
+    console.log("places:", places);
+  }, [places]);
+
   return {
     // 주소/좌표 관련
     searchResults,
@@ -171,7 +177,7 @@ export function useRegion() {
     // 키워드 검색 관련
     places,
     searchPlaces,
-    totalCount,
+    // totalCount,
     isEnd,
 
     // 공통
