@@ -100,7 +100,7 @@ export default function Header() {
       </div>
 
       <nav className="flex gap-2">
-        <Link href="/board/search" className="m-[6px]">
+        <Link href="/search" className="m-[6px]">
           <Image src="/icons/ic_search.svg" alt="검색페이지로 이동" width={24} height={24} />
         </Link>
         <Link href="/mypage" className="m-[6px]">
