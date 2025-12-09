@@ -5,7 +5,7 @@ import Badge from "./Badge";
 import dateFormatter from "@/util/dateFormatter";
 
 interface CardProps {
-  id: string;
+  id: number;
   location: string;
   title: string;
   currentMember: number;
@@ -25,13 +25,11 @@ interface CardProps {
  * @param meetingDate string 모임 시간
  */
 export default function Card({ id, location, title, currentMember, maxMember, games, meetingDate }: CardProps) {
-  const posting = "/";
-  const postingId = id;
   const { month, day, weekday, hours, minutes } = dateFormatter(meetingDate);
   const dateFormat = `${month}/${day}(${weekday}) ${hours}:${minutes}`;
   return (
     <article className="w-[335px] h-[116px] rounded-2xl p-4 bg-white">
-      <Link href={posting} className="flex flex-col gap-2">
+      <Link href={`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings/${id}`} className="flex flex-col gap-2">
         <div className="flex justify-between items-center gap-1">
           <div className="flex">
             <Image src={mapPin} alt="위치" width={18} height={18} />
