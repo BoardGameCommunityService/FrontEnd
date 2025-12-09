@@ -1,3 +1,5 @@
+"use client";
+
 import Banner from "@/components/common/Banner";
 import Calendar from "@/components/common/Calendar";
 import CardList from "@/components/common/CardList";
@@ -7,22 +9,57 @@ import Link from "next/link";
 import Image from "next/image";
 import bottomLogo from "../../public/bottomLogo.svg";
 import plusIcon from "../../public/icons/ic_plus.svg";
+import { useInView } from "react-intersection-observer";
+import { useEffect, useRef, useState } from "react";
+import { Post } from "@/types/post";
 
-async function fetchPostings() {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings`);
-    if (!res.ok) {
-      throw new Error("데이터 fetch 에러");
+export default function Home() {
+  const { ref, inView } = useInView({ threshold: 0 });
+  const [postings, setPostings] = useState<Post[]>([]);
+  const [page, setPage] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const initialRef = useRef(false);
+
+  async function getData(pageNum: number) {
+    try {
+      setIsLoading(true);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings?page=${pageNum}&size=15`);
+      if (!res.ok) throw new Error("데이터 fetch 에러");
+
+      const { content } = await res.json();
+      if (content.length === 0) {
+        setHasMore(false);
+      } else {
+        setPostings((prev) => [...prev, ...content]);
+        setPage((prev) => prev + 1);
+      }
+    } catch (error: any) {
+      console.error("통신 에러", error);
+    } finally {
+      setIsLoading(false);
     }
-    const data = await res.json();
-    return data.content;
-  } catch (error: any) {
-    console.error("통신 에러", error);
   }
-}
 
-export default async function Home() {
-  const postings = await fetchPostings();
+  useEffect(() => {
+    // 개발 strict mode에서 키중복 이슈로 추가
+    if (initialRef.current) return;
+
+    initialRef.current = true;
+
+    (async () => {
+      await getData(0);
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      if (inView && !isLoading && hasMore && page > 0) {
+        await getData(page);
+      }
+    })();
+  }, [inView]);
+
   return (
     <div className="flex justify-center">
       <div className="w-full min-h-screen flex flex-col items-center bg-[#F5F6FA] relative">
@@ -36,6 +73,7 @@ export default async function Home() {
           </section>
           <section>
             <CardList results={postings} />
+            <div ref={ref}></div>
           </section>
           <div className="flex justify-center mt-6 mb-[60px]">
             <Image
