@@ -145,7 +145,7 @@ export default function New() {
               {games.length > 0 && (
                 <button
                   type="button"
-                  className="text-[13px] text-[#767676] leading-5 underline underline-offset-[2px] font-normal cursor-pointer"
+                  className="text-[13px] text-[#767676] leading-5 underline underline-offset-2 font-normal cursor-pointer"
                   onClick={handleGameSelect}
                 >
                   변경하기
@@ -181,16 +181,46 @@ export default function New() {
 
           {/* 장소 지정 */}
           <div className="mt-8 flex flex-col gap-2">
-            <h3 className="font-medium text-[14px] text-[#363636]">장소</h3>
+            <div className="flex justify-between">
+              <h3 className="font-medium text-[14px] text-[#363636]">장소</h3>
 
-            <button
-              className="min-w-[335px] h-10 rounded-lg border border-[#DEE1E6] p-3 flex justify-between items-center"
-              type="button"
-              onClick={handleRegionSelect}
-            >
-              <span className="font-normal text-sm text-[#767676]">모임 장소를 정해주세요.</span>
-              <Image src={nextIcon} alt="" width={20} height={20} />
-            </button>
+              {meetingPlace && (
+                <button
+                  type="button"
+                  className="text-[13px] text-[#767676] leading-5 underline underline-offset-2 font-normal cursor-pointer"
+                  onClick={handleRegionSelect}
+                >
+                  변경하기
+                </button>
+              )}
+            </div>
+
+            {meetingPlace ? (
+              <>
+                <div className="flex gap-[5px] border border-[#DEE1E6] rounded-xl px-3 py-[9px]">
+                  <Image
+                    className="self-start mt-[3px]"
+                    src="/icons/ic_black_marker.svg"
+                    alt=""
+                    width={16}
+                    height={16}
+                  />
+                  <div>
+                    <h4 className="text-sm text-[#161616] font-semibold leading-[22px]">{meetingPlace}</h4>
+                    <span className="text-xs text-[#767676] leading-[18px]">{meetingAddress}</span>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <button
+                className="min-w-[335px] h-10 rounded-lg border border-[#DEE1E6] p-3 flex justify-between items-center cursor-pointer"
+                type="button"
+                onClick={handleRegionSelect}
+              >
+                <span className="font-normal text-sm text-[#767676]">모임 장소를 정해주세요.</span>
+                <Image src={nextIcon} alt="" width={20} height={20} />
+              </button>
+            )}
           </div>
 
           {/* 날짜 지정 */}
