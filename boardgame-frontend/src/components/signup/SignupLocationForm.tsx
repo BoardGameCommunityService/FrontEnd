@@ -3,7 +3,7 @@
 import Button from "@/components/common/Button";
 import TextInput from "@/components/common/TextInput";
 import { useDebounce } from "@/hooks/useDebounce";
-import { useLocation } from "@/hooks/useLocation";
+import { useRegion } from "@/hooks/useRegion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -12,10 +12,10 @@ import LocationSearchResults from "./LocationSearchResults";
 
 export default function SignupLocationForm() {
   const router = useRouter();
-  const [locationInput, setLocationInput] = useState("");
-  const debouncedSearch = useDebounce(locationInput, 300);
+  const [regionInput, setRegionInput] = useState("");
+  const debouncedSearch = useDebounce(regionInput, 300);
 
-  const { searchResults, isLoading, getCurrentLocation, searchAddress } = useLocation();
+  const { searchResults, isLoading, getCurrentRegion, searchAddress } = useRegion();
 
   // 디바운스된 검색어로 자동 검색
   useEffect(() => {
@@ -24,39 +24,37 @@ export default function SignupLocationForm() {
     }
   }, [debouncedSearch]);
 
-  const handleLocationSelect = (location: string) => {
-    // sessionStorage에 location 저장
-    sessionStorage.setItem("region", location);
+  const handleRegionSelect = (region: string) => {
+    // sessionStorage에 region 저장
+    sessionStorage.setItem("region", region);
     router.back();
   };
 
-  const handleCurrentLocationClick = async () => {
-    const results = await getCurrentLocation();
+  const handleCurrentRegionClick = async () => {
+    const results = await getCurrentRegion();
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocationInput(e.target.value);
+    setRegionInput(e.target.value);
   };
 
   return (
     <>
-      <header>
-        <button onClick={() => router.back()}>
-          <Image src="/icons/ic_back.svg" alt="뒤로가기 버튼" width={24} height={24} />
-        </button>
-      </header>
+      <Link href="/signup">
+        <Image src="/icons/ic_back.svg" alt="뒤로가기 버튼" width={24} height={24} />
+      </Link>
 
       <main>
         <section className="flex flex-col gap-3">
-          <h2 className="mt-4 font-semibold text-2xl text-[#161616]">활동 지역을 선택해주세요</h2>
+          <h2 className="mt-4 mb-[40px]  font-semibold text-2xl text-[#161616]">활동 지역을 선택해주세요</h2>
 
           <div className="mt-7">
             <TextInput
               label="활동지역"
-              name="userLocation"
+              name="userRegion"
               placeholder="지역구를 입력해주세요.(ex.강남구, 서초구)"
               isHidden={true}
-              value={locationInput}
+              value={regionInput}
               onChange={handleSearchChange}
             />
           </div>
@@ -67,12 +65,12 @@ export default function SignupLocationForm() {
             bgColor="bg-[#06E393]"
             icon={<Image src="/icons/ic_gps.svg" alt="버튼" width={20} height={20} />}
             textColor="text-black"
-            onClick={handleCurrentLocationClick}
+            onClick={handleCurrentRegionClick}
             disabled={isLoading}
           />
         </section>
 
-        <LocationSearchResults results={searchResults} onSelect={handleLocationSelect} isLoading={isLoading} />
+        <LocationSearchResults results={searchResults} onSelect={handleRegionSelect} isLoading={isLoading} />
       </main>
     </>
   );
