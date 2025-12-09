@@ -5,6 +5,15 @@ interface CardListProps {
   results: Post[];
 }
 
+const parseTags = (tagsJson: string | string[]): string[] => {
+  if (Array.isArray(tagsJson)) return tagsJson;
+  try {
+    return JSON.parse(tagsJson);
+  } catch {
+    return [];
+  }
+};
+
 export default function CardList({ results }: CardListProps) {
   return (
     <div>
