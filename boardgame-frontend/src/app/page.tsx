@@ -35,7 +35,7 @@ export default async function Home() {
             <Calendar />
           </section>
           <section>
-            <CardList />
+            <CardList results={postings} />
           </section>
           <div className="flex justify-center mt-6 mb-[60px]">
             <Image
