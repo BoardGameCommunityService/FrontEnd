@@ -1,7 +1,7 @@
 "use client";
 
 import { LocationResult } from "@/types/location";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface Place {
   id: string;
@@ -163,10 +163,6 @@ export function useRegion() {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    console.log("places:", places);
-  }, [places]);
 
   return {
     // 주소/좌표 관련
