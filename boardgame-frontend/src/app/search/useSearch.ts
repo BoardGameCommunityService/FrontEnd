@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Post } from "@/types/post";
 import useSearchStore from "@/stores/post/useSearchStore";
-import useDebounce from "@/util/debouncer";
+import { useDebounce } from "@/hooks/useDebounce";
 
 // 검색 훅
 export default function useSearch() {
@@ -40,7 +40,7 @@ export default function useSearch() {
       const data = await res.json();
       setSearchResult(data.content);
       setHasSearched(true);
-      if (data.length > 0) {
+      if (data.content?.length > 0) {
         addSearch(query);
       }
     } catch (e: any) {
