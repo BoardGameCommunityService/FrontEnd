@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Post } from "@/types/post";
 import useSearchStore from "@/stores/post/useSearchStore";
 import { useDebounce } from "@/hooks/useDebounce";
+import { useInView } from "react-intersection-observer";
 
 // 검색 훅
 export default function useSearch() {
@@ -9,16 +10,25 @@ export default function useSearch() {
   const [searchResult, setSearchResult] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const { ref, inView } = useInView();
 
   const [page, setPage] = useState(0);
-  const size = 10;
+  const size = 15;
 
   const debouncedQuery = useDebounce(query, 500);
   const { recentSearches, addSearch } = useSearchStore();
 
   useEffect(() => {
     if (debouncedQuery.trim()) {
-      fetchSearchResult(debouncedQuery);
+      (async () => {
+        setSearchResult([]);
+        setPage(0);
+        setHasMore(true);
+        setHasSearched(false);
+
+        await fetchSearchResult(debouncedQuery, 0);
+      })();
     } else {
       setSearchResult([]);
       setHasSearched(false);
@@ -26,7 +36,16 @@ export default function useSearch() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedQuery]);
 
-  async function fetchSearchResult(query: string) {
+  useEffect(() => {
+    if (inView && !isLoading && hasMore && page > 0 && debouncedQuery.trim()) {
+      (async () => {
+        await fetchSearchResult(debouncedQuery, page);
+      })();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inView]);
+
+  async function fetchSearchResult(query: string, pageNum: number) {
     if (!query.trim()) {
       setSearchResult([]);
       return;
@@ -35,13 +54,18 @@ export default function useSearch() {
     setIsLoading(true);
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings/search?keyword=${encodeURIComponent(query)}&page=${page}&size=${size}`
+        `${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings/search?keyword=${encodeURIComponent(query)}&page=${pageNum}&size=${size}`
       );
-      const data = await res.json();
-      setSearchResult(data.content);
-      setHasSearched(true);
-      if (data.content?.length > 0) {
+
+      const { content } = await res.json();
+
+      if (content.length === 0) {
+        setHasMore(false);
+      } else {
+        setSearchResult((prev) => [...prev, ...content]);
+        setHasSearched(true);
         addSearch(query);
+        setPage((prev) => prev + 1);
       }
     } catch (e: any) {
       console.error("통신 에러", e);
@@ -67,5 +91,6 @@ export default function useSearch() {
     recentSearches,
     handleChipClick,
     handleSearch,
+    ref,
   };
 }

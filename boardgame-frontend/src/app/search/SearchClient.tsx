@@ -15,7 +15,8 @@ interface Props {
 
 export default function SearchClient({ popularGames, popularRegions }: Props) {
   const router = useRouter();
-  const { query, searchResult, isLoading, hasSearched, recentSearches, handleChipClick, handleSearch } = useSearch();
+  const { query, searchResult, isLoading, hasSearched, recentSearches, handleChipClick, handleSearch, ref } =
+    useSearch();
 
   //조건부 렌더링을 위한 요소
   const hasQuery = query.trim().length > 0;
@@ -23,7 +24,7 @@ export default function SearchClient({ popularGames, popularRegions }: Props) {
   const isEmptyState = hasQuery && !isLoading && !hasResults;
 
   return (
-    <div className={`pt-11 max-w-[375px] h-screen flex flex-col ${hasResults ? "bg-[#F5F6FA]" : ""}`}>
+    <div className={`pt-11 max-w-[375px] min-h-dvh flex flex-col ${hasResults ? "bg-[#F5F6FA]" : ""}`}>
       <header className="h-[60px] max-w-[355px] flex justify-between items-center gap-3">
         <h1 className="sr-only">검색 페이지</h1>
         <button type="button" onClick={() => router.back()}>
@@ -50,10 +51,20 @@ export default function SearchClient({ popularGames, popularRegions }: Props) {
         )}
 
         {/* 검색결과 있음 */}
-        {!isLoading && hasResults && <CardList results={searchResult} />}
+        {!isLoading && hasResults && (
+          <>
+            <CardList results={searchResult} />
+            <div ref={ref}></div>
+          </>
+        )}
 
         {/* 검색 결과 없음 */}
-        {!isLoading && isEmptyState && <EmptyState />}
+        {!isLoading && isEmptyState && (
+          <>
+            <EmptyState />
+            <div ref={ref}></div>
+          </>
+        )}
 
         {/* 로딩중 */}
         {isLoading && <p>검색중입니다...</p>}
