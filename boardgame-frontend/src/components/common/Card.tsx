@@ -29,7 +29,7 @@ export default function Card({ id, location, title, currentMember, maxMember, ga
   const dateFormat = `${month}/${day}(${weekday}) ${hours}:${minutes}`;
   return (
     <article className="w-[335px] h-[116px] rounded-2xl p-4 bg-white">
-      <Link href={`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings/${id}`} className="flex flex-col gap-2">
+      <Link href={`/board/${id}`} className="flex flex-col gap-2">
         <div className="flex justify-between items-center gap-1">
           <div className="flex">
             <Image src={mapPin} alt="위치" width={18} height={18} />
