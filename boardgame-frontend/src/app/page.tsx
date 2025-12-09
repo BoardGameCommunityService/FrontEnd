@@ -10,7 +10,7 @@ import Image from "next/image";
 import bottomLogo from "../../public/bottomLogo.svg";
 import plusIcon from "../../public/icons/ic_plus.svg";
 import { useInView } from "react-intersection-observer";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Post } from "@/types/post";
 
 export default function Home() {
@@ -19,6 +19,7 @@ export default function Home() {
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const initialRef = useRef(false);
 
   async function getData(pageNum: number) {
     try {
@@ -41,7 +42,14 @@ export default function Home() {
   }
 
   useEffect(() => {
-    getData(0);
+    // 개발 strict mode에서 키중복 이슈로 추가
+    if (initialRef.current) return;
+
+    initialRef.current = true;
+
+    (async () => {
+      await getData(0);
+    })();
   }, []);
 
   useEffect(() => {
