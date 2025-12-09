@@ -15,7 +15,7 @@ import useBottomSheetStore from "@/stores/useBottomSheetStore";
 import { formatDateTime } from "@/util/dateFormatter";
 
 import Image from "next/image";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import usePlaceStore from "@/stores/post/usePlaceStore";
 import { useRouter } from "next/navigation";
@@ -36,13 +36,14 @@ interface MeetingFormData {
 export default function New() {
   // textarea 글자수 카운터
   const [inputCount, setInputCount] = useState(0);
+  const [isValid, setIsValid] = useState(false);
   //인원수
   const [people, setPeople] = useState<number | "무제한">(2);
 
   const router = useRouter();
   const { data: session } = useSession();
 
-  const { register, handleSubmit } = useForm<MeetingFormData>({
+  const { register, handleSubmit, watch } = useForm<MeetingFormData>({
     defaultValues: {
       title: "",
       content: "",
@@ -53,6 +54,16 @@ export default function New() {
   const { games, setGames } = useGameStore();
   const { meetingPlace, meetingAddress } = usePlaceStore();
   const { selectedDate } = useDateStore();
+
+  const title = watch("title");
+  const content = watch("content");
+
+  useEffect(() => {
+    const isFormValid =
+      title?.trim() !== "" && content?.trim() !== "" && meetingPlace !== "" && selectedDate !== null && !!people;
+
+    setIsValid(isFormValid);
+  }, [title, content, meetingPlace, selectedDate, people]);
 
   const handleInputCount = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInputCount(e.target.value.length);
@@ -248,7 +259,8 @@ export default function New() {
 
           <button
             type="submit"
-            className="mt-4 mb-10 h-11 rounded-[10px] bg-[#06E393] font-semibold text-sm text-[#161616] cursor-pointer"
+            className={`mt-4 mb-10 h-11 rounded-[10px] ${isValid ? "bg-[#06E393]" : "bg-[#EEF0F7]"} font-semibold text-sm text-[#161616] cursor-pointer`}
+            disabled={!isValid}
           >
             만들기
           </button>
