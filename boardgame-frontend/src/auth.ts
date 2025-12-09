@@ -129,34 +129,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
 });
 
-// 동시 요청 방지를 위한 Promise 캐시
-let refreshPromise: Promise<JWT> | null = null;
-let currentRefreshToken: string | null = null;
-
 async function refreshAccessToken(token: JWT) {
-  // 이미 같은 refreshToken으로 갱신 중이면 해당 Promise 재사용
-  if (refreshPromise && currentRefreshToken === token.refreshToken) {
-    return refreshPromise;
-  }
-
-  currentRefreshToken = token.refreshToken ?? null;
-
-  refreshPromise = (async () => {
-    try {
-      return await performRefresh(token);
-    } finally {
-      // 현재 갱신이 완료되면 캐시 초기화
-      if (currentRefreshToken === token.refreshToken) {
-        refreshPromise = null;
-        currentRefreshToken = null;
-      }
-    }
-  })();
-
-  return refreshPromise;
-}
-
-async function performRefresh(token: JWT) {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/auth/refresh`, {
     method: "POST",
     headers: {
