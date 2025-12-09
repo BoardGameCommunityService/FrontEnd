@@ -7,9 +7,22 @@ import Link from "next/link";
 import Image from "next/image";
 import bottomLogo from "../../public/bottomLogo.svg";
 import plusIcon from "../../public/icons/ic_plus.svg";
-import React from "react";
 
-export default function Home() {
+async function fetchPostings() {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings`);
+    if (!res.ok) {
+      throw new Error("데이터 fetch 에러");
+    }
+    const data = await res.json();
+    return data.content;
+  } catch (error: any) {
+    console.error("통신 에러", error);
+  }
+}
+
+export default async function Home() {
+  const postings = await fetchPostings();
   return (
     <div className="flex justify-center">
       <div className="w-full min-h-screen flex flex-col items-center bg-[#F5F6FA] relative">
