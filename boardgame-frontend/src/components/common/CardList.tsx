@@ -27,7 +27,7 @@ export default function CardList({ results }: CardListProps) {
             currentMember={post.currentParticipants}
             maxMember={post.maxParticipants}
             meetingDate={post.meetingAt}
-            games={parseTags(post.tagsJson)}
+            games={parseTags(post.gameNameJson)}
           />
         ))}
       </ul>
