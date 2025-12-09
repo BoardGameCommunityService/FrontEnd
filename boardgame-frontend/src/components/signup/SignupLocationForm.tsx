@@ -44,8 +44,9 @@ export default function SignupLocationForm() {
         <Image src="/icons/ic_back.svg" alt="뒤로가기 버튼" width={24} height={24} />
       </Link>
 
-      <div className="flex flex-col">
-        <h2 className="mt-4 mb-[40px]  font-semibold text-2xl text-[#161616]">활동 지역을 선택해주세요</h2>
+      <main>
+        <section className="flex flex-col gap-3">
+          <h2 className="mt-4 mb-[40px]  font-semibold text-2xl text-[#161616]">활동 지역을 선택해주세요</h2>
 
           <div className="mt-7">
             <TextInput
