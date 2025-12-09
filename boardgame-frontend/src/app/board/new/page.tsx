@@ -16,6 +16,22 @@ import { formatDateTime } from "@/util/dateFormatter";
 
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
+import { useForm } from "react-hook-form";
+import usePlaceStore from "@/stores/post/usePlaceStore";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+
+interface MeetingFormData {
+  meetingId: number;
+  title: string;
+  content: string;
+  gameNames: string[];
+  meetingPlace: string;
+  meetingAddress: string;
+  regionCode: string;
+  meetingAt: Date | null;
+  maxParticipants: number | "무제한";
+}
 
 export default function New() {
   // textarea 글자수 카운터
@@ -23,9 +39,20 @@ export default function New() {
   //인원수
   const [people, setPeople] = useState<number | "무제한">(2);
 
+  const router = useRouter();
+  const { data: session } = useSession();
+
+  const { register, handleSubmit } = useForm<MeetingFormData>({
+    defaultValues: {
+      title: "",
+      content: "",
+    },
+  });
+
   const { setOpen } = useBottomSheetStore();
-  const { selectedDate } = useDateStore();
   const { games, setGames } = useGameStore();
+  const { meetingPlace, meetingAddress } = usePlaceStore();
+  const { selectedDate } = useDateStore();
 
   const handleInputCount = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInputCount(e.target.value.length);
@@ -47,27 +74,60 @@ export default function New() {
     setOpen(<RegionSelect />, "fixed50");
   };
 
+  const onSubmit = async (data: MeetingFormData) => {
+    console.log("폼 데이터:", data);
+    data.meetingId = 0;
+    data.gameNames = [...games];
+    data.meetingPlace = meetingPlace;
+    data.meetingAddress = meetingAddress;
+    data.regionCode = meetingAddress.split(" ")[0] + " " + meetingAddress.split(" ")[1];
+    data.meetingAt = selectedDate;
+    data.maxParticipants = people;
+
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings`, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.user?.accessToken}`,
+        },
+      });
+
+      if (!res.ok) {
+        alert("네트워크 처리 중 오류가 발생했습니다.");
+        throw new Error(`서버 응답 에러: ${res.status}`);
+      }
+
+      const { meetingId } = await res.json();
+      router.replace(`/board/${meetingId}`);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div id="page-container" className="flex justify-center relative">
       <div className="w-[335px] flex flex-col">
         <header className="h-[52px] py-3 flex gap-0.5 items-center">
-          <Link href="/login">
+          <Link href="/">
             <Image src="/icons/ic_back.svg" alt="뒤로가기 버튼" width={24} height={24} />
           </Link>
           <h1 className="font-semibold text-[20px] text-[#161616]">모임 만들기</h1>
         </header>
-        <section className="py-2">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col py-2">
           <input
             type="text"
             placeholder="제목을 입력해주세요."
             className="w-full h-12 rounded-xl px-3 border border-[#DEE1E6] text-sm text-[#161616] placeholder:text-[#767676]"
+            {...register("title", { required: true })}
           />
           <div className="flex flex-col gap-1">
             <textarea
               placeholder="모임 소개글을 입력해주세요.(최대 300자)"
               maxLength={300}
-              onChange={handleInputCount}
               className="mt-3 resize-none min-w-[335px] min-h-60 px-3 py-3 bg-white rounded-xl border border-[#DEE1E6] text-sm text-[#161616] placeholder:text-[#767676] field-sizing-content leading-[22px]"
+              {...register("content", { required: true, onChange: handleInputCount })}
             />
             <div className="flex gap-0.5">
               <span className="font-normal text-sm text-[#161616]">{inputCount}</span>
@@ -84,6 +144,7 @@ export default function New() {
               </div>
               {games.length > 0 && (
                 <button
+                  type="button"
                   className="text-[13px] text-[#767676] leading-5 underline underline-offset-[2px] font-normal cursor-pointer"
                   onClick={handleGameSelect}
                 >
@@ -99,7 +160,7 @@ export default function New() {
                     key={game}
                     className="text-[13px] text-[#161616] font-semibold border border-[#161616] rounded-[34px] leading-[18px] px-2.5 py-2"
                   >
-                    <button className="flex gap-1 cursor-pointer" onClick={() => handleGameDelete(game)}>
+                    <button type="button" className="flex gap-1 cursor-pointer" onClick={() => handleGameDelete(game)}>
                       {game}
                       <Image className="w-4 h-4" src="/icons/ic_close.svg" alt="삭제" width={16} height={16} />
                     </button>
@@ -154,13 +215,14 @@ export default function New() {
 
             <PeopleSelector value={people} onChange={(v) => setPeople(v)} />
           </div>
-        </section>
-        <button
-          type="button"
-          className="mt-4 mb-10 h-11 rounded-[10px] bg-[#06E393] font-semibold text-sm text-[#161616]"
-        >
-          만들기
-        </button>
+
+          <button
+            type="submit"
+            className="mt-4 mb-10 h-11 rounded-[10px] bg-[#06E393] font-semibold text-sm text-[#161616] cursor-pointer"
+          >
+            만들기
+          </button>
+        </form>
       </div>
     </div>
   );
