@@ -86,7 +86,6 @@ export default function New() {
   };
 
   const onSubmit = async (data: MeetingFormData) => {
-    console.log("폼 데이터:", data);
     data.meetingId = 0;
     data.gameNames = [...games];
     data.meetingPlace = meetingPlace;
