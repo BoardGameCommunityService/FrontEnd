@@ -3,9 +3,18 @@ import { useRegion } from "@/hooks/useRegion";
 import useBottomSheetStore from "@/stores/useBottomSheetStore";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import usePlaceStore from "../../stores/post/usePlaceStore";
+
+interface Place {
+  id: string;
+  place_name: string;
+  address_name: string;
+}
 
 export default function RegionSelect() {
   const { setClose } = useBottomSheetStore();
+  const { setPlace } = usePlaceStore();
+
   const [keyword, setKeyword] = useState("");
   const debouncedSearch = useDebounce(keyword, 500);
   const { places, isLoading, error, searchPlaces } = useRegion();
@@ -20,7 +29,10 @@ export default function RegionSelect() {
     setKeyword(e.target.value);
   };
 
-  const handleMeetingRegion = (e: React.MouseEvent<HTMLLIElement>) => {};
+  const handleSelectPlace = (place: Place) => {
+    setPlace(place.place_name, place.address_name);
+    setClose();
+  };
 
   return (
     <div className="h-full flex flex-col">
@@ -49,7 +61,7 @@ export default function RegionSelect() {
           {places.map((place) => (
             <li
               key={place.id}
-              onClick={handleMeetingRegion}
+              onClick={() => handleSelectPlace(place)}
               className="border-[#E3E5E9] flex gap-[5px] items-start cursor-pointer"
             >
               <Image src="/icons/ic_marker_outline.svg" width={16} height={16} alt="" className="mt-[3px]"></Image>
