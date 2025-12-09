@@ -32,7 +32,7 @@ export default function New() {
   };
 
   const handleGameSelect = () => {
-    setOpen(<GameSelect />, "fixed");
+    setOpen(<GameSelect />, "fixed80");
   };
 
   const handleDateSelect = () => {
@@ -44,7 +44,7 @@ export default function New() {
   };
 
   const handleRegionSelect = () => {
-    setOpen(<RegionSelect />, "fixed");
+    setOpen(<RegionSelect />, "fixed50");
   };
 
   return (
