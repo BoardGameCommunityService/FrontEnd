@@ -6,7 +6,7 @@ import calendarIcon from "../../../../public/icons/ic_calendor.svg";
 import nextIcon from "../../../../public/icons/ic_chevron_right_icon.svg";
 
 import GameSelect from "@/components/bottom-sheet/GameSelect";
-import RegionSelect from "@/components/bottom-sheet/RegionSelect";
+import PlaceSelect from "@/components/bottom-sheet/PlaceSelect";
 import DateTimeSelector from "@/components/bottom-sheet/TimeSelect";
 import PeopleSelector from "@/components/common/PeopleSelector";
 import useDateStore from "@/stores/post/useDateStore";
@@ -44,7 +44,7 @@ export default function New() {
   };
 
   const handleRegionSelect = () => {
-    setOpen(<RegionSelect />, "fixed50");
+    setOpen(<PlaceSelect />, "fixed50");
   };
 
   return (

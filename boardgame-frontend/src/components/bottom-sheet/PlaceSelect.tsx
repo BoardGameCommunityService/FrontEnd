@@ -11,7 +11,7 @@ interface Place {
   address_name: string;
 }
 
-export default function RegionSelect() {
+export default function PlaceSelect() {
   const { setClose } = useBottomSheetStore();
   const { setPlace } = usePlaceStore();
 
