@@ -1,12 +1,11 @@
 "use client";
 
-import Image from "next/image";
-import useBottomSheetStore from "@/stores/useBottomSheetStore";
-import { BoardGames } from "@/content/games/games";
 import Button from "@/components/common/Button";
-import { useRef, useState } from "react";
+import { BoardGames } from "@/content/games/games";
 import useGameStore from "@/stores/post/useGameStore";
-import React from "react";
+import useBottomSheetStore from "@/stores/useBottomSheetStore";
+import Image from "next/image";
+import React, { useRef, useState } from "react";
 
 export default function GameSelect() {
   const { setClose } = useBottomSheetStore();
@@ -57,7 +56,7 @@ export default function GameSelect() {
             value={search}
           />
         </div>
-        <button className="cursor-pointer" aria-label="닫기" onClick={setClose}>
+        <button type="button" className="cursor-pointer" aria-label="닫기" onClick={setClose}>
           <Image src="/icons/ic_close_gray.svg" alt="" width={24} height={24} />
         </button>
       </div>
