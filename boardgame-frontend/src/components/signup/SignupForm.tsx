@@ -8,7 +8,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { FormValueType } from "@/types/SignupFormType";
+import { UserDataType } from "@/types/UserDataType";
 
 export default function SignupForm() {
   const [location, setLocation] = useState("");
@@ -19,7 +19,7 @@ export default function SignupForm() {
     handleSubmit,
     formState: { errors, isValid },
     getValues,
-  } = useForm<FormValueType>({
+  } = useForm<UserDataType>({
     defaultValues: {
       nickname: getSessionValue("nickname") || "",
       gender: (getSessionValue("gender") as "male" | "female") || undefined,

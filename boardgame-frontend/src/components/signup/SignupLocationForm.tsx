@@ -5,7 +5,6 @@ import TextInput from "@/components/common/TextInput";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useRegion } from "@/hooks/useRegion";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import LocationSearchResults from "./LocationSearchResults";
@@ -40,9 +39,9 @@ export default function SignupLocationForm() {
 
   return (
     <>
-      <Link href="/signup">
+      <button onClick={() => router.back()}>
         <Image src="/icons/ic_back.svg" alt="뒤로가기 버튼" width={24} height={24} />
-      </Link>
+      </button>
 
       <main>
         <section className="flex flex-col gap-3">
