@@ -24,7 +24,7 @@ interface CardProps {
  * @param games string[] 게임태그
  * @param meetingDate string 모임 시간
  */
-export default function Card({ id, location, title, currentMember, maxMember, games, meetingDate }: CardProps) {
+export default function Card({ id, location, title, currentMember, maxMember, games = [], meetingDate }: CardProps) {
   const { month, day, weekday, hours, minutes } = dateFormatter(meetingDate);
   const dateFormat = `${month}/${day}(${weekday}) ${hours}:${minutes}`;
   return (
@@ -40,9 +40,7 @@ export default function Card({ id, location, title, currentMember, maxMember, ga
         <h2 className="font-medium text-[15px] text-[#161616]">{title}</h2>
         <ul className="flex gap-1">
           <Badge>{`${currentMember}/${maxMember} 명`}</Badge>
-          {games.map((game, index) => (
-            <Badge key={index}>{game}</Badge>
-          ))}
+          {Array.isArray(games) && games.map((game, index) => <Badge key={index}>{game}</Badge>)}
         </ul>
       </Link>
     </article>
