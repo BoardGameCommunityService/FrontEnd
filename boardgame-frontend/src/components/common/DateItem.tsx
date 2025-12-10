@@ -14,7 +14,7 @@ export default function DateItem({ date, isSelected, onClick }: DateItemProps) {
     <li>
       <button
         onClick={onClick}
-        className={`w-[42px] h-[56px] rounded-full ${
+        className={`w-[42px] h-14 rounded-full cursor-pointer ${
           isSelected ? "bg-[#06E393] border-black border-2" : "border-2 border-transparent"
         }`}
       >

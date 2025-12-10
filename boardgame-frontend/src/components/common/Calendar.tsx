@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import DateItem from "./DateItem";
 
-export default function Calendar() {
-  const today = new Date();
-  const [selectedDate, setSelectedDate] = useState<Date>(today);
+interface CalendarProps {
+  today: Date;
+  selectedDate: Date;
+  changeDate: (date: Date) => void;
+}
 
+export default function Calendar({ today, selectedDate, changeDate }: CalendarProps) {
   // 오늘부터 30일간의 날짜 배열 생성
   const getDatesForMonth = () => {
     const dates = [];
@@ -36,7 +38,7 @@ export default function Calendar() {
           key={index}
           date={date}
           isSelected={isSameDate(date, selectedDate)}
-          onClick={() => setSelectedDate(date)}
+          onClick={() => changeDate(date)}
         />
       ))}
     </ul>

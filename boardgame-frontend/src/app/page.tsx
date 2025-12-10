@@ -10,8 +10,9 @@ import Image from "next/image";
 import bottomLogo from "../../public/bottomLogo.svg";
 import plusIcon from "../../public/icons/ic_plus.svg";
 import { useInView } from "react-intersection-observer";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Post } from "@/types/post";
+import dateFormatter from "@/util/dateFormatter";
 
 export default function Home() {
   const { ref, inView } = useInView({ threshold: 0 });
@@ -19,20 +20,31 @@ export default function Home() {
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const initialRef = useRef(false);
+
+  const today = new Date();
+  const [selectedDate, setSelectedDate] = useState<Date>(today);
 
   async function getData(pageNum: number) {
     try {
       setIsLoading(true);
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings?page=${pageNum}&size=15`);
+      const { year, month, day } = dateFormatter(selectedDate.toISOString());
+      const date = `${year}${month}${day}`;
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings?page=${pageNum}&size=15&date=${date}`
+      );
       if (!res.ok) throw new Error("데이터 fetch 에러");
 
       const { content } = await res.json();
       if (content.length === 0) {
         setHasMore(false);
       } else {
-        setPostings((prev) => [...prev, ...content]);
-        setPage((prev) => prev + 1);
+        if (pageNum === 0) {
+          setPostings(content);
+        } else {
+          setPostings((prev) => [...prev, ...content]);
+        }
+        setPage(pageNum + 1);
       }
     } catch (error: any) {
       console.error("통신 에러", error);
@@ -42,15 +54,14 @@ export default function Home() {
   }
 
   useEffect(() => {
-    // 개발 strict mode에서 키중복 이슈로 추가
-    if (initialRef.current) return;
-
-    initialRef.current = true;
+    setPostings([]);
+    setPage(0);
+    setHasMore(true);
 
     (async () => {
       await getData(0);
     })();
-  }, []);
+  }, [selectedDate]);
 
   useEffect(() => {
     (async () => {
@@ -69,7 +80,7 @@ export default function Home() {
             <Banner />
           </section>
           <section className="my-4">
-            <Calendar />
+            <Calendar today={today} selectedDate={selectedDate} changeDate={(date: Date) => setSelectedDate(date)} />
           </section>
           <section>
             <CardList results={postings} />
