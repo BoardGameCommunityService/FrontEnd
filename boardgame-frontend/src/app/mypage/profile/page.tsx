@@ -71,6 +71,7 @@ export default function Page() {
         await fetch("/api/auth/logout", { method: "POST" })
           .then((res) => res.json())
           .then(async (data) => {
+            setClose();
             await signOut({ redirect: false });
             router.replace(data.redirectURL);
           })
@@ -79,7 +80,26 @@ export default function Page() {
     );
   };
 
-  const handleDeactivate = () => {};
+  const handleDeactivate = () => {
+    setModal(
+      "정말 회원탈퇴를 하시겠습니까?",
+      "취소",
+      () => setClose(),
+      "회원탈퇴",
+      async () => {
+        await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/auth/deactivate`, {
+          method: "POST",
+          headers: { Authorization: `Bearer ${session?.user.accessToken}` },
+        })
+          .then(async () => {
+            setClose();
+            await signOut({ redirect: false });
+            router.replace("/");
+          })
+          .catch((err) => console.error(err));
+      }
+    );
+  };
 
   useEffect(() => {
     if (status === "loading" || !session?.user?.accessToken) return;
