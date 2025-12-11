@@ -14,12 +14,14 @@ import Header from "@/components/board/Hearder";
 import MeetingJoinButton from "@/components/board/MeetingJoinButton";
 import MemberList from "@/components/board/MemberList";
 import PlaceSection from "@/components/board/PlaceSection";
+import { useSession } from "next-auth/react";
 
 export default function Page() {
   const params = useParams();
   const id = params.id as string;
 
   const { data, loading } = useMeetingDetail(id);
+  const { data: session } = useSession();
 
   if (loading || !data) return <MeetingSkeleton />;
 
@@ -35,6 +37,8 @@ export default function Page() {
     gameNamesJson,
     host,
   } = data;
+
+  const amIHost = Boolean(host.userId === Number(session?.user.id));
 
   //날짜 계산 함수
   const { year, month, day, hours, minutes } = dateFormatter(meetingAt);
@@ -53,7 +57,7 @@ export default function Page() {
   return (
     <>
       {/* 헤더 */}
-      <Header />
+      <Header host={amIHost} />
       {/* 메인 */}
       <main className="pb-[60px]">
         <section className="px-5 mt-2.5">
@@ -87,7 +91,7 @@ export default function Page() {
         <MemberList participants={participants} host={host} />
 
         {/* 참가신청 버튼 */}
-        <MeetingJoinButton id={id} participants={participants} maxParticipants={maxParticipants} />
+        {!amIHost && <MeetingJoinButton id={id} participants={participants} maxParticipants={maxParticipants} />}
       </main>
     </>
   );
