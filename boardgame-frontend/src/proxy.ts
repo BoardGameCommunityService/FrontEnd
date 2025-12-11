@@ -14,6 +14,12 @@ export const proxy = auth((req) => {
   const isBoardDetailPage = /^\/board\/\d+$/.test(pathname);
   const isPublicPath = pathname === "/" || isBoardDetailPage || publicPaths.some((path) => pathname.startsWith(path));
 
+  if (isBoardDetailPage) {
+    if (!session?.user) {
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
+  }
+
   if (isPublicPath) {
     return NextResponse.next();
   }
