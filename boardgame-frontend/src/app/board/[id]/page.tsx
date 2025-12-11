@@ -39,7 +39,7 @@ export default function Page() {
       }
     );
     router.push("/");
-    return null;
+    return <MeetingSkeleton />;
   }
 
   const {
