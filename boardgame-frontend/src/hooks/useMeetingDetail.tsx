@@ -14,17 +14,14 @@ export default function useMeetingDetail(id: string) {
     try {
       setLoading(true);
       setError(null);
-      const token = session?.user?.accessToken as string | undefined;
-      if (!token) {
-        router.push("/login");
-        return;
-      }
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings/${id}`, {
+
+      const res = await fetch(`/api/proxy/meetings/${id}`, {
         headers: {
           "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
+        credentials: "include",
       });
+
       if (!res.ok) throw new Error(`상세 데이터 fetch 실패: ${res.status}`);
       const result = await res.json();
       setData(result);
@@ -34,7 +31,7 @@ export default function useMeetingDetail(id: string) {
     } finally {
       setLoading(false);
     }
-  }, [id, session, router]);
+  }, [id]);
 
   useEffect(() => {
     if (status === "loading") return;
