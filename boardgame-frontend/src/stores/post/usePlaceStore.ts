@@ -14,8 +14,8 @@ const initialState: PlaceState = {
 
 const usePlaceStore = create(
   combine(initialState, (set) => ({
+    setClear: () => set(initialState),
     setPlace: (place: string, address: string) => set({ meetingPlace: place, meetingAddress: address }),
-
     clearPlace: () => set({ meetingPlace: "", meetingAddress: "" }),
   }))
 );

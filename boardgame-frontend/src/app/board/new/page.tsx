@@ -51,9 +51,9 @@ export default function New() {
   });
 
   const { setOpen } = useBottomSheetStore();
-  const { games, setGames } = useGameStore();
-  const { meetingPlace, meetingAddress } = usePlaceStore();
-  const { selectedDate } = useDateStore();
+  const { games, setGames, setClear: setGameClear } = useGameStore();
+  const { meetingPlace, meetingAddress, setClear: setPlaceClear } = usePlaceStore();
+  const { selectedDate, setClear: setDateClear } = useDateStore();
 
   const title = watch("title");
   const content = watch("content");
@@ -110,6 +110,11 @@ export default function New() {
       }
 
       const { meetingId } = await res.json();
+
+      setGameClear();
+      setPlaceClear();
+      setDateClear();
+
       router.replace(`/board/${meetingId}`);
     } catch (error) {
       console.error(error);

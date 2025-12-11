@@ -11,6 +11,7 @@ const initialState: DateState = {
 
 const useDateStore = create(
   combine(initialState, (set) => ({
+    setClear: () => set(initialState),
     setSelectedDate: (date: Date | null) => set({ selectedDate: date }),
     clearSelectedDate: () => set({ selectedDate: null }),
   }))
