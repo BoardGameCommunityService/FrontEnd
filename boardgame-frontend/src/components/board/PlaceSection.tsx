@@ -20,13 +20,6 @@ export default function PlaceSection({ meetingPlace, meetingAddress }: Props) {
         </div>
 
         <div>
-          <link rel="preconnect" href="https://dapi.kakao.com" crossOrigin="anonymous" />
-          <link rel="dns-prefetch" href="https://dapi.kakao.com" />
-          <link
-            rel="prefetch"
-            href={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_JAVASCRIPT_KEY}&libraries=services&autoload=false`}
-            as="script"
-          />
           <KakaoMap address={meetingAddress} />
         </div>
       </address>

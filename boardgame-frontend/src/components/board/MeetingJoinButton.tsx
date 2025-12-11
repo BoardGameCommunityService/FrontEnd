@@ -12,7 +12,7 @@ interface Props extends Pick<Post, "participants" | "maxParticipants"> {
 
 // 구조분해할당으로 바로 사용
 export default function MeetingJoinButton({ id, participants, maxParticipants }: Props) {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const [isDisabled, setIsDisabled] = useState(false);
@@ -84,6 +84,7 @@ export default function MeetingJoinButton({ id, participants, maxParticipants }:
   }
 
   useEffect(() => {
+    if (status === "loading" || !session?.user?.accessToken) return;
     const amIParticipant = (participants ?? []).some((p) => p.nickname === session?.user?.name);
 
     if (participants.length === maxParticipants) {
