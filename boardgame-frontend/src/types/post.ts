@@ -19,7 +19,7 @@ export interface Post {
   maxParticipants: number;
   currentParticipants: number;
   status: string;
-  gameNameJson: string;
+  gameNamesJson: string;
   participants: Participant[];
   host: Host;
 }
