@@ -39,7 +39,14 @@ export default function SignupLocationForm() {
 
   return (
     <>
-      <button onClick={() => router.back()}>
+      <button
+        className="cursor-pointer"
+        type="button"
+        onClick={() => {
+          if (window.history.length > 1) router.back();
+          else router.push("/signup");
+        }}
+      >
         <Image src="/icons/ic_back.svg" alt="뒤로가기 버튼" width={24} height={24} />
       </button>
 
