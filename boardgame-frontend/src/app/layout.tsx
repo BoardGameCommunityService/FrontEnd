@@ -2,6 +2,7 @@ import "./globals.css";
 
 import Providers from "@/components/Providers";
 import BottomSheet from "@/components/common/BottomSheet";
+import Modal from "@/components/common/Modal";
 import React from "react";
 
 export default function RootLayout({
@@ -17,6 +18,7 @@ export default function RootLayout({
             <div className={`w-full h-screen overflow-y-scroll scrollbar-hide`}>
               {children}
               <BottomSheet />
+              <Modal />
             </div>
           </div>
         </Providers>
