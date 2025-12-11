@@ -7,8 +7,9 @@ import GenderRadio from "@/components/common/GenderRadio";
 import { useForm } from "react-hook-form";
 import { UserDataType } from "@/types/UserDataType";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { getSessionValue } from "@/util/getSession";
+import useModalStore from "@/stores/useModalStore";
 
 export default function Page() {
   const router = useRouter();
@@ -25,6 +26,7 @@ export default function Page() {
   });
 
   const { data: session, status } = useSession();
+  const { setModal, setClose } = useModalStore();
 
   const onSubmit = (data: UserDataType) => {
     if (status === "loading" || !session?.user?.accessToken) return;
@@ -58,6 +60,26 @@ export default function Page() {
 
     router.push("/mypage/profile/location");
   };
+
+  const handleLogout = () => {
+    setModal(
+      "로그아웃 하시겠습니까?",
+      "취소",
+      () => setClose(),
+      "로그아웃",
+      async () => {
+        await fetch("/api/auth/logout", { method: "POST" })
+          .then((res) => res.json())
+          .then(async (data) => {
+            await signOut({ redirect: false });
+            router.replace(data.redirectURL);
+          })
+          .catch((err) => console.error(err));
+      }
+    );
+  };
+
+  const handleDeactivate = () => {};
 
   useEffect(() => {
     if (status === "loading" || !session?.user?.accessToken) return;
@@ -163,10 +185,18 @@ export default function Page() {
         </section>
 
         <div className="flex gap-2 mt-[clamp(10px,10vw,160px)] text-[#161616] text-sm leading-[22px] font-semibold">
-          <button className="flex-1 bg-white py-[11px] rounded-[10px] cursor-pointer" type="button">
+          <button
+            className="flex-1 bg-white py-[11px] rounded-[10px] cursor-pointer"
+            type="button"
+            onClick={handleLogout}
+          >
             로그아웃
           </button>
-          <button className="flex-1 bg-white py-[11px] rounded-[10px] cursor-pointer" type="button">
+          <button
+            className="flex-1 bg-white py-[11px] rounded-[10px] cursor-pointer"
+            type="button"
+            onClick={handleDeactivate}
+          >
             회원탈퇴
           </button>
         </div>
