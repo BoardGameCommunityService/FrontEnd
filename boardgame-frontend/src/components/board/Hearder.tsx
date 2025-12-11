@@ -13,15 +13,27 @@ const copyToClipboard = () => {
       console.error("복사 실패:", err);
     });
 };
-export default function Header() {
+
+type HearderProps = { host: boolean };
+
+export default function Hearder({ host }: HearderProps) {
   return (
     <header className="px-5 flex justify-between items-center h-12">
       <Link href="/" className="cursor-pointer">
         <Image src="/icons/ic_back.svg" alt="뒤로가기 버튼" width={24} height={24} />
       </Link>
-      <button className="cursor-pointer" type="button" onClick={copyToClipboard}>
-        <Image src="/icons/ic_share.svg" alt="공유하기 버튼" width={24} height={24} />
-      </button>
+      <div className="flex gap-4">
+        <button className="cursor-pointer" type="button" onClick={copyToClipboard}>
+          <Image src="/icons/ic_share.svg" alt="공유하기 버튼" width={24} height={24} />
+        </button>
+        {host ? (
+          <button className="cursor-pointer" type="button" onClick={copyToClipboard}>
+            <Image src="/icons/ic_edit.svg" alt="공유하기 버튼" width={24} height={24} />
+          </button>
+        ) : (
+          ""
+        )}
+      </div>
     </header>
   );
 }
