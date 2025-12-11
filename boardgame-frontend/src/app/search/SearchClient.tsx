@@ -24,7 +24,7 @@ export default function SearchClient({ popularGames, popularRegions }: Props) {
   const isEmptyState = hasQuery && !isLoading && !hasResults;
 
   return (
-    <div className={`pt-11 max-w-[375px] min-h-dvh flex flex-col ${hasResults ? "bg-[#F5F6FA]" : ""}`}>
+    <div className={`pt-11 max-w-[375px] min-h-dvh flex flex-col bg-[#F5F6FA]`}>
       <header className="h-[60px] max-w-[355px] flex justify-between items-center gap-3">
         <h1 className="sr-only">검색 페이지</h1>
         <button type="button" onClick={() => router.back()}>
