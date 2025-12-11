@@ -11,8 +11,14 @@ export const proxy = auth((req) => {
 
   // public 경로는 먼저 허용
   const publicPaths = ["/login"];
-  const isBoardDetailPage = /^\/board\/\d+$/.test(pathname);
-  const isPublicPath = pathname === "/" || isBoardDetailPage || publicPaths.some((path) => pathname.startsWith(path));
+
+  const isPublicPath = pathname === "/" || publicPaths.some((path) => pathname.startsWith(path));
+
+  // if (isBoardDetailPage) {
+  //   if (!session?.user) {
+  //     return NextResponse.redirect(new URL("/login", req.url));
+  //   }
+  // }
 
   if (isPublicPath) {
     return NextResponse.next();
