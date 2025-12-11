@@ -7,8 +7,7 @@ import Badge from "@/components/common/Badge";
 import dateFormatter from "@/util/dateFormatter";
 
 import useMeetingDetail from "@/hooks/useMeetingDetail";
-import { useParams, useRouter } from "next/navigation";
-import useModalStore from "@/stores/useModalStore";
+import { useParams } from "next/navigation";
 
 //컴포넌트
 import Header from "@/components/board/Hearder";
@@ -17,30 +16,12 @@ import MemberList from "@/components/board/MemberList";
 import PlaceSection from "@/components/board/PlaceSection";
 
 export default function Page() {
-  const { setModal, setClose } = useModalStore();
-  const router = useRouter();
   const params = useParams();
   const id = params.id as string;
 
   const { data, loading } = useMeetingDetail(id);
 
-  if (loading) return <MeetingSkeleton />;
-  if (!data) {
-    setModal(
-      "로그인이 필요한 서비스입니다. 로그인하시겠습니까?",
-      "확인",
-      () => {
-        router.push("/login");
-        setClose();
-      },
-      "취소",
-      () => {
-        setClose();
-      }
-    );
-    router.push("/");
-    return <MeetingSkeleton />;
-  }
+  if (loading || !data) return <MeetingSkeleton />;
 
   const {
     title,
