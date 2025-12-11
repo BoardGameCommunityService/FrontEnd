@@ -5,7 +5,6 @@ import { Post } from "@/types/post";
 
 export default function useMeetingDetail(id: string) {
   const { data: session, status } = useSession();
-  const router = useRouter();
   const [data, setData] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<any>(null);
@@ -14,12 +13,12 @@ export default function useMeetingDetail(id: string) {
     try {
       setLoading(true);
       setError(null);
-
-      const res = await fetch(`/api/proxy/meetings/${id}`, {
+      const token = session?.user?.accessToken as string | undefined;
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings/${id}`, {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-        credentials: "include",
       });
 
       if (!res.ok) throw new Error(`상세 데이터 fetch 실패: ${res.status}`);
@@ -31,7 +30,7 @@ export default function useMeetingDetail(id: string) {
     } finally {
       setLoading(false);
     }
-  }, [id]);
+  }, [id, session]);
 
   useEffect(() => {
     if (status === "loading") return;
