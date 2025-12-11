@@ -11,10 +11,10 @@ import { useParams, useRouter } from "next/navigation";
 import useModalStore from "@/stores/useModalStore";
 
 //컴포넌트
-import Header from "./Hearder";
-import MeetingJoinButton from "./MeetingJoinButton";
-import MemberList from "./MemberList";
-import PlaceSection from "./PlaceSection";
+import Header from "@/components/board/Hearder";
+import MeetingJoinButton from "@/components/board/MeetingJoinButton";
+import MemberList from "@/components/board/MemberList";
+import PlaceSection from "@/components/board/PlaceSection";
 
 export default function Page() {
   const { setModal, setClose } = useModalStore();
