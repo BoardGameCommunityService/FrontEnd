@@ -1,8 +1,8 @@
 import "./globals.css";
 
-import React from "react";
 import Providers from "@/components/Providers";
 import BottomSheet from "@/components/common/BottomSheet";
+import React from "react";
 
 export default function RootLayout({
   children,
@@ -14,7 +14,7 @@ export default function RootLayout({
       <body className="flex justify-center">
         <Providers>
           <div className="w-[375px] min-h-dvh relative overflow-hidden">
-            <div className="w-full">
+            <div className={`w-full h-screen overflow-y-scroll scrollbar-hide`}>
               {children}
               <BottomSheet />
             </div>
