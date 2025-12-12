@@ -4,18 +4,20 @@ import Banner from "@/components/common/Banner";
 import Calendar from "@/components/common/Calendar";
 import CardList from "@/components/common/CardList";
 import Header from "@/components/common/Header";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 
-import Image from "next/image";
-import bottomLogo from "../../public/bottomLogo.svg";
-import plusIcon from "../../public/icons/ic_plus.svg";
-import { useInView } from "react-intersection-observer";
-import { useEffect, useState } from "react";
 import { Post } from "@/types/post";
 import dateFormatter from "@/util/dateFormatter";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { useInView } from "react-intersection-observer";
+import bottomLogo from "../../public/bottomLogo.svg";
+import plusIcon from "../../public/icons/ic_plus.svg";
 
 export default function Home() {
   const { ref, inView } = useInView({ threshold: 0 });
+  const { data: session, status } = useSession();
   const [postings, setPostings] = useState<Post[]>([]);
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -23,6 +25,31 @@ export default function Home() {
 
   const today = new Date();
   const [selectedDate, setSelectedDate] = useState<Date>(today);
+  const [region, setRegion] = useState<string>("서울");
+
+  async function getRegion() {
+    if (status === "loading" || !session?.user?.accessToken) return;
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/users/me`, {
+        headers: {
+          Authorization: `Bearer ${session.user.accessToken}`,
+        },
+      });
+      if (!res.ok) throw new Error("지역 정보 fetch 에러");
+
+      const data = await res.json();
+      setRegion(data.region);
+      console.log("data: ", data.region);
+    } catch (error: any) {
+      console.error("통신 에러", error);
+    }
+  }
+
+  useEffect(() => {
+    (async () => {
+      await getRegion();
+    })();
+  }, [region]);
 
   async function getData(pageNum: number) {
     try {
@@ -36,6 +63,7 @@ export default function Home() {
       if (!res.ok) throw new Error("데이터 fetch 에러");
 
       const { content } = await res.json();
+      console.log("content: ", content);
       if (content.length === 0) {
         setHasMore(false);
       } else {
@@ -74,7 +102,7 @@ export default function Home() {
   return (
     <div className="flex justify-center">
       <div className="w-full min-h-screen flex flex-col items-center bg-[#F5F6FA] relative">
-        <Header />
+        <Header region={region} changeRegion={(region: string) => setRegion(region)} />
         <main>
           <section className="w-full flex flex-col items-center">
             <Banner />
