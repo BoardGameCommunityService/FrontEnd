@@ -16,7 +16,7 @@ export default function MemberList({ participants, host }: Props) {
       <ul className="mt-4 flex flex-col gap-5">
         {participants.map((m) => (
           <li key={m.userId} className="flex items-center gap-3">
-            <img src={m.avatarImageUrl} alt={`${m.nickname} 프로필 이미지`} className="w-6 h-6" />
+            <img src={m.avatarImageUrl} alt={`${m.nickname} 프로필 이미지`} className="w-6 h-6 rounded-full" />
             <span className="text-base text-[#121212] leading-[26px] font-medium">{m.nickname}</span>
             {m.userId === host.userId ? (
               <span className="ml-2 text-[13px] text-[#10C584] font-medium leading-5 bg-[#D1FAEB] rounded-md px-1 py-0.5 inline-block">
