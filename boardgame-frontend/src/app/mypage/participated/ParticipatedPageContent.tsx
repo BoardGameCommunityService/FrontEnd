@@ -1,7 +1,6 @@
 "use client";
 
 import backIco from "../../../../public/icons/ic_back.svg";
-import { EmptyState } from "@/components/search";
 
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -49,6 +48,15 @@ export default function ParticipatedPageContent() {
     return "만든 모임";
   }, [endPoint]);
 
+  type ApprovedResult = {
+    upcoming: any[];
+    finished: any[];
+    totalUpcoming: number;
+    totalFinished: number;
+  };
+
+  const [approvedResult, setApprovedResult] = useState<ApprovedResult | null>(null);
+
   useEffect(() => {
     if (!token) return;
 
@@ -72,15 +80,10 @@ export default function ParticipatedPageContent() {
 
         const data = await res.json();
 
-        const normalize = (d: any) => {
-          if (Array.isArray(d)) return d;
-          if (!d) return [];
-          if (Array.isArray(d.content)) return d.content;
-          return [];
-        };
-
-        if (mounted) {
-          setResults(normalize(data));
+        if (endPoint === "approved") {
+          if (mounted) setApprovedResult(data);
+        } else {
+          if (mounted) setResults(Array.isArray(data) ? data : (data.content ?? []));
         }
       } catch (error: any) {
         if (error.name === "AbortError") return;
@@ -102,7 +105,7 @@ export default function ParticipatedPageContent() {
       mounted = false;
       abortController.abort();
     };
-  }, [token, url]);
+  }, [token, url, endPoint]);
 
   const [upcoming, finished] = useMemo(() => {
     if (!results) return [[], []];
@@ -151,11 +154,11 @@ export default function ParticipatedPageContent() {
           <>
             <div className="flex flex-col pt-2 px-5 gap-2.5">
               <h2 className="font-medium text-sm text-[#767676]">다가오는 모임</h2>
-              <CardList results={upcoming} />
+              <CardList results={approvedResult?.upcoming ?? []} />
             </div>
             <div className="flex flex-col pt-2 px-5 gap-2.5">
               <h2 className="font-medium text-sm text-[#767676]">참여 완료</h2>
-              <CardList results={finished} />
+              <CardList results={approvedResult?.finished ?? []} />
             </div>
           </>
         ) : (
