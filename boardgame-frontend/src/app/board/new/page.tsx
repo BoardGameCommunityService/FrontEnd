@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 import calendarIcon from "../../../../public/icons/ic_calendor.svg";
 import nextIcon from "../../../../public/icons/ic_chevron_right_icon.svg";
@@ -20,6 +21,7 @@ import { useForm } from "react-hook-form";
 import usePlaceStore from "@/stores/post/usePlaceStore";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import useMeetingDetail from "@/hooks/useMeetingDetail";
 
 interface MeetingFormData {
   meetingId: number;
@@ -34,6 +36,13 @@ interface MeetingFormData {
 }
 
 export default function New() {
+  const searchParams = useSearchParams();
+  const id = searchParams?.get("id") ?? undefined;
+  const { data } = useMeetingDetail(id as any);
+
+  const { setPlace } = usePlaceStore();
+  const { setSelectedDate } = useDateStore();
+
   // textarea 글자수 카운터
   const [inputCount, setInputCount] = useState(0);
   const [isValid, setIsValid] = useState(false);
@@ -43,7 +52,7 @@ export default function New() {
   const router = useRouter();
   const { data: session } = useSession();
 
-  const { register, handleSubmit, watch } = useForm<MeetingFormData>({
+  const { register, handleSubmit, watch, reset } = useForm<MeetingFormData>({
     defaultValues: {
       title: "",
       content: "",
@@ -124,6 +133,28 @@ export default function New() {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    if (!data) return;
+    const gameListMaker = (gameNamesJson: string) => {
+      const games = JSON.parse(gameNamesJson);
+      if (games === null) return;
+      if (games.length === 0) return;
+      return games;
+    };
+    const games = gameListMaker(data.gameNamesJson);
+
+    reset({
+      meetingId: data.meetingId,
+      title: data.title ?? "",
+      content: data.content ?? "",
+    });
+    setInputCount((data.content ?? "").length);
+    setPeople(data.maxParticipants ?? 2);
+    setGames(games);
+    setPlace(data.meetingPlace ?? "", data.meetingAddress ?? "");
+    setSelectedDate(data.meetingAt ? new Date(data.meetingAt) : null);
+  }, [data, reset, setGames, setPlace, setSelectedDate]);
 
   return (
     <div id="page-container" className="flex justify-center relative">
