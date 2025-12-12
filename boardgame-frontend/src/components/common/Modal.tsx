@@ -12,7 +12,7 @@ export default function Modal() {
     return () => {
       document.body.style.overflow = "unset";
     };
-  }, [isOpen]);
+  }, []);
 
   return (
     <>
