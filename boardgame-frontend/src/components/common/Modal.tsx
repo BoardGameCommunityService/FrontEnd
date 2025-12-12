@@ -7,12 +7,12 @@ export default function Modal() {
   const { isOpen, content, leftBtnTxt, rightBtnTxt, leftOnClick, rightOnClick } = useModalStore();
 
   useEffect(() => {
-    document.body.style.overflow = "hidden";
+    if (isOpen) document.body.style.overflow = "hidden";
 
     return () => {
       document.body.style.overflow = "unset";
     };
-  }, []);
+  }, [isOpen]);
 
   return (
     <>
