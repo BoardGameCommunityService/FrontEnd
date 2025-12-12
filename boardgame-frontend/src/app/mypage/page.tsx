@@ -7,31 +7,68 @@ import React, { useEffect, useState } from "react";
 import Menu from "@/components/mypage/Menu";
 import { useSession } from "next-auth/react";
 
+interface MyPartData {
+  hostCount: number;
+  approvedCount: number;
+  pendingCount: number;
+}
+
 export default function Page() {
   const { data: session } = useSession();
   const token = session?.user.accessToken as string | undefined;
-  const [myPartData, setMyPartData] = useState<any | null>(null);
+  const [myPartData, setMyPartData] = useState<MyPartData>({
+    hostCount: 0,
+    approvedCount: 0,
+    pendingCount: 0,
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!token) return;
+
     let mounted = true;
-    (async () => {
+    const abortController = new AbortController();
+
+    const fetchData = async () => {
+      setIsLoading(true);
+      setError(null);
+
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/my/participations/summary`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
+          signal: abortController.signal,
         });
+
         if (!res.ok) throw new Error("통신 요청 실패");
+
         const data = await res.json();
-        if (mounted) setMyPartData(data);
+
+        if (mounted) {
+          setMyPartData(data);
+        }
       } catch (error: any) {
-        console.error("네트워크 에러", error);
+        if (error.name === "AbortError") return;
+
+        if (mounted) {
+          console.error("네트워크 에러", error);
+          setError("데이터를 불러오는데 실패했습니다.");
+        }
+      } finally {
+        if (mounted) {
+          setIsLoading(false);
+        }
       }
-    })();
+    };
+
+    fetchData();
+
     return () => {
       mounted = false;
+      abortController.abort();
     };
   }, [token]);
 
@@ -43,10 +80,10 @@ export default function Page() {
         href="/"
         title="마이페이지"
         elements={
-          <Link className="cursor-pointer relative" href="/mypage/alim">
-            <Image src="/icons/ic_alim.svg" alt="알림 버튼" width={36} height={36} />
+          <button className="cursor-pointer relative">
+            <Image src="/icons/ic_alim.svg" alt="공유하기 버튼" width={36} height={36} />
             <span className="rounded-[50%] bg-[#FC3B45] w-1.5 h-1.5 inline-block absolute top-1.5 right-1.5"></span>
-          </Link>
+          </button>
         }
       />
 
@@ -71,33 +108,59 @@ export default function Page() {
           </Link>
           <ul className="mt-4 flex w-full bg-[#F5F6FA] rounded-xl">
             <li className="flex-1 py-3">
-              <Link
-                className="flex flex-col items-center"
-                href={`/mypage/participated?endPoint=host&length=${hostCount}`}
-              >
-                <span className="text-[#767676] text-xs leading-[18px]">만든모임</span>
-                <span className="text-[#121212] text-xl leading-7 font-medium">{hostCount || "0"}</span>
-              </Link>
+              {hostCount > 0 ? (
+                <Link
+                  className="flex flex-col items-center"
+                  href={`/mypage/participated?endPoint=host&length=${hostCount}`}
+                >
+                  <span className="text-[#767676] text-xs leading-[18px]">만든모임</span>
+                  <span className="text-[#121212] text-xl leading-7 font-medium">{isLoading ? "-" : hostCount}</span>
+                </Link>
+              ) : (
+                <div className="flex flex-col items-center opacity-50 cursor-not-allowed">
+                  <span className="text-[#767676] text-xs leading-[18px]">만든모임</span>
+                  <span className="text-[#121212] text-xl leading-7 font-medium">{isLoading ? "-" : hostCount}</span>
+                </div>
+              )}
             </li>
             <li className="flex-1 py-3">
-              <Link
-                className="flex flex-col items-center"
-                href={`/mypage/participated?endPoint=approved&length=${approvedCount}`}
-              >
-                <span className="text-[#767676] text-xs leading-[18px]">참여한모임</span>
-                <span className="text-[#121212] text-xl leading-7 font-medium">{approvedCount || "0"}</span>
-              </Link>
+              {approvedCount > 0 ? (
+                <Link
+                  className="flex flex-col items-center"
+                  href={`/mypage/participated?endPoint=approved&length=${approvedCount}`}
+                >
+                  <span className="text-[#767676] text-xs leading-[18px]">참여한모임</span>
+                  <span className="text-[#121212] text-xl leading-7 font-medium">
+                    {isLoading ? "-" : approvedCount}
+                  </span>
+                </Link>
+              ) : (
+                <div className="flex flex-col items-center opacity-50 cursor-not-allowed">
+                  <span className="text-[#767676] text-xs leading-[18px]">참여한모임</span>
+                  <span className="text-[#121212] text-xl leading-7 font-medium">
+                    {isLoading ? "-" : approvedCount}
+                  </span>
+                </div>
+              )}
             </li>
             <li className="flex-1 py-3">
-              <Link
-                className="flex flex-col items-center"
-                href={`/mypage/participated?endPoint=pending&length=${pendingCount}`}
-              >
-                <span className="text-[#767676] text-xs leading-[18px]">신청 대기중</span>
-                <span className="text-[#121212] text-xl leading-7 font-medium">{pendingCount || "0"}</span>
-              </Link>
+              {pendingCount > 0 ? (
+                <Link
+                  className="flex flex-col items-center"
+                  href={`/mypage/participated?endPoint=pending&length=${pendingCount}`}
+                >
+                  <span className="text-[#767676] text-xs leading-[18px]">신청 대기중</span>
+                  <span className="text-[#121212] text-xl leading-7 font-medium">{isLoading ? "-" : pendingCount}</span>
+                </Link>
+              ) : (
+                <div className="flex flex-col items-center opacity-50 cursor-not-allowed">
+                  <span className="text-[#767676] text-xs leading-[18px]">신청 대기중</span>
+                  <span className="text-[#121212] text-xl leading-7 font-medium">{isLoading ? "-" : pendingCount}</span>
+                </div>
+              )}
             </li>
           </ul>
+          {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
         </section>
         <section className="mt-3">
           <h2 className="sr-only">마이페이지 메뉴 목록</h2>
