@@ -12,7 +12,7 @@ import PeopleSelector from "@/components/common/PeopleSelector";
 import useDateStore from "@/stores/post/useDateStore";
 import useGameStore from "@/stores/post/useGameStore";
 import useBottomSheetStore from "@/stores/useBottomSheetStore";
-import { formatDateTime } from "@/util/dateFormatter";
+import dateFormatter, { formatDateTime } from "@/util/dateFormatter";
 
 import Image from "next/image";
 import { ChangeEvent, useEffect, useState } from "react";
@@ -29,7 +29,7 @@ interface MeetingFormData {
   meetingPlace: string;
   meetingAddress: string;
   regionCode: string;
-  meetingAt: Date | null;
+  meetingAt: string | null;
   maxParticipants: number | "무제한";
 }
 
@@ -86,12 +86,16 @@ export default function New() {
   };
 
   const onSubmit = async (data: MeetingFormData) => {
+    if (!selectedDate) return;
+
+    const { year, month, day, hours, minutes } = dateFormatter(selectedDate.toISOString());
+
     data.meetingId = 0;
     data.gameNames = [...games];
     data.meetingPlace = meetingPlace;
     data.meetingAddress = meetingAddress;
     data.regionCode = meetingAddress.split(" ")[0] + " " + meetingAddress.split(" ")[1];
-    data.meetingAt = selectedDate;
+    data.meetingAt = `${year}-${month}-${day}T${hours}:${minutes}:00`;
     data.maxParticipants = people;
 
     try {
