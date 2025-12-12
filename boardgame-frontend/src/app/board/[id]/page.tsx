@@ -50,6 +50,7 @@ export default function Page() {
   const gameListMaker = (gameNamesJson: string) => {
     const games = JSON.parse(gameNamesJson);
     if (games === null) return;
+    if (games.length === 0) return;
     return games;
   };
   const gameList = gameListMaker(gameNamesJson);
@@ -57,7 +58,7 @@ export default function Page() {
   return (
     <>
       {/* 헤더 */}
-      <Header host={amIHost} />
+      <Header host={amIHost} id={id} />
       {/* 메인 */}
       <main className="pb-[60px]">
         <section className="px-5 mt-2.5">

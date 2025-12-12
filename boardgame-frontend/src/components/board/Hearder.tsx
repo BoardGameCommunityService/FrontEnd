@@ -14,9 +14,9 @@ const copyToClipboard = () => {
     });
 };
 
-type HearderProps = { host: boolean };
+type HearderProps = { host: boolean; id: string };
 
-export default function Hearder({ host }: HearderProps) {
+export default function Hearder({ host, id }: HearderProps) {
   return (
     <header className="px-5 flex justify-between items-center h-12">
       <Link href="/" className="cursor-pointer">
@@ -27,12 +27,10 @@ export default function Hearder({ host }: HearderProps) {
           <Image src="/icons/ic_share.svg" alt="공유하기 버튼" width={24} height={24} />
         </button>
         {host ? (
-          <button className="cursor-pointer" type="button" onClick={copyToClipboard}>
-            <Image src="/icons/ic_edit.svg" alt="공유하기 버튼" width={24} height={24} />
-          </button>
-        ) : (
-          ""
-        )}
+          <Link href={`/board/new?id=${id}`} className="cursor-pointer">
+            <Image src="/icons/ic_edit.svg" alt="수정하기 버튼" width={24} height={24} />
+          </Link>
+        ) : null}
       </div>
     </header>
   );
