@@ -47,7 +47,7 @@ export default function CreateBoard({ id }: { id: number }) {
   const [people, setPeople] = useState<number | "무제한">(2);
 
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   const { register, handleSubmit, watch, reset } = useForm<MeetingFormData>({
     defaultValues: {
@@ -132,7 +132,12 @@ export default function CreateBoard({ id }: { id: number }) {
   };
 
   useEffect(() => {
-    if (!data) return;
+    if (status === "loading" || !data) return;
+
+    if (id && session && Number(session?.user.id) !== data?.host.userId) {
+      router.replace("/");
+    }
+
     const gameListMaker = (gameNamesJson: string) => {
       const games = JSON.parse(gameNamesJson);
       if (games === null) return;
@@ -151,7 +156,7 @@ export default function CreateBoard({ id }: { id: number }) {
     setGames(games);
     setPlace(data.meetingPlace ?? "", data.meetingAddress ?? "");
     setSelectedDate(data.meetingAt ? new Date(data.meetingAt) : null);
-  }, [data, reset, setGames, setPlace, setSelectedDate]);
+  }, [data, id, reset, router, session, setGames, setPlace, setSelectedDate, status]);
 
   return (
     <div id="page-container" className="flex justify-center relative">
