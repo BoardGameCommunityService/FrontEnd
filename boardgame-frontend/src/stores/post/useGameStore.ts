@@ -1,16 +1,17 @@
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
 
-type GameStat = {
+type GameState = {
   games: Array<string>;
 };
 
-const initialStat: GameStat = {
+const initialState: GameState = {
   games: [],
 };
 
 const useGameStore = create(
-  combine(initialStat, (set, get) => ({
+  combine(initialState, (set, get) => ({
+    setClear: () => set(initialState),
     setGames: (games: Array<string>) => set({ games }),
   }))
 );
