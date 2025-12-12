@@ -15,7 +15,7 @@ export default function RootLayout({
       <body className="flex justify-center">
         <Providers>
           <div className="w-[375px] min-h-dvh relative overflow-hidden">
-            <div className="w-full">
+            <div className="h-screen overflow-y-scroll scrollbar-hide">
               {children}
               <BottomSheet />
               <Modal />
