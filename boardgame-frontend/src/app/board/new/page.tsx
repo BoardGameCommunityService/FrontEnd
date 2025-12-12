@@ -37,8 +37,8 @@ interface MeetingFormData {
 
 export default function New() {
   const searchParams = useSearchParams();
-  const id = searchParams?.get("id") ?? undefined;
-  const { data } = useMeetingDetail(id as any);
+  const id = Number(searchParams.get("id")) || 0;
+  const { data } = useMeetingDetail(id);
 
   const { setPlace } = usePlaceStore();
   const { setSelectedDate } = useDateStore();
@@ -99,7 +99,7 @@ export default function New() {
 
     const { year, month, day, hours, minutes } = dateFormatter(selectedDate.toISOString());
 
-    data.meetingId = 0;
+    data.meetingId = id;
     data.gameNames = [...games];
     data.meetingPlace = meetingPlace;
     data.meetingAddress = meetingAddress;
@@ -108,8 +108,8 @@ export default function New() {
     data.maxParticipants = people;
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings`, {
-        method: "POST",
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings${id ? `/${id}` : ""}`, {
+        method: id ? "PUT" : "POST",
         body: JSON.stringify(data),
         headers: {
           "Content-Type": "application/json",
@@ -128,7 +128,7 @@ export default function New() {
       setPlaceClear();
       setDateClear();
 
-      router.replace(`/board/${meetingId}`);
+      router.replace(`/board/${meetingId ? meetingId : id}`);
     } catch (error) {
       console.error(error);
     }
