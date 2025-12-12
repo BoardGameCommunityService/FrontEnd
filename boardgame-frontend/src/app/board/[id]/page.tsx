@@ -18,7 +18,7 @@ import { useSession } from "next-auth/react";
 
 export default function Page() {
   const params = useParams();
-  const id = params.id as string;
+  const id = Number(params.id);
 
   const { data, loading } = useMeetingDetail(id);
   const { data: session } = useSession();

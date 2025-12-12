@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 
 import { Post } from "@/types/post";
 
-export default function useMeetingDetail(id: string) {
+export default function useMeetingDetail(id: number) {
   const { data: session, status } = useSession();
   const [data, setData] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
@@ -34,8 +34,8 @@ export default function useMeetingDetail(id: string) {
 
   useEffect(() => {
     if (status === "loading") return;
-    fetchData();
-  }, [fetchData, status]);
+    if (id) fetchData();
+  }, [fetchData, status, id]);
 
   return {
     data,

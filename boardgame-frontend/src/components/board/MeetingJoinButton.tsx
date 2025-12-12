@@ -7,7 +7,7 @@ import { Post } from "@/types/post";
 import useModalStore from "@/stores/useModalStore";
 
 interface Props extends Pick<Post, "participants" | "maxParticipants"> {
-  id: string;
+  id: number;
 }
 
 // 구조분해할당으로 바로 사용

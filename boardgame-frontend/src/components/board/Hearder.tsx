@@ -14,7 +14,7 @@ const copyToClipboard = () => {
     });
 };
 
-type HearderProps = { host: boolean; id: string };
+type HearderProps = { host: boolean; id: number };
 
 export default function Hearder({ host, id }: HearderProps) {
   return (
