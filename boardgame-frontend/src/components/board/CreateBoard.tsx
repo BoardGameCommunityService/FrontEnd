@@ -189,7 +189,7 @@ export default function CreateBoard({ id }: { id: number }) {
                 <h3 className="font-medium text-[14px] leading-[22px] text-[#363636]">게임</h3>
                 <span className="font-normal text-[12px] text-[#999999]">(선택)</span>
               </div>
-              {games.length > 0 && (
+              {games?.length > 0 && (
                 <button
                   type="button"
                   className="text-[13px] text-[#767676] leading-5 underline underline-offset-2 font-normal cursor-pointer"
@@ -200,7 +200,7 @@ export default function CreateBoard({ id }: { id: number }) {
               )}
             </div>
 
-            {games.length ? (
+            {games?.length ? (
               <ul className="flex flex-wrap gap-2">
                 {games.map((game: string) => (
                   <li
