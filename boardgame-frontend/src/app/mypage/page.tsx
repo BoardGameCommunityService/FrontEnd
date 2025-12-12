@@ -1,10 +1,46 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import NavigationBar from "@/components/common/NavigationBar";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Menu from "@/components/mypage/Menu";
+import { useSession } from "next-auth/react";
 
 export default function Page() {
+  const { data: session } = useSession();
+  const token = session?.user.accessToken as string | undefined;
+  const [myPartData, setMyPartData] = useState<any | null>(null);
+
+  useEffect(() => {
+    if (!token) return;
+    let mounted = true;
+    (async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/my/participations/summary`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!res.ok) throw new Error("통신 요청 실패");
+        const data = await res.json();
+        if (mounted) setMyPartData(data);
+      } catch (error: any) {
+        console.error("네트워크 에러", error);
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, [token]);
+
+  const participationsData = { ...myPartData };
+
+  const hostLength = participationsData.hostCount;
+  const approvedLength = participationsData.approvedCount;
+  const pendingLength = participationsData.pendingCount;
+
   return (
     <>
       <NavigationBar
@@ -24,14 +60,14 @@ export default function Page() {
           <Link className="flex justify-between items-center cursor-pointer" href="/mypage/profile">
             <div className="flex items-center gap-3 text-lg leading-[26px] font-bold">
               <Image
-                className={"w-12 h-12"}
-                src="/temp_profile.svg"
+                className={"w-12 h-12 rounded-full"}
+                src={session?.user.image || "/temp_profile.svg"}
                 alt="프로필 이미지"
                 width={48}
                 height={48}
                 loading="eager"
               />
-              <span>즐겜러</span>
+              <span>{session?.user.name}</span>
             </div>
             <button>
               <Image className="w-5 h-5" src="/icons/ic_right20.svg" alt="" width={20} height={20} />
@@ -39,21 +75,30 @@ export default function Page() {
           </Link>
           <ul className="mt-4 flex w-full bg-[#F5F6FA] rounded-xl">
             <li className="flex-1 py-3">
-              <Link className="flex flex-col items-center" href="/mypage/meeting/created">
+              <Link
+                className="flex flex-col items-center"
+                href={`/mypage/participated?endPoint=host&length=${hostLength}`}
+              >
                 <span className="text-[#767676] text-xs leading-[18px]">만든모임</span>
-                <span className="text-[#121212] text-xl leading-7 font-medium">2</span>
+                <span className="text-[#121212] text-xl leading-7 font-medium">{hostLength || "0"}</span>
               </Link>
             </li>
             <li className="flex-1 py-3">
-              <Link className="flex flex-col items-center" href="/mypage/meeting/joined">
+              <Link
+                className="flex flex-col items-center"
+                href={`/mypage/participated?endPoint=approved&length=${approvedLength}`}
+              >
                 <span className="text-[#767676] text-xs leading-[18px]">참여한모임</span>
-                <span className="text-[#121212] text-xl leading-7 font-medium">23</span>
+                <span className="text-[#121212] text-xl leading-7 font-medium">{approvedLength || "0"}</span>
               </Link>
             </li>
             <li className="flex-1 py-3">
-              <Link className="flex flex-col items-center" href="/mypage/meeting/waiting">
+              <Link
+                className="flex flex-col items-center"
+                href={`/mypage/participated?endPoint=pending&length=${pendingLength}`}
+              >
                 <span className="text-[#767676] text-xs leading-[18px]">신청 대기중</span>
-                <span className="text-[#121212] text-xl leading-7 font-medium">2</span>
+                <span className="text-[#121212] text-xl leading-7 font-medium">{pendingLength || "0"}</span>
               </Link>
             </li>
           </ul>
