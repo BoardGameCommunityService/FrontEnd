@@ -48,7 +48,7 @@ export default function MeetingJoinButton({ id, participants, maxParticipants }:
       console.error("통신 에러", error);
     } finally {
       setIsLoading(false);
-      router.back();
+      router.push(`/board/${id}`);
     }
   }
 
