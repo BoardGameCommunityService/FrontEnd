@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+
 import { Post } from "@/types/post";
 
 export default function useMeetingDetail(id: number) {
