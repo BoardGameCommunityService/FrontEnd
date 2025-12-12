@@ -26,7 +26,7 @@ export default function Page() {
 
   //무한 스크롤...
   const [page, setPage] = useState<number>(0);
-  const [size, setSize] = useState<number>(10);
+  const size = 10;
 
   const meetingEndpointUrl = {
     PENDING: `/api/my/participations/pending`,
@@ -76,8 +76,6 @@ export default function Page() {
       mounted = false;
     };
   }, [token, url, page, size]);
-
-  console.log("페치결과", results);
 
   //참여모임은 다가오는 모임을 분류
   const [upcoming, finished] = useMemo(() => {

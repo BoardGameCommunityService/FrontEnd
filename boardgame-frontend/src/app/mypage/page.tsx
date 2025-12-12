@@ -35,11 +35,7 @@ export default function Page() {
     };
   }, [token]);
 
-  const participationsData = { ...myPartData };
-
-  const hostLength = participationsData.hostCount;
-  const approvedLength = participationsData.approvedCount;
-  const pendingLength = participationsData.pendingCount;
+  const { hostCount, approvedCount, pendingCount } = myPartData;
 
   return (
     <>
@@ -77,28 +73,28 @@ export default function Page() {
             <li className="flex-1 py-3">
               <Link
                 className="flex flex-col items-center"
-                href={`/mypage/participated?endPoint=host&length=${hostLength}`}
+                href={`/mypage/participated?endPoint=host&length=${hostCount}`}
               >
                 <span className="text-[#767676] text-xs leading-[18px]">만든모임</span>
-                <span className="text-[#121212] text-xl leading-7 font-medium">{hostLength || "0"}</span>
+                <span className="text-[#121212] text-xl leading-7 font-medium">{hostCount || "0"}</span>
               </Link>
             </li>
             <li className="flex-1 py-3">
               <Link
                 className="flex flex-col items-center"
-                href={`/mypage/participated?endPoint=approved&length=${approvedLength}`}
+                href={`/mypage/participated?endPoint=approved&length=${approvedCount}`}
               >
                 <span className="text-[#767676] text-xs leading-[18px]">참여한모임</span>
-                <span className="text-[#121212] text-xl leading-7 font-medium">{approvedLength || "0"}</span>
+                <span className="text-[#121212] text-xl leading-7 font-medium">{approvedCount || "0"}</span>
               </Link>
             </li>
             <li className="flex-1 py-3">
               <Link
                 className="flex flex-col items-center"
-                href={`/mypage/participated?endPoint=pending&length=${pendingLength}`}
+                href={`/mypage/participated?endPoint=pending&length=${pendingCount}`}
               >
                 <span className="text-[#767676] text-xs leading-[18px]">신청 대기중</span>
-                <span className="text-[#121212] text-xl leading-7 font-medium">{pendingLength || "0"}</span>
+                <span className="text-[#121212] text-xl leading-7 font-medium">{pendingCount || "0"}</span>
               </Link>
             </li>
           </ul>
