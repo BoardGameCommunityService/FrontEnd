@@ -1,6 +1,7 @@
 import NavigationBar from "@/components/common/NavigationBar";
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Page() {
   const dummy = [
@@ -24,16 +25,18 @@ export default function Page() {
           <ul className="px-5 flex flex-col gap-1">
             {dummy.map((data) => (
               <li key={data.id} className="flex gap-3 p-4 bg-white rounded-xl cursor-pointer">
-                <Image
-                  src={`${data.type === "system" ? "/icons/ic_logo_black.svg" : "/icons/ic_logo_green.svg"}`}
-                  alt=""
-                  width={36}
-                  height={36}
-                />
-                <div className="text-[14px] leading-[22px]">
-                  <h3 className="font-semibold text-[#363636]">{data.title}</h3>
-                  <p>{data.content}</p>
-                </div>
+                <Link href="#">
+                  <Image
+                    src={`${data.type === "system" ? "/icons/ic_logo_black.svg" : "/icons/ic_logo_green.svg"}`}
+                    alt=""
+                    width={36}
+                    height={36}
+                  />
+                  <div className="text-[14px] leading-[22px]">
+                    <h3 className="font-semibold text-[#363636]">{data.title}</h3>
+                    <p>{data.content}</p>
+                  </div>
+                </Link>
               </li>
             ))}
           </ul>
