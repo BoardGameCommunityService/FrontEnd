@@ -24,7 +24,7 @@ export default function Home() {
 
   const today = new Date();
   const [selectedDate, setSelectedDate] = useState<Date>(today);
-  const [region, setRegion] = useState<string>("서울시 서초구");
+  const [region, setRegion] = useState<string>("서울 강남구");
 
   // 서버에서 region 가져오기
   async function getRegion() {
@@ -94,7 +94,7 @@ export default function Home() {
       const date = `${year}${month}${day}`;
 
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings?page=${pageNum}&size=15&date=${date}`
+        `${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings?page=${pageNum}&size=15&date=${date}&regionCode=${region}`
       );
 
       if (!res.ok) throw new Error("데이터 fetch 에러");
