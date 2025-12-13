@@ -24,7 +24,7 @@ export default function ParticipatedPageContent() {
   const [error, setError] = useState<string | null>(null);
 
   //페치결과 전역 관리
-  const { results, setResults, approvedResult, setApprovedResult, isFetched, setIsFetched } = useParticipatedStore();
+  const { results, setResults, appendResults, approvedResult, setApprovedResult, isFetched } = useParticipatedStore();
 
   // 쿼리에서 읽기
   const raw = searchParams?.get("endPoint") ?? "approved";
@@ -81,11 +81,14 @@ export default function ParticipatedPageContent() {
         if (!res.ok) throw new Error("통신 요청 실패");
 
         const data = await res.json();
-
-        if (endPoint === "approved") {
-          if (mounted) setApprovedResult(data);
+        const payload = Array.isArray(data?.content) ? data.content : Array.isArray(data) ? data : [];
+        if (endPoint === "host") {
+          if (page === 0) setResults(payload);
+          else appendResults(payload);
+        } else if (endPoint === "approved") {
+          setApprovedResult(data);
         } else {
-          if (mounted) setResults(Array.isArray(data) ? data : (data.content ?? []));
+          setResults(payload);
         }
       } catch (error: any) {
         if (error.name === "AbortError") return;
@@ -107,12 +110,13 @@ export default function ParticipatedPageContent() {
       mounted = false;
       abortController.abort();
     };
-  }, [token, url, endPoint, isFetched]);
+  }, [token, url, endPoint, isFetched, appendResults, setApprovedResult]);
 
   // 무한 스크롤
   useEffect(() => {
     if (inView) {
-      setPage((prev) => prev + 10);
+      if (loading) return;
+      if (page * size < cardLength) setPage((prev) => prev + 1);
     }
   }, [inView]);
 
