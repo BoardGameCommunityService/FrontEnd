@@ -1,6 +1,6 @@
 import React from "react";
 
-type Option = number | "무제한";
+type Option = number;
 
 interface Props {
   value?: Option;
@@ -9,7 +9,7 @@ interface Props {
 
 // 인원수 버튼 관리
 export default function PeopleSelector({ value, onChange }: Props) {
-  const options: Option[] = [2, 3, 4, 5, 6, 7, 8, 9, 10, "무제한"];
+  const options: Option[] = [2, 3, 4, 5, 6, 7, 8, 9, 10, 99];
 
   const handleKey = (e: React.KeyboardEvent, opt: Option) => {
     if (e.key === "Enter" || e.key === " ") {
@@ -28,12 +28,14 @@ export default function PeopleSelector({ value, onChange }: Props) {
             type="button"
             role="radio"
             aria-checked={isSelected}
-            onClick={() => onChange?.(opt)}
+            onClick={() => {
+              onChange?.(opt);
+            }}
             onKeyDown={(e) => handleKey(e, opt)}
             className={`h-8 rounded-lg flex items-center justify-center text-sm text-[#767676] focus:outline-none transition-colors border
               ${isSelected ? "font-semibold border-[#161616]" : "font-normal border-[#DEE1E6]"}`}
           >
-            {opt}
+            {opt === 99 ? "무제한" : opt}
           </button>
         );
       })}
