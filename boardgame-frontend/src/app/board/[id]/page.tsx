@@ -10,7 +10,7 @@ import useMeetingDetail from "@/hooks/useMeetingDetail";
 import { useParams } from "next/navigation";
 
 //컴포넌트
-import Header from "@/components/board/Hearder";
+import Header from "@/components/board/Header";
 import MeetingJoinButton from "@/components/board/MeetingJoinButton";
 import MemberList from "@/components/board/MemberList";
 import PlaceSection from "@/components/board/PlaceSection";
