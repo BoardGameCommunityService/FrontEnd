@@ -76,10 +76,10 @@ export default function Page() {
         href="/"
         title="마이페이지"
         elements={
-          <button className="cursor-pointer relative">
-            <Image src="/icons/ic_alim.svg" alt="공유하기 버튼" width={36} height={36} />
+          <Link href="/mypage/alim" className="cursor-pointer relative">
+            <Image src="/icons/ic_alim.svg" alt="알림 버튼" width={36} height={36} />
             <span className="rounded-[50%] bg-[#FC3B45] w-1.5 h-1.5 inline-block absolute top-1.5 right-1.5"></span>
-          </button>
+          </Link>
         }
       />
 
