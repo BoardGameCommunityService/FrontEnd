@@ -21,6 +21,7 @@ import usePlaceStore from "@/stores/post/usePlaceStore";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import useMeetingDetail from "@/hooks/useMeetingDetail";
+import useToastMessage from "@/stores/useToastMessage";
 
 interface MeetingFormData {
   meetingId: number;
@@ -35,19 +36,17 @@ interface MeetingFormData {
 }
 
 export default function CreateBoard({ id }: { id: number }) {
-  const { data } = useMeetingDetail(id);
-
-  const { setPlace } = usePlaceStore();
-  const { setSelectedDate } = useDateStore();
+  const { data, loading } = useMeetingDetail(id);
 
   // textarea 글자수 카운터
   const [inputCount, setInputCount] = useState(0);
   const [isValid, setIsValid] = useState(false);
   //인원수
-  const [people, setPeople] = useState<number | "무제한">(2);
+  const [people, setPeople] = useState<number>(2);
 
   const router = useRouter();
   const { data: session, status } = useSession();
+  const { setToastMessage } = useToastMessage();
 
   const { register, handleSubmit, watch, reset } = useForm<MeetingFormData>({
     defaultValues: {
@@ -58,18 +57,18 @@ export default function CreateBoard({ id }: { id: number }) {
 
   const { setOpen } = useBottomSheetStore();
   const { games, setGames, setClear: setGameClear } = useGameStore();
-  const { meetingPlace, meetingAddress, setClear: setPlaceClear } = usePlaceStore();
-  const { selectedDate, setClear: setDateClear } = useDateStore();
+  const { meetingPlace, meetingAddress, setClear: setPlaceClear, setPlace } = usePlaceStore();
+  const { selectedDate, setClear: setDateClear, setSelectedDate } = useDateStore();
 
   const title = watch("title");
   const content = watch("content");
 
-  useEffect(() => {
-    const isFormValid =
-      title?.trim() !== "" && content?.trim() !== "" && meetingPlace !== "" && selectedDate !== null && !!people;
-
-    setIsValid(isFormValid);
-  }, [title, content, meetingPlace, selectedDate, people]);
+  const dataReset = () => {
+    reset();
+    setGameClear();
+    setPlaceClear();
+    setDateClear();
+  };
 
   const handleInputCount = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInputCount(e.target.value.length);
@@ -120,11 +119,9 @@ export default function CreateBoard({ id }: { id: number }) {
       }
 
       const { meetingId } = await res.json();
+      setToastMessage("success", id ? "수정이 완료되었습니다." : "생성이 완료되었습니다.");
 
-      setGameClear();
-      setPlaceClear();
-      setDateClear();
-
+      dataReset();
       router.replace(`/board/${meetingId ? meetingId : id}`);
     } catch (error) {
       console.error(error);
@@ -132,37 +129,40 @@ export default function CreateBoard({ id }: { id: number }) {
   };
 
   useEffect(() => {
-    if (status === "loading" || !data) return;
+    const isFormValid =
+      title?.trim() !== "" && content?.trim() !== "" && meetingPlace !== "" && selectedDate !== null && !!people;
+    setIsValid(isFormValid);
+  }, [title, content, meetingPlace, selectedDate, people]);
 
-    if (id && session && Number(session?.user.id) !== data?.host.userId) {
+  useEffect(() => {
+    if (status === "loading" || loading) return;
+
+    if (session?.user.id != data?.host.userId) {
       router.replace("/");
     }
+  }, [status, loading]);
 
-    const gameListMaker = (gameNamesJson: string) => {
-      const games = JSON.parse(gameNamesJson);
-      if (games === null) return;
-      if (games.length === 0) return;
-      return games;
-    };
-    const games = gameListMaker(data.gameNamesJson);
+  useEffect(() => {
+    if (id && data) {
+      reset({
+        title: data?.title,
+        content: data?.content,
+      });
 
-    reset({
-      meetingId: data.meetingId,
-      title: data.title ?? "",
-      content: data.content ?? "",
-    });
-    setInputCount((data.content ?? "").length);
-    setPeople(data.maxParticipants ?? 2);
-    setGames(games);
-    setPlace(data.meetingPlace ?? "", data.meetingAddress ?? "");
-    setSelectedDate(data.meetingAt ? new Date(data.meetingAt) : null);
-  }, [data, id, reset, router, session, setGames, setPlace, setSelectedDate, status]);
+      setGames(JSON.parse(data.gameNamesJson));
+      setPlace(data.meetingPlace, data.meetingAddress);
+      setSelectedDate(new Date(data.meetingAt));
+      setPeople(data.maxParticipants);
+    } else {
+      dataReset();
+    }
+  }, [id, data]);
 
   return (
     <div id="page-container" className="flex justify-center relative">
       <div className="w-[335px] flex flex-col">
         <header className="h-[52px] py-3 flex gap-0.5 items-center">
-          <Link href="/">
+          <Link href={id ? `/board/${id}` : "/"}>
             <Image src="/icons/ic_back.svg" alt="뒤로가기 버튼" width={24} height={24} />
           </Link>
           <h1 className="font-semibold text-[20px] text-[#161616]">모임 만들기</h1>
