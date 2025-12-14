@@ -8,7 +8,7 @@ const getData = async () => {
   const session = await auth();
 
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/notifications?page=0&size=10`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/notifications?page=0&size=20`, {
       headers: {
         Authorization: `Bearer ${session?.user?.accessToken}`,
       },
@@ -33,7 +33,7 @@ export default async function Page() {
       <main>
         <section className="mt-2">
           <h2 className="sr-only">알림 목록</h2>
-          <Notifications initialData={initialData} />
+          <Notifications initialData={initialData} size={20} />
         </section>
       </main>
     </>
