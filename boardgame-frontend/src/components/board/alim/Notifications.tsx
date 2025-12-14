@@ -1,14 +1,15 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { Notification, NotificationItem } from "@/types/Notification";
 import { useInView } from "react-intersection-observer";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function Notifications({ initialData, size }: { initialData: Notification; size: number }) {
   const { data: session, status } = useSession();
+  const router = useRouter();
 
   const [notifications, setNotifications] = useState<NotificationItem[]>(initialData.items);
   const [page, setPage] = useState(0);
@@ -63,12 +64,32 @@ export default function Notifications({ initialData, size }: { initialData: Noti
     }
   }
 
+  const handleEvent = (
+    type: "REGION_MEETING" | "MEETING_APPLICATION" | "APPLICATION_APPROVED" | "APPLICATION_DENIED"
+  ) => {
+    switch (type) {
+      case "REGION_MEETING":
+        router.push("/mypage/alim/meetings");
+        break;
+      case "MEETING_APPLICATION":
+        break;
+      case "APPLICATION_APPROVED":
+        break;
+      case "APPLICATION_DENIED":
+        break;
+    }
+  };
+
   return (
     <>
       <ul className="px-5 flex flex-col gap-1">
         {notifications.map((data, index) => (
-          <li key={`${data.id}_${data.resourceId}_${index}`} className="bg-white rounded-xl p-4 cursor-pointer">
-            <Link href="#" className="flex gap-3">
+          <li key={`${data.id}_${data.resourceId}_${index}`} className="bg-white rounded-xl">
+            <button
+              className="w-full p-4 flex gap-3 cursor-pointer"
+              type="button"
+              onClick={() => handleEvent(data.type)}
+            >
               <Image
                 src={`${data.type === "REGION_MEETING" ? "/icons/ic_logo_black.svg" : "/icons/ic_logo_green.svg"}`}
                 alt=""
@@ -79,7 +100,7 @@ export default function Notifications({ initialData, size }: { initialData: Noti
                 <h3 className="font-semibold text-[#363636]">{data.title}</h3>
                 <p>{data.message}</p>
               </div>
-            </Link>
+            </button>
           </li>
         ))}
       </ul>
