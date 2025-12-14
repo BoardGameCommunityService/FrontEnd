@@ -39,7 +39,7 @@ export default function Card({ id, location, title, currentMember, maxMember, ga
         </div>
         <h2 className="font-medium text-[15px] text-[#161616]">{title}</h2>
         <ul className="flex gap-1">
-          <Badge>{`${currentMember}/${maxMember} 명`}</Badge>
+          <Badge>{`${currentMember}/${maxMember === 99 ? "무제한" : maxMember} 명`}</Badge>
           {Array.isArray(games) && games.map((game, index) => <Badge key={index}>{game}</Badge>)}
         </ul>
       </Link>

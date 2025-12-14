@@ -66,7 +66,7 @@ export default function Page() {
           <h1 className="text-[20px] leading-7 font-bold">{title}</h1>
           {/* 태그 리스트 */}
           <ul className="flex gap-1 text-[13px] text-[#767676] font-medium leading-5 mt-3">
-            <Badge>{`${currentParticipants}/${maxParticipants} 명`}</Badge>
+            <Badge>{`${currentParticipants}/${maxParticipants === 99 ? "무제한" : maxParticipants} 명`}</Badge>
             {gameList ? <Badge>{gameList}</Badge> : ""}
           </ul>
           {/* 게시글 내용 */}
