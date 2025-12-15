@@ -14,13 +14,10 @@ export const proxy = auth((req) => {
 
   const isPublicPath = pathname === "/" || publicPaths.some((path) => pathname.startsWith(path));
 
-  // if (isBoardDetailPage) {
-  //   if (!session?.user) {
-  //     return NextResponse.redirect(new URL("/login", req.url));
-  //   }
-  // }
-
   if (isPublicPath) {
+    if (pathname === "/" && session?.user && session.user.profileCompleted === false) {
+      return NextResponse.redirect(new URL("/signup", req.url));
+    }
     return NextResponse.next();
   }
 
