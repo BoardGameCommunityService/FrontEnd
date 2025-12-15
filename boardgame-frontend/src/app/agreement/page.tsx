@@ -119,10 +119,7 @@ export default function Agreement() {
       sessionStorage.removeItem("region");
 
       // profileCompleted 값을 true로 session 갱신
-      await update({ profileCompleted: true });
-
-      // 가입 완료 후 홈으로 이동
-      router.push("/");
+      await update({ profileCompleted: true }).then(() => router.push("/"));
       alert("회원가입 완료!");
     } catch (err) {
       console.error("complete-signup error:", err);

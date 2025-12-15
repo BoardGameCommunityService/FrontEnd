@@ -18,9 +18,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async jwt({ token, account, profile, user, trigger, session }) {
       // 세션 업데이트 시 (회원가입 완료 후 등)
       if (trigger === "update" && session) {
-        if (session.profileCompleted !== undefined) {
-          token.profileCompleted = session.profileCompleted;
-        }
+        token.profileCompleted = session.profileCompleted;
         return token;
       }
 
