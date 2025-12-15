@@ -5,7 +5,7 @@ export default function InquiriesListPage() {
   return (
     <div className="pt-11 bg-white h-screen flex flex-col">
       <header className="flex px-5 py-[11px] gap-[2px] border-b border-[#F1F1F4]">
-        <Link href="/mypage">
+        <Link href="/mypage/inquiries/list">
           <Image src="/icons/ic_back.svg" width={24} height={24} alt="이전 페이지로 돌아가기"></Image>
         </Link>
         <h1 className="font-semibold text-lg">문의하기</h1>
