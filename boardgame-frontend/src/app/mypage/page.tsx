@@ -161,19 +161,7 @@ export default function Page() {
         <section className="mt-3">
           <h2 className="sr-only">마이페이지 메뉴 목록</h2>
           <ul className="flex flex-col gap-[1px]">
-            <Menu
-              title="알림 설정"
-              isTop={true}
-              elements={
-                <button
-                  className="flex items-center justify-end w-[38px] h-5 p-[2px] bg-[#06E393] rounded-[1000000000px]"
-                  aria-label="알림설정 ON/OFF 버튼"
-                >
-                  <span className="inline-block w-4 h-4 rounded-[50%] bg-white"></span>
-                </button>
-              }
-            />
-            <Menu title="서비스 이용 약관" />
+            <Menu title="서비스 이용 약관" isTop={true} />
             <Menu title="개인정보 처리 약관" />
             <Menu title="위치 정보 이용 약관" />
             <Menu title="1:1 문의" isBottom={true} />

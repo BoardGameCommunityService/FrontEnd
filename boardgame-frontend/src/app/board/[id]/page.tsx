@@ -67,7 +67,11 @@ export default function Page() {
           {/* 태그 리스트 */}
           <ul className="flex gap-1 text-[13px] text-[#767676] font-medium leading-5 mt-3">
             <Badge>{`${currentParticipants}/${maxParticipants === 99 ? "무제한" : maxParticipants} 명`}</Badge>
-            {gameList ? <Badge>{gameList}</Badge> : ""}
+            {gameList
+              ? gameList.map((v: string, i: number) => {
+                  return <Badge key={i}>{v}</Badge>;
+                })
+              : ""}
           </ul>
           {/* 게시글 내용 */}
           <p className="whitespace-pre-line mt-4 bg-[#F5F6FA] rounded-xl p-3 text-sm text-[#161616] leading-[22px]">
