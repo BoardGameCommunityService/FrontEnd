@@ -9,6 +9,14 @@ export const proxy = auth((req) => {
     return NextResponse.next();
   }
 
+  if (
+    session?.user &&
+    session.user.profileCompleted === true &&
+    (pathname.startsWith("/login") || pathname.startsWith("/signup"))
+  ) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+
   // public 경로는 먼저 허용
   const publicPaths = ["/login"];
 
