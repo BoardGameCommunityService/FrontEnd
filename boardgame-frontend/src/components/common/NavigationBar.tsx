@@ -8,7 +8,7 @@ export default function NavigationBar({
   elements,
 }: {
   href: string;
-  title: string;
+  title?: string;
   elements?: React.ReactNode;
 }) {
   return (
@@ -17,7 +17,7 @@ export default function NavigationBar({
         <Link href={href} className="cursor-pointer">
           <Image src="/icons/ic_back.svg" alt="뒤로가기" width={24} height={24} />
         </Link>
-        <h1 className="text-[#161616] font-bold text-[20px] leading-7">{title}</h1>
+        {title && <h1 className="text-[#161616] font-bold text-[20px] leading-7">{title}</h1>}
       </div>
       {elements}
     </header>

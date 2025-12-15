@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Post } from "@/types/post";
 import useModalStore from "@/stores/useModalStore";
+import { useMyPageStore } from "@/stores/mypage/useMyPageStore";
+import { useParticipatedStore } from "@/stores/mypage/useParticipatedStore";
 
 interface Props extends Pick<Post, "participants" | "maxParticipants"> {
   id: number;
@@ -21,6 +23,10 @@ export default function MeetingJoinButton({ id, participants, maxParticipants }:
   const [buttonColor, setButtonColor] = useState(false);
 
   const { setModal, setClose } = useModalStore();
+
+  //참가 신청 상태 전역 관리
+  const { setIsFetched: setMyPageFetched } = useMyPageStore();
+  const { setIsFetched: setParticipatedFetched } = useParticipatedStore();
 
   //참가신청 취소 페치함수
   async function fetchJoin() {
@@ -43,7 +49,9 @@ export default function MeetingJoinButton({ id, participants, maxParticipants }:
         throw new Error("참가 신청 실패");
       }
 
-      window.location.reload();
+      //참여 요약 리페치 트리거
+      setMyPageFetched(false); // 요약 데이터 refetch 트리거
+      setParticipatedFetched(false); // 리스트 데이터 refetch 트리거
     } catch (error: any) {
       console.error("통신 에러", error);
     } finally {
@@ -112,7 +120,7 @@ export default function MeetingJoinButton({ id, participants, maxParticipants }:
         onClick={handleConfirmClick}
         disabled={isLoading || isDisabled}
       >
-        {isLoading ? "로딩 중..." : buttonText}
+        {isLoading ? "로딩 중" : buttonText}
       </button>
     </div>
   );
