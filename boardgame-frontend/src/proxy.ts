@@ -9,18 +9,23 @@ export const proxy = auth((req) => {
     return NextResponse.next();
   }
 
+  if (
+    session?.user &&
+    session.user.profileCompleted === true &&
+    (pathname.startsWith("/login") || pathname.startsWith("/signup"))
+  ) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+
   // public 경로는 먼저 허용
   const publicPaths = ["/login"];
 
   const isPublicPath = pathname === "/" || publicPaths.some((path) => pathname.startsWith(path));
 
-  // if (isBoardDetailPage) {
-  //   if (!session?.user) {
-  //     return NextResponse.redirect(new URL("/login", req.url));
-  //   }
-  // }
-
   if (isPublicPath) {
+    if (pathname === "/" && session?.user && session.user.profileCompleted === false) {
+      return NextResponse.redirect(new URL("/signup", req.url));
+    }
     return NextResponse.next();
   }
 

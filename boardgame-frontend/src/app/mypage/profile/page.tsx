@@ -25,7 +25,7 @@ export default function Page() {
     mode: "onChange",
   });
 
-  const { data: session, status } = useSession();
+  const { data: session, status, update } = useSession();
   const { setModal, setClose } = useModalStore();
 
   const onSubmit = (data: UserDataType) => {
@@ -48,9 +48,10 @@ export default function Page() {
         sessionStorage.removeItem("gender");
         sessionStorage.removeItem("region");
       })
+      .then(async () => {
+        await update({ nickname: data.nickname }).then(() => router.push("/mypage"));
+      })
       .catch((err) => console.error(err));
-
-    router.push("/mypage");
   };
 
   const handleLocationClick = () => {
