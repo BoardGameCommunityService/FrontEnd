@@ -129,13 +129,17 @@ export default function Agreement() {
     }
   };
 
+  const handleBack = () => {
+    router.replace("/signup");
+  };
+
   return (
     <div className="flex justify-center h-screen">
       <main className="mt-10 max-w-[355px] flex flex-col justify-between">
         <section className="flex flex-col">
-          <Link href="/login">
+          <button onClick={handleBack}>
             <Image src="/icons/ic_back.svg" alt="뒤로가기 버튼" width={24} height={24} />
-          </Link>
+          </button>
           <div>
             <h1 className="mt-4 mb-10 font-semibold text-2xl text-[#161616]">약관 동의</h1>
           </div>
