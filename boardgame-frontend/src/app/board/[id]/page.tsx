@@ -10,7 +10,7 @@ import useMeetingDetail from "@/hooks/useMeetingDetail";
 import { useParams } from "next/navigation";
 
 //컴포넌트
-import Header from "@/components/board/Hearder";
+import Header from "@/components/board/Header";
 import MeetingJoinButton from "@/components/board/MeetingJoinButton";
 import MemberList from "@/components/board/MemberList";
 import PlaceSection from "@/components/board/PlaceSection";
@@ -18,7 +18,7 @@ import { useSession } from "next-auth/react";
 
 export default function Page() {
   const params = useParams();
-  const id = params.id as string;
+  const id = Number(params.id);
 
   const { data, loading } = useMeetingDetail(id);
   const { data: session } = useSession();
@@ -66,8 +66,12 @@ export default function Page() {
           <h1 className="text-[20px] leading-7 font-bold">{title}</h1>
           {/* 태그 리스트 */}
           <ul className="flex gap-1 text-[13px] text-[#767676] font-medium leading-5 mt-3">
-            <Badge>{`${currentParticipants}/${maxParticipants} 명`}</Badge>
-            {gameList ? <Badge>{gameList}</Badge> : ""}
+            <Badge>{`${currentParticipants}/${maxParticipants === 99 ? "무제한" : maxParticipants} 명`}</Badge>
+            {gameList
+              ? gameList.map((v: string, i: number) => {
+                  return <Badge key={i}>{v}</Badge>;
+                })
+              : ""}
           </ul>
           {/* 게시글 내용 */}
           <p className="whitespace-pre-line mt-4 bg-[#F5F6FA] rounded-xl p-3 text-sm text-[#161616] leading-[22px]">

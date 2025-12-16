@@ -3,6 +3,7 @@ import "./globals.css";
 import Providers from "@/components/Providers";
 import BottomSheet from "@/components/common/BottomSheet";
 import Modal from "@/components/common/Modal";
+import ToastMessage from "@/components/common/ToastMessage";
 import React from "react";
 
 export default function RootLayout({
@@ -19,6 +20,7 @@ export default function RootLayout({
               {children}
               <BottomSheet />
               <Modal />
+              <ToastMessage />
             </div>
           </div>
         </Providers>
