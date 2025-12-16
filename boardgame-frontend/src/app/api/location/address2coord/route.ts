@@ -25,10 +25,10 @@ export async function GET(request: NextRequest) {
 
     // 행정구역 정보만 추출
     const filteredResults = data.documents
-      .filter((doc: any) => doc.address_type === "REGION" || doc.address)
+      .filter((doc: any) => doc.address_type === "ROAD" || doc.address)
       .map((doc: any) => {
-        // REGION 타입인 경우
-        if (doc.address_type === "REGION") {
+        // ROAD 타입인 경우
+        if (doc.address_type === "ROAD") {
           return {
             region_1depth_name: doc.address_name.split(" ")[0] || "",
             region_2depth_name: doc.address_name.split(" ")[1] || "",
