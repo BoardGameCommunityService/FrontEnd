@@ -5,6 +5,7 @@ import Calendar from "@/components/common/Calendar";
 import CardList from "@/components/common/CardList";
 import Header from "@/components/common/Header";
 import Link from "next/link";
+import { EmptyState } from "@/components/search";
 
 import Image from "next/image";
 import bottomLogo from "../../public/bottomLogo.svg";
@@ -75,18 +76,24 @@ export default function Home() {
     <div className="flex justify-center">
       <div className="w-full min-h-screen flex flex-col items-center bg-[#F5F6FA] relative">
         <Header />
-        <main>
+        <main className="flex-1 flex flex-col w-full">
           <section className="w-full flex flex-col items-center">
             <Banner />
           </section>
           <section className="my-4">
             <Calendar today={today} selectedDate={selectedDate} changeDate={(date: Date) => setSelectedDate(date)} />
           </section>
-          <section>
-            <CardList results={postings} />
+          <section className="flex-1 flex flex-col">
+            {postings.length === 0 ? (
+              <div className="flex-1 flex flex-col justify-center items-center">
+                <EmptyState isBottom={false} textSize="sm" />
+              </div>
+            ) : (
+              <CardList results={postings} />
+            )}
             <div ref={ref}></div>
           </section>
-          <div className="flex justify-center mt-6 mb-[60px]">
+          <div className="flex flex-1 justify-center mt-6 mb-[60px]">
             <Image
               src={bottomLogo}
               alt="함께하면 더 즐거운 보드게임 라이프!"
