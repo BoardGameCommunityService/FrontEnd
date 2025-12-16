@@ -35,7 +35,7 @@ export default function Inquiry({ inquiry }: { inquiry: InquiryProps }) {
           {inquiry.answer && (
             <div className="mt-6 flex gap-3">
               <figure className="bg-[#EEF0F7] rounded-full w-8 h-8 overflow-hidden grid place-items-center">
-                <Image src="/symbolLogo.svg" width={15} height={18} alt="" />
+                <Image src="/icons/ic_logo_green.svg" width={32} height={32} alt="" />
               </figure>
               <p>{inquiry.answer}</p>
             </div>
