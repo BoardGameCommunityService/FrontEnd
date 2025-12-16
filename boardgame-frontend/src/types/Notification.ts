@@ -5,6 +5,7 @@ export interface NotificationItem {
   message: string;
   readAt: string | null;
   resourceId: number;
+  relatedUserId: number;
   title: string;
   type: "REGION_MEETING" | "MEETING_APPLICATION" | "APPLICATION_APPROVED" | "APPLICATION_DENIED";
 }

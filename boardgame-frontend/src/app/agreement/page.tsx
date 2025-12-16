@@ -119,10 +119,7 @@ export default function Agreement() {
       sessionStorage.removeItem("region");
 
       // profileCompleted 값을 true로 session 갱신
-      await update({ profileCompleted: true });
-
-      // 가입 완료 후 홈으로 이동
-      router.push("/");
+      await update({ profileCompleted: true }).then(() => router.push("/"));
       alert("회원가입 완료!");
     } catch (err) {
       console.error("complete-signup error:", err);
@@ -132,13 +129,17 @@ export default function Agreement() {
     }
   };
 
+  const handleBack = () => {
+    router.replace("/signup");
+  };
+
   return (
     <div className="flex justify-center h-screen">
       <main className="mt-10 max-w-[355px] flex flex-col justify-between">
         <section className="flex flex-col">
-          <Link href="/login">
+          <button onClick={handleBack}>
             <Image src="/icons/ic_back.svg" alt="뒤로가기 버튼" width={24} height={24} />
-          </Link>
+          </button>
           <div>
             <h1 className="mt-4 mb-10 font-semibold text-2xl text-[#161616]">약관 동의</h1>
           </div>

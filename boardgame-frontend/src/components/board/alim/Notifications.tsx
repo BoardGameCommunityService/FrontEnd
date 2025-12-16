@@ -6,10 +6,14 @@ import { useInView } from "react-intersection-observer";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import useModalStore from "@/stores/useModalStore";
+import useToastMessage from "@/stores/useToastMessage";
 
 export default function Notifications({ initialData, size }: { initialData: Notification; size: number }) {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const { setModal, setClose } = useModalStore();
+  const { setToastMessage } = useToastMessage();
 
   const [notifications, setNotifications] = useState<NotificationItem[]>(initialData.items);
   const [page, setPage] = useState(0);
@@ -41,7 +45,7 @@ export default function Notifications({ initialData, size }: { initialData: Noti
         }
       );
 
-      if (!res.ok) throw new Error();
+      if (!res.ok) throw new Error("알림 목록 조회중 에러 발생");
 
       const result: Notification = await res.json();
 
@@ -64,14 +68,70 @@ export default function Notifications({ initialData, size }: { initialData: Noti
     }
   }
 
+  const handleApprove = async (resourceId: number, relatedUserId: number) => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings/${resourceId}/participants/${relatedUserId}/approve`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${session?.user?.accessToken}`,
+          },
+        }
+      );
+
+      if (!res.ok) throw new Error("참가 신청 수락 중 오류가 발생하였습니다.");
+
+      setToastMessage("success", "수락을 완료하였습니다.");
+    } catch (error) {
+      setToastMessage("failure", "오류가 발생하였습니다.");
+      console.error(error);
+    } finally {
+      setClose();
+    }
+  };
+
+  const handleReject = async (resourceId: number, relatedUserId: number) => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings/${resourceId}/participants/${relatedUserId}/deny`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${session?.user?.accessToken}`,
+          },
+        }
+      );
+
+      if (!res.ok) throw new Error("참가 신청 거절 중 오류가 발생하였습니다.");
+
+      setToastMessage("success", "거절을 완료하였습니다.");
+    } catch (error) {
+      setToastMessage("failure", "오류가 발생하였습니다.");
+      console.error(error);
+    } finally {
+      setClose();
+    }
+  };
+
   const handleEvent = (
-    type: "REGION_MEETING" | "MEETING_APPLICATION" | "APPLICATION_APPROVED" | "APPLICATION_DENIED"
+    type: "REGION_MEETING" | "MEETING_APPLICATION" | "APPLICATION_APPROVED" | "APPLICATION_DENIED",
+    resourceId: number,
+    relatedUserId: number
   ) => {
+    console.log("handleEvent:", type, resourceId, relatedUserId);
     switch (type) {
       case "REGION_MEETING":
         router.push("/mypage/alim/meetings");
         break;
       case "MEETING_APPLICATION":
+        setModal(
+          "참가 신청을 수락할까요?",
+          "수락",
+          () => handleApprove(resourceId, relatedUserId),
+          "거절",
+          () => handleReject(resourceId, relatedUserId)
+        );
         break;
       case "APPLICATION_APPROVED":
         break;
@@ -88,7 +148,7 @@ export default function Notifications({ initialData, size }: { initialData: Noti
             <button
               className="w-full p-4 flex gap-3 cursor-pointer"
               type="button"
-              onClick={() => handleEvent(data.type)}
+              onClick={() => handleEvent(data.type, data.resourceId, data.relatedUserId)}
             >
               <Image
                 src={`${data.type === "REGION_MEETING" ? "/icons/ic_logo_black.svg" : "/icons/ic_logo_green.svg"}`}
