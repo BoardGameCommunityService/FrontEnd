@@ -113,7 +113,7 @@ export default function MeetingJoinButton({ id, participants, maxParticipants }:
   }, [participants, maxParticipants, session?.user?.name]);
 
   return (
-    <div className="mb-1.5 fixed bottom-0 right-0 left-1/2 -translate-x-1/2 w-full max-w-[335px]">
+    <div className="mb-1.5 w-full max-w-[335px]">
       <button
         className={`w-full ${buttonColor || !isLoading ? "bg-[#06E393]" : "bg-[#EEF0F7]"} text-sm leading-[22px] text-[#161616] font-semibold py-[11px] rounded-[10px] cursor-pointer`}
         type="button"
