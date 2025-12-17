@@ -14,7 +14,7 @@ export default function Header({ region, changeRegion }: HeaderProps) {
   const { setOpen } = useBottomSheetStore();
 
   const handleRegionSelect = () => {
-    setOpen(<RegionSelect onSelect={(region) => changeRegion(region)} />, "fixed50");
+    setOpen(<RegionSelect onSelect={(region) => changeRegion(region)} />, "auto");
   };
 
   return (
