@@ -59,6 +59,7 @@ export async function GET(request: NextRequest) {
 
     addressList = addressList.map((doc: any) => {
       let regionName = doc.region_1depth_name || doc.address_name || "";
+      regionName = regionName.replace(/제주특별자치도$/, "제주도");
       regionName = regionName.replace(/특별자치도$/, "");
       regionName = regionName.replace(/^경기도/, "경기");
 

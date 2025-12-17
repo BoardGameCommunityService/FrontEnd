@@ -27,17 +27,26 @@ export async function GET(request: NextRequest) {
     const filteredResults = data.documents
       .filter((doc: any) => doc.address_type === "ROAD" || doc.address)
       .map((doc: any) => {
+        let region1 = "";
+        let region2 = "";
         // ROAD 타입인 경우
         if (doc.address_type === "ROAD") {
-          return {
-            region_1depth_name: doc.address_name.split(" ")[0] || "",
-            region_2depth_name: doc.address_name.split(" ")[1] || "",
-          };
+          region1 = doc.address_name.split(" ")[0] || "";
+          region2 = doc.address_name.split(" ")[1] || "";
         }
         // 일반 주소인 경우
+        else {
+          region1 = doc.address?.region_1depth_name || "";
+          region2 = doc.address?.region_2depth_name || "";
+        }
+
+        region1 = region1.replace(/제주특별자치도/, "제주도");
+        region1 = region1.replace(/특별자치도/, "");
+        region1 = region1.replace(/특별자치시/, "");
+
         return {
-          region_1depth_name: doc.address?.region_1depth_name || "",
-          region_2depth_name: doc.address?.region_2depth_name || "",
+          region_1depth_name: region1,
+          region_2depth_name: region2,
         };
       })
       .filter((item: any) => item.region_1depth_name && item.region_2depth_name);
