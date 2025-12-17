@@ -9,14 +9,6 @@ export const proxy = auth((req) => {
     return NextResponse.next();
   }
 
-  if (
-    session?.user &&
-    session.user.profileCompleted === true &&
-    (pathname.startsWith("/login") || pathname.startsWith("/signup"))
-  ) {
-    return NextResponse.redirect(new URL("/", req.url));
-  }
-
   // public 경로는 먼저 허용
   const publicPaths = ["/login"];
 
@@ -34,7 +26,7 @@ export const proxy = auth((req) => {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  if (pathname.startsWith("/agreement")) {
+  if (pathname.startsWith("/login") || pathname.startsWith("/agreement")) {
     if (!session?.user) {
       return NextResponse.redirect(new URL("/login", req.url));
     }
