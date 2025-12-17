@@ -25,7 +25,8 @@ export default function Home() {
 
   const today = new Date();
   const [selectedDate, setSelectedDate] = useState<Date>(today);
-  const [region, setRegion] = useState<string>("서울 강남구");
+  const [region, setRegion] = useState<string>("");
+  const [isRegionLoaded, setIsRegionLoaded] = useState(false); //활동지역 로딩 상태
 
   // 서버에서 region 가져오기
   async function getRegion() {
@@ -48,37 +49,16 @@ export default function Home() {
         setRegion(data.region);
       }
     } catch (error) {
+      setRegion("서울 강남구");
       console.error("통신 에러", error);
-    }
-  }
-
-  // 서버에 region 저장하기
-  async function putRegion(newRegion: string) {
-    if (!session?.user?.accessToken) return;
-
-    try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/users/me`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.user.accessToken}`,
-        },
-        body: JSON.stringify({ region: newRegion }),
-      });
-
-      // console.log("지역 업데이트 완료:", newRegion);
-    } catch (error) {
-      console.error("지역 업데이트 에러:", error);
+    } finally {
+      setIsRegionLoaded(true);
     }
   }
 
   // Header에서 지역 변경 시 호출되는 함수
   const handleRegionChange = async (newRegion: string) => {
     setRegion(newRegion);
-
-    if (session?.user?.accessToken) {
-      await putRegion(newRegion);
-    }
   };
 
   // 초기 로딩: 인증 완료 시 서버에서 region 가져오기
@@ -124,7 +104,7 @@ export default function Home() {
     setPage(0);
     setHasMore(true);
     getData(0);
-  }, [selectedDate]);
+  }, [selectedDate, region]);
 
   useEffect(() => {
     if (inView && !isLoading && hasMore && page > 0) {
