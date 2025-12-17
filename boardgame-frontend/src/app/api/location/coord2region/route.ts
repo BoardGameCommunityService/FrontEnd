@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    console.log("📡 카카오 응답 상태:", response.status);
+    console.log("카카오 응답 상태:", response.status);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -52,11 +52,23 @@ export async function GET(request: NextRequest) {
     }
 
     const data = await response.json();
-    console.log("✅ 성공, 문서 개수:", data.documents?.length);
+    console.log("현재위치: ", data);
+    console.log("성공, 문서 개수:", data.documents?.length);
 
-    const legalDongData = data.documents.filter((doc: any) => doc.region_type === "B");
+    let addressList = data.documents.filter((doc: any) => doc.region_type === "H");
 
-    return NextResponse.json({ documents: legalDongData });
+    addressList = addressList.map((doc: any) => {
+      let regionName = doc.region_1depth_name || doc.address_name || "";
+      regionName = regionName.replace(/특별자치도$/, "");
+      regionName = regionName.replace(/^경기도/, "경기");
+
+      return {
+        ...doc,
+        region_1depth_name: regionName.trim(),
+      };
+    });
+
+    return NextResponse.json({ documents: addressList });
   } catch (error) {
     console.error("=== coord2region 예외 발생 ===");
     console.error(error);
