@@ -5,46 +5,68 @@ export const proxy = auth((req) => {
   const { pathname } = req.nextUrl;
   const session = req.auth;
 
+  //api는 일단 다 열고
   if (pathname.startsWith("/api")) {
     return NextResponse.next();
   }
 
-  // public 경로는 먼저 허용
-  const publicPaths = ["/login"];
-
-  const isPublicPath = pathname === "/" || publicPaths.some((path) => pathname.startsWith(path));
-
-  if (isPublicPath) {
-    if (pathname === "/" && session?.user && session.user.profileCompleted === false) {
-      return NextResponse.redirect(new URL("/signup", req.url));
+  //인증 상태
+  if (session?.user) {
+    //토큰 만료시
+    if (session.error === "RefreshTokenExpired") {
+      // 추가정보 입력을 완료한 사용자인 경우
+      if (session.user.profileCompleted === true) {
+        // 로그인 페이지로
+        if (!pathname.startsWith("/login")) {
+          return NextResponse.redirect(new URL("/login", req.url));
+        } else {
+          return NextResponse.next();
+        }
+      } else {
+        // 회원 추가정보 입력이 안끝났으면 home, login, signup, agreement만 허용
+        if (
+          pathname === "/" ||
+          pathname.startsWith("/login") ||
+          pathname.startsWith("/signup") ||
+          pathname.startsWith("/agreement")
+        ) {
+          return NextResponse.next();
+        } else {
+          // 그외는 로그인 페이지로
+          return NextResponse.redirect(new URL("/login", req.url));
+        }
+      }
+    } else {
+      // 토큰이 살아있는 경우
+      // 추가정보 입력이 완료된 경우
+      if (session.user.profileCompleted === true) {
+        // login, signup, agreement 제외하고 모두 허용
+        if (pathname.startsWith("/login") || pathname.startsWith("/signup") || pathname.startsWith("/agreement")) {
+          return NextResponse.redirect(new URL("/", req.url));
+        } else {
+          return NextResponse.next();
+        }
+      } else {
+        if (pathname.startsWith("/login") || pathname.startsWith("/signup") || pathname.startsWith("/agreement")) {
+          return NextResponse.next();
+        } else {
+          return NextResponse.redirect(new URL("/signup", req.url));
+        }
+      }
     }
-    return NextResponse.next();
-  }
-
-  // protected 경로에서만 토큰 에러 체크
-  if (session?.error === "RefreshTokenExpired") {
-    return NextResponse.redirect(new URL("/login", req.url));
-  }
-
-  if (pathname.startsWith("/login") || pathname.startsWith("/agreement")) {
-    if (!session?.user) {
+  } else {
+    // 미인증 상태
+    if (
+      pathname === "/" ||
+      pathname.startsWith("/login") ||
+      pathname.startsWith("/signup") ||
+      pathname.startsWith("/agreement")
+    ) {
+      return NextResponse.next();
+    } else {
       return NextResponse.redirect(new URL("/login", req.url));
     }
-    if (session.user.profileCompleted === true) {
-      return NextResponse.redirect(new URL("/", req.url));
-    }
-    return NextResponse.next();
   }
-
-  if (session?.user && session.user.profileCompleted === false && !pathname.startsWith("/signup")) {
-    return NextResponse.redirect(new URL("/signup", req.url));
-  }
-
-  if (!session?.user) {
-    return NextResponse.redirect(new URL("/login", req.url));
-  }
-
-  return NextResponse.next();
 });
 
 export const config = {
