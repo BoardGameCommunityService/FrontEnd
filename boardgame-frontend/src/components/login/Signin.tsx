@@ -14,10 +14,10 @@ export default function Signin() {
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center gap-6">
-      <section className="w-full h-[524px] flex flex-col gap-6 items-center justify-center">
+      <section className="w-full flex flex-1 flex-col gap-6 items-center justify-center">
         {/* 말풍선 */}
         <div className="flex flex-col items-center">
-          <div className="w-[118px] h-[52px] rounded-xl px-3 py-2 bg-[#161616]">
+          <div className="w-[118px] h-full rounded-xl px-3 py-2 bg-[#161616]">
             <h2 className="m-0 font-semibold text-[13px] leading-[140%] tracking-[-0.02em] text-center text-[#FAFAFA] whitespace-pre">
               함께하면 더 즐거운{"\n"}보드게임 라이프!
             </h2>

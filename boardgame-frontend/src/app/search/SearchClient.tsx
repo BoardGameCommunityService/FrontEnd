@@ -61,7 +61,7 @@ export default function SearchClient({ popularGames, popularRegions }: Props) {
         {/* 검색 결과 없음 */}
         {!isLoading && isEmptyState && (
           <>
-            <EmptyState />
+            <EmptyState isBottom={true} textSize="lg" />
             <div ref={ref}></div>
           </>
         )}
