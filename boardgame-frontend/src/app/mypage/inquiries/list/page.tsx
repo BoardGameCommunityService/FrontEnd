@@ -15,27 +15,6 @@ interface Inquiry {
 }
 
 export default function InquiriesListPage() {
-  // 샘플 문의 내역 데이터
-  // const inquiries = [
-  //   {
-  //     id: 0,
-  //     title: "문의는 포도가 좋아",
-  //     content: "문의 테스트 1입니다. 문의 테스트 1입니다.",
-  //     answer: null,
-  //     createdAt: "2025.12.06",
-  //   },
-  //   {
-  //     id: 1,
-  //     title: "문의2",
-  //     content: "문의 테스트 2입니다. 문의 테스트 2입니다.",
-  //     answer: "문의 답변입니다. 문의 답변입니다. 문의 답변입니다.",
-  //     createdAt: "2025.12.16",
-  //   },
-  // ];
-
-  // 문의 내역이 없을 때 빈 배열로 설정
-  // const inquiries = [] as Inquiry[];
-
   const [inquiries, setInquiries] = useState<Inquiry[] | undefined>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { data: session, status } = useSession();
