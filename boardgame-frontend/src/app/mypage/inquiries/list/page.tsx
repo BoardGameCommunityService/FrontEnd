@@ -1,5 +1,3 @@
-"use client";
-
 import Inquiry from "@/components/inquiry/Inquiry";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
