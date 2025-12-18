@@ -1,5 +1,3 @@
-"use client";
-
 import ToastMessage from "@/components/common/ToastMessage";
 import useToastMessage from "@/stores/useToastMessage";
 import { useSession } from "next-auth/react";
