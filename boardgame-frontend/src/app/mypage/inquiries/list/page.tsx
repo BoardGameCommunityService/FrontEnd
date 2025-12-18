@@ -1,4 +1,5 @@
-import Inquiry from "@/components/inquiry/Inquiry";
+import { auth } from "@/auth";
+import InquiryList from "@/components/inquiry/InquiryList";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -10,27 +11,34 @@ interface Inquiry {
   createdAt: string;
 }
 
-export default function InquiriesListPage() {
-  // 샘플 문의 내역 데이터
-  const inquiries = [
-    {
-      id: 0,
-      title: "문의는 포도가 좋아",
-      content: "문의 테스트 1입니다. 문의 테스트 1입니다.",
-      answer: null,
-      createdAt: "2025.12.06",
-    },
-    {
-      id: 1,
-      title: "문의2",
-      content: "문의 테스트 2입니다. 문의 테스트 2입니다.",
-      answer: "문의 답변입니다. 문의 답변입니다. 문의 답변입니다.",
-      createdAt: "2025.12.16",
-    },
-  ];
+export default async function InquiriesListPage() {
+  const session = await auth();
 
-  // 문의 내역이 없을 때 빈 배열로 설정
-  // const inquiries = [] as Inquiry[];
+  // 내 문의 목록 API
+  const fetchInquiries = async (): Promise<Inquiry[]> => {
+    if (!session?.user?.accessToken) {
+      return [];
+    }
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/inquiries/my`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.user?.accessToken}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`요청 실패: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data as Inquiry[];
+    } catch (error) {
+      console.error("데이터를 불러오지 못했습니다:", error);
+      throw error;
+    }
+  };
+
+  const inquiries = await fetchInquiries();
 
   return (
     <div className="pt-11 bg-white h-screen flex flex-col">
@@ -40,19 +48,9 @@ export default function InquiriesListPage() {
         </Link>
         <h1 className="font-semibold text-lg">1:1문의</h1>
       </header>
-      <main className="flex-1 overflow-y-auto">
-        {/* 문의 내역이 없을 때 보여주는 화면 */}
-        {inquiries.length === 0 && (
-          <section className="flex flex-col items-center justify-center h-[calc(100%-100px)]">
-            <Image src="/icons/ic_empty_logo_with_bubble.svg" width={45} height={58} alt=""></Image>
-            <p className="mt-6 font-medium text-base text-center text-[#363636]">문의 내역이 없습니다.</p>
-          </section>
-        )}
-        {/* 문의 내역 */}
-        {inquiries.map((inquiry: Inquiry) => (
-          <Inquiry key={inquiry.id} inquiry={inquiry} />
-        ))}
-      </main>
+
+      <InquiryList inquiries={inquiries} />
+
       <div className="fixed bottom-0 left-0 right-0 px-5 pb-10 pt-[18px] bg-white flex justify-center">
         <Link
           href="/mypage/inquiries/new"

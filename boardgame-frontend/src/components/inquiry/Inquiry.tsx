@@ -14,7 +14,7 @@ interface InquiryProps {
 export default function Inquiry({ inquiry }: { inquiry: InquiryProps }) {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <section>
+    <li key={inquiry?.id}>
       <button
         className="flex flex-col items-start w-full gap-1 p-5 border-b border-[#F1F1F4] cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
@@ -42,6 +42,6 @@ export default function Inquiry({ inquiry }: { inquiry: InquiryProps }) {
           )}
         </div>
       )}
-    </section>
+    </li>
   );
 }
