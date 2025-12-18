@@ -1,6 +1,5 @@
 "use client";
 
-import ToastMessage from "@/components/common/ToastMessage";
 import useToastMessage from "@/stores/useToastMessage";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -101,7 +100,6 @@ export default function InquiryForm({ accessToken }: InquiryFormProps) {
           </button>
         </div>
       </form>
-      <ToastMessage />
     </>
   );
 }

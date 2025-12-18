@@ -27,7 +27,11 @@ export default function InquiryList({ inquiries }: InquiryListProps) {
         </section>
       ) : (
         /* 문의 내역 */
-        inquiries.map((inquiry) => <Inquiry key={inquiry.id} inquiry={inquiry} />)
+        <ul>
+          {inquiries.map((inquiry) => (
+            <Inquiry key={inquiry.id} inquiry={inquiry} />
+          ))}
+        </ul>
       )}
     </main>
   );
