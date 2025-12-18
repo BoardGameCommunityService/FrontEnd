@@ -56,11 +56,11 @@ export default function Page() {
   const gameList = gameListMaker(gameNamesJson);
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       {/* 헤더 */}
       <Header host={amIHost} id={id} />
       {/* 메인 */}
-      <main className="pb-[60px]">
+      <main className="pb-[60px] flex-1">
         <section className="px-5 mt-2.5">
           {/* 제목 */}
           <h1 className="text-[20px] leading-7 font-bold">{title}</h1>
@@ -94,10 +94,11 @@ export default function Page() {
         <div className="h-2.5 bg-[#F5F6FA] mt-5" role="separator" aria-hidden="true"></div>
         {/* 참여 인원 */}
         <MemberList participants={participants} host={host} />
-
+      </main>
+      <footer className="flex justify-center">
         {/* 참가신청 버튼 */}
         {!amIHost && <MeetingJoinButton id={id} participants={participants} maxParticipants={maxParticipants} />}
-      </main>
-    </>
+      </footer>
+    </div>
   );
 }
