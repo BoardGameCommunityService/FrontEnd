@@ -4,19 +4,20 @@ import Banner from "@/components/common/Banner";
 import Calendar from "@/components/common/Calendar";
 import CardList from "@/components/common/CardList";
 import Header from "@/components/common/Header";
-import Link from "next/link";
 import { EmptyState } from "@/components/search";
-
-import Image from "next/image";
-import bottomLogo from "../../public/bottomLogo.svg";
-import plusIcon from "../../public/icons/ic_plus.svg";
-import { useInView } from "react-intersection-observer";
-import { useEffect, useState } from "react";
 import { Post } from "@/types/post";
 import dateFormatter from "@/util/dateFormatter";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useInView } from "react-intersection-observer";
+import bottomLogo from "../../public/bottomLogo.svg";
+import plusIcon from "../../public/icons/ic_plus.svg";
 
 export default function Home() {
   const { ref, inView } = useInView({ threshold: 0 });
+  const { data: session, status } = useSession();
   const [postings, setPostings] = useState<Post[]>([]);
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -24,6 +25,48 @@ export default function Home() {
 
   const today = new Date();
   const [selectedDate, setSelectedDate] = useState<Date>(today);
+  const [region, setRegion] = useState<string>("");
+  const [isRegionLoaded, setIsRegionLoaded] = useState(false); //활동지역 로딩 상태
+
+  // 서버에서 region 가져오기
+  async function getRegion() {
+    if (!session?.user?.accessToken) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/users/me`, {
+        headers: {
+          Authorization: `Bearer ${session.user.accessToken}`,
+        },
+      });
+
+      if (!res.ok) throw new Error("지역 정보 fetch 에러");
+
+      const data = await res.json();
+
+      if (data.region) {
+        setRegion(data.region);
+      }
+    } catch (error) {
+      setRegion("서울 강남구");
+      console.error("통신 에러", error);
+    } finally {
+      setIsRegionLoaded(true);
+    }
+  }
+
+  // Header에서 지역 변경 시 호출되는 함수
+  const handleRegionChange = async (newRegion: string) => {
+    setRegion(newRegion);
+  };
+
+  // 초기 로딩: 인증 완료 시 서버에서 region 가져오기
+  useEffect(() => {
+    if (status === "authenticated") {
+      getRegion();
+    }
+  }, [status]);
 
   async function getData(pageNum: number) {
     try {
@@ -32,11 +75,13 @@ export default function Home() {
       const date = `${year}${month}${day}`;
 
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings?page=${pageNum}&size=15&date=${date}`
+        `${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings?page=${pageNum}&size=15&date=${date}&regionCode=${region}`
       );
+
       if (!res.ok) throw new Error("데이터 fetch 에러");
 
       const { content } = await res.json();
+
       if (content.length === 0) {
         setHasMore(false);
       } else {
@@ -47,7 +92,7 @@ export default function Home() {
         }
         setPage(pageNum + 1);
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error("통신 에러", error);
     } finally {
       setIsLoading(false);
@@ -58,24 +103,19 @@ export default function Home() {
     setPostings([]);
     setPage(0);
     setHasMore(true);
-
-    (async () => {
-      await getData(0);
-    })();
-  }, [selectedDate]);
+    getData(0);
+  }, [selectedDate, region]);
 
   useEffect(() => {
-    (async () => {
-      if (inView && !isLoading && hasMore && page > 0) {
-        await getData(page);
-      }
-    })();
+    if (inView && !isLoading && hasMore && page > 0) {
+      getData(page);
+    }
   }, [inView]);
 
   return (
     <div className="flex justify-center">
       <div className="w-full min-h-screen flex flex-col items-center bg-[#F5F6FA] relative">
-        <Header />
+        <Header region={region} changeRegion={handleRegionChange} />
         <main className="flex-1 flex flex-col w-full">
           <section className="w-full flex flex-col items-center">
             <Banner />

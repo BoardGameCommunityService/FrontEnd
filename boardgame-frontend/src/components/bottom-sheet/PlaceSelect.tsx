@@ -56,7 +56,7 @@ export default function PlaceSelect() {
         </button>
       </div>
 
-      {!isLoading && !error && places.length > 0 && (
+      {!isLoading && !error && places?.length > 0 && (
         <ul className="flex flex-1 flex-col gap-4 my-4 h-full overflow-y-scroll scrollbar-hide">
           {places.map((place) => (
             <li

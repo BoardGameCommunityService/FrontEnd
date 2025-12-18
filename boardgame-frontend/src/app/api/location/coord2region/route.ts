@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
     console.log("좌표:", { x, y });
 
     if (!x || !y) {
-      console.error("❌ 좌표 없음");
+      console.error("좌표 없음");
       return NextResponse.json({ error: "좌표 정보가 필요합니다" }, { status: 400 });
     }
 
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     console.log("API 키 길이:", apiKey?.length);
 
     if (!apiKey) {
-      console.error("❌ KAKAO_REST_API_KEY 환경 변수 없음");
+      console.error("KAKAO_REST_API_KEY 환경 변수 없음");
       console.error(
         "현재 환경 변수:",
         Object.keys(process.env).filter((k) => k.includes("KAKAO"))
@@ -28,7 +28,6 @@ export async function GET(request: NextRequest) {
     }
 
     const url = `https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=${x}&y=${y}`;
-    console.log("📍 카카오 API 요청:", url);
 
     const response = await fetch(url, {
       headers: {
@@ -36,11 +35,9 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    console.log("📡 카카오 응답 상태:", response.status);
-
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("❌ 카카오 API 에러:", errorText);
+      console.error("카카오 API 에러:", errorText);
       return NextResponse.json(
         {
           error: "카카오 API 요청 실패",
@@ -52,11 +49,22 @@ export async function GET(request: NextRequest) {
     }
 
     const data = await response.json();
-    console.log("✅ 성공, 문서 개수:", data.documents?.length);
 
-    const legalDongData = data.documents.filter((doc: any) => doc.region_type === "B");
+    let addressList = data.documents.filter((doc: any) => doc.region_type === "H");
 
-    return NextResponse.json({ documents: legalDongData });
+    addressList = addressList.map((doc: any) => {
+      let regionName = doc.region_1depth_name || doc.address_name || "";
+      regionName = regionName.replace(/제주특별자치도$/, "제주도");
+      regionName = regionName.replace(/특별자치도$/, "");
+      regionName = regionName.replace(/^경기도/, "경기");
+
+      return {
+        ...doc,
+        region_1depth_name: regionName.trim(),
+      };
+    });
+
+    return NextResponse.json({ documents: addressList });
   } catch (error) {
     console.error("=== coord2region 예외 발생 ===");
     console.error(error);

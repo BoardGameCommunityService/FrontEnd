@@ -1,10 +1,10 @@
 import "./globals.css";
 
-import React from "react";
 import Providers from "@/components/Providers";
 import BottomSheet from "@/components/common/BottomSheet";
 import Modal from "@/components/common/Modal";
 import ToastMessage from "@/components/common/ToastMessage";
+import React from "react";
 
 export default function RootLayout({
   children,
@@ -16,7 +16,7 @@ export default function RootLayout({
       <body className="flex justify-center">
         <Providers>
           <div className="w-[375px] min-h-dvh relative overflow-hidden">
-            <div className="h-screen overflow-y-scroll scrollbar-hide">
+            <div className="w-full h-screen overflow-y-scroll scrollbar-hide">
               {children}
               <BottomSheet />
               <Modal />
