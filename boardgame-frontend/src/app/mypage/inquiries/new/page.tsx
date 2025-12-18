@@ -2,6 +2,7 @@
 
 import ToastMessage from "@/components/common/ToastMessage";
 import useToastMessage from "@/stores/useToastMessage";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -22,6 +23,8 @@ export default function InquiriesListPage() {
     mode: "onChange",
   });
 
+  const { data: session, status } = useSession();
+
   const router = useRouter();
 
   const contentValue = watch("content", "");
@@ -29,15 +32,38 @@ export default function InquiriesListPage() {
 
   const { setToastMessage } = useToastMessage();
 
+  const createInquiry = async (inquiry: FormData) => {
+    if (!session?.user?.accessToken) {
+      return;
+    }
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/inquiries`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.user.accessToken}`,
+      },
+      credentials: "include",
+      body: JSON.stringify(inquiry),
+    });
+
+    if (!response.ok) {
+      throw new Error("문의 등록 실패");
+    }
+    return await response.json();
+  };
+
   const onSubmit = async (data: FormData) => {
     // 폼 제출 시 처리 로직
-    // API 호출
+    // 문의 등록 API
     try {
+      await createInquiry(data);
       // 모달
       setToastMessage("success", "문의가 등록되었습니다.");
       // 페이지 이동
-      router.push("/mypage/inquiries/list");
+      router.push(`/mypage/inquiries/list`);
     } catch (error) {
+      console.log("문의 등록 에러:", error);
       setToastMessage("failure", "문의 등록에 실패했습니다. 다시 시도해주세요.");
     }
   };
