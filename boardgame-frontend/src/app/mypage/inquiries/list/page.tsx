@@ -25,7 +25,6 @@ export default async function InquiriesListPage() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${session?.user?.accessToken}`,
         },
-        credentials: "include",
       });
       if (!response.ok) {
         throw new Error(`요청 실패: ${response.status}`);

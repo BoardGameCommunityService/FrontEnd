@@ -41,7 +41,6 @@ export default function InquiryForm({ accessToken }: InquiryFormProps) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      credentials: "include",
       body: JSON.stringify(inquiry),
     });
 
