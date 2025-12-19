@@ -30,14 +30,10 @@ export default function Home() {
 
   // 서버에서 region 가져오기
   async function getRegion() {
-    if (!session?.user?.accessToken) {
-      return;
-    }
-
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/users/me`, {
         headers: {
-          Authorization: `Bearer ${session.user.accessToken}`,
+          Authorization: `Bearer ${session?.user.accessToken}`,
         },
       });
 
@@ -63,8 +59,10 @@ export default function Home() {
 
   // 초기 로딩: 인증 완료 시 서버에서 region 가져오기
   useEffect(() => {
-    if (status === "authenticated") {
+    if (status === "authenticated" && !isRegionLoaded) {
       getRegion();
+    } else if (status === "unauthenticated") {
+      setRegion("서울 강남구");
     }
   }, [status]);
 
@@ -75,7 +73,7 @@ export default function Home() {
       const date = `${year}${month}${day}`;
 
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings?page=${pageNum}&size=15&date=${date}&regionCode=${region}`
+        `${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings?page=${pageNum}&size=15&date=${date}`
       );
 
       if (!res.ok) throw new Error("데이터 fetch 에러");
