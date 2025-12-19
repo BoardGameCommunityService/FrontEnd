@@ -4,21 +4,17 @@ import Button from "@/components/common/Button";
 import TextInput from "@/components/common/TextInput";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useRegion } from "@/hooks/useRegion";
-import { useSession } from "next-auth/react";
+import useBottomSheetStore from "@/stores/useBottomSheetStore";
+import useRegionStore from "@/stores/useRegionStore";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import useBottomSheetStore from "../../stores/useBottomSheetStore";
 
-interface RegionSelectProps {
-  onSelect: (region: string) => void;
-}
-
-export default function RegionSelect({ onSelect }: RegionSelectProps) {
-  const { data: session, status } = useSession();
+export default function RegionSelect() {
   const { setClose } = useBottomSheetStore();
   const [regionInput, setRegionInput] = useState("");
   const debouncedSearch = useDebounce(regionInput, 300);
   const { searchResults, isLoading, getCurrentRegion, searchAddress } = useRegion();
+  const { region, setRegion } = useRegionStore();
 
   useEffect(() => {
     if (debouncedSearch) {
@@ -27,7 +23,7 @@ export default function RegionSelect({ onSelect }: RegionSelectProps) {
   }, [debouncedSearch]);
 
   const handleCurrentRegionClick = async () => {
-    const results = await getCurrentRegion();
+    return await getCurrentRegion();
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,7 +31,7 @@ export default function RegionSelect({ onSelect }: RegionSelectProps) {
   };
 
   const handleRegionSelect = (locationString: string) => {
-    onSelect(locationString); // 부모에게 선택된 지역 전달
+    setRegion(locationString); // 전역 상태에 선택한 지역 저장
     setClose(); // 바텀시트 닫기
   };
 

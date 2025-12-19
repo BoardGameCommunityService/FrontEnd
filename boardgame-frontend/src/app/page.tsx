@@ -5,6 +5,7 @@ import Calendar from "@/components/common/Calendar";
 import CardList from "@/components/common/CardList";
 import Header from "@/components/common/Header";
 import { EmptyState } from "@/components/search";
+import useRegionStore from "@/stores/useRegionStore";
 import { Post } from "@/types/post";
 import dateFormatter from "@/util/dateFormatter";
 import { useSession } from "next-auth/react";
@@ -25,46 +26,16 @@ export default function Home() {
 
   const today = new Date();
   const [selectedDate, setSelectedDate] = useState<Date>(today);
-  const [region, setRegion] = useState<string>("");
-  const [isRegionLoaded, setIsRegionLoaded] = useState(false); //활동지역 로딩 상태
 
-  // 서버에서 region 가져오기
-  async function getRegion() {
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/users/me`, {
-        headers: {
-          Authorization: `Bearer ${session?.user.accessToken}`,
-        },
-      });
+  const { selectedRegion, initializeRegion, isInitialized } = useRegionStore();
 
-      if (!res.ok) throw new Error("지역 정보 fetch 에러");
-
-      const data = await res.json();
-
-      if (data.region) {
-        setRegion(data.region);
-      }
-    } catch (error) {
-      setRegion("서울 강남구");
-      console.error("통신 에러", error);
-    } finally {
-      setIsRegionLoaded(true);
-    }
-  }
-
-  // Header에서 지역 변경 시 호출되는 함수
-  const handleRegionChange = async (newRegion: string) => {
-    setRegion(newRegion);
-  };
-
-  // 초기 로딩: 인증 완료 시 서버에서 region 가져오기
   useEffect(() => {
-    if (status === "authenticated" && !isRegionLoaded) {
-      getRegion();
+    if (status === "authenticated" && session?.user?.accessToken) {
+      initializeRegion(session.user.accessToken);
     } else if (status === "unauthenticated") {
-      setRegion("서울 강남구");
+      // 비로그인 상태면 기본값 사용 (이미 "서울 강남구"로 초기화됨)
     }
-  }, [status]);
+  }, [status, session?.user?.accessToken]);
 
   async function getData(pageNum: number) {
     try {
@@ -75,6 +46,7 @@ export default function Home() {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings?page=${pageNum}&size=15&date=${date}`
       );
+      // 지역 파라미터 추가 예정: &regionCode=${selectedRegion}
 
       if (!res.ok) throw new Error("데이터 fetch 에러");
 
@@ -98,11 +70,13 @@ export default function Home() {
   }
 
   useEffect(() => {
-    setPostings([]);
-    setPage(0);
-    setHasMore(true);
-    getData(0);
-  }, [selectedDate, region]);
+    if (isInitialized) {
+      setPostings([]);
+      setPage(0);
+      setHasMore(true);
+      getData(0);
+    }
+  }, [selectedDate, selectedRegion]);
 
   useEffect(() => {
     if (inView && !isLoading && hasMore && page > 0) {
@@ -113,7 +87,7 @@ export default function Home() {
   return (
     <div className="flex justify-center">
       <div className="w-full min-h-screen flex flex-col items-center bg-[#F5F6FA] relative">
-        <Header region={region} changeRegion={handleRegionChange} />
+        <Header />
         <main className="flex-1 flex flex-col w-full">
           <section className="w-full flex flex-col items-center">
             <Banner />

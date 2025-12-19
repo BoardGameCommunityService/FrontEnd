@@ -4,17 +4,18 @@ import RegionSelect from "@/components/bottom-sheet/RegionSelect";
 import useBottomSheetStore from "@/stores/useBottomSheetStore";
 import Image from "next/image";
 import Link from "next/link";
+import useRegionStore from "../../stores/useRegionStore";
 
 interface HeaderProps {
   region: string;
-  changeRegion: (region: string) => void;
 }
 
-export default function Header({ region, changeRegion }: HeaderProps) {
+export default function Header() {
   const { setOpen } = useBottomSheetStore();
+  const { region } = useRegionStore();
 
   const handleRegionSelect = () => {
-    setOpen(<RegionSelect onSelect={(region) => changeRegion(region)} />, "auto");
+    setOpen(<RegionSelect />, "auto");
   };
 
   return (
