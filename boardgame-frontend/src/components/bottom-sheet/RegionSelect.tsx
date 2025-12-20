@@ -14,7 +14,7 @@ export default function RegionSelect() {
   const [regionInput, setRegionInput] = useState("");
   const debouncedSearch = useDebounce(regionInput, 300);
   const { searchResults, isLoading, getCurrentRegion, searchAddress } = useRegion();
-  const { region, setRegion } = useRegionStore();
+  const { setSelectedRegion } = useRegionStore();
 
   useEffect(() => {
     if (debouncedSearch) {
@@ -30,8 +30,17 @@ export default function RegionSelect() {
     setRegionInput(e.target.value);
   };
 
+  const formatAddress = (address: string) => {
+    return address
+      .replace(/제주특별자치도/g, "제주도")
+      .replace(/특별자치도/g, "")
+      .replace(/특별자치시/g, "")
+      .replace(/경기도/g, "경기")
+      .trim();
+  };
+
   const handleRegionSelect = (locationString: string) => {
-    setRegion(locationString); // 전역 상태에 선택한 지역 저장
+    setSelectedRegion(formatAddress(locationString)); // 전역 상태에 선택한 지역 저장
     setClose(); // 바텀시트 닫기
   };
 
@@ -81,7 +90,7 @@ export default function RegionSelect() {
                     onClick={() => handleRegionSelect(locationString)}
                     className="w-full text-left transition-colors cursor-pointer"
                   >
-                    {locationString}
+                    {formatAddress(locationString)}
                   </button>
                 </li>
               );

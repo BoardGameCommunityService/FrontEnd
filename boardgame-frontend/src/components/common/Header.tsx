@@ -2,9 +2,9 @@
 
 import RegionSelect from "@/components/bottom-sheet/RegionSelect";
 import useBottomSheetStore from "@/stores/useBottomSheetStore";
+import useRegionStore from "@/stores/useRegionStore";
 import Image from "next/image";
 import Link from "next/link";
-import useRegionStore from "../../stores/useRegionStore";
 
 interface HeaderProps {
   region: string;
@@ -12,10 +12,19 @@ interface HeaderProps {
 
 export default function Header() {
   const { setOpen } = useBottomSheetStore();
-  const { region } = useRegionStore();
+  const { selectedRegion } = useRegionStore();
 
   const handleRegionSelect = () => {
     setOpen(<RegionSelect />, "auto");
+  };
+
+  const formatAddress = (address: string) => {
+    return address
+      .replace(/제주특별자치도/g, "제주도")
+      .replace(/특별자치도/g, "")
+      .replace(/특별자치시/g, "")
+      .replace(/경기도/g, "경기")
+      .trim();
   };
 
   return (
@@ -24,7 +33,7 @@ export default function Header() {
 
       <div className="relative inline-block">
         <button onClick={handleRegionSelect} className="flex items-center gap-[2px] cursor-pointer outline-none">
-          <span>{region}</span>
+          <span>{formatAddress(selectedRegion)}</span>
           <Image src="/icons/ic_dropdown.svg" width={24} height={24} alt="dropdown" />
         </button>
       </div>
