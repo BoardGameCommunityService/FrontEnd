@@ -40,19 +40,13 @@ export async function GET(request: NextRequest) {
           region2 = doc.address?.region_2depth_name || "";
         }
 
-        return {
-          region_1depth_name: region1,
-          region_2depth_name: region2,
-        };
+        return `${region1} ${region2}`;
       })
-      .filter((item: any) => item.region_1depth_name && item.region_2depth_name);
+      .filter((item: any) => item);
 
     //주소 중복제거
-    const uniqueResults = Array.from(
-      new Map(
-        filteredResults.map((item: any) => [`${item.region_1depth_name}-${item.region_2depth_name}`, item])
-      ).values()
-    );
+    const uniqueResults = Array.from(new Set(filteredResults));
+    console.log("data:", data, "address:", filteredResults, "uniqueAddress:", uniqueResults);
 
     return NextResponse.json({ documents: uniqueResults });
   } catch (error) {
