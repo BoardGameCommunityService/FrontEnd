@@ -40,10 +40,6 @@ export async function GET(request: NextRequest) {
           region2 = doc.address?.region_2depth_name || "";
         }
 
-        region1 = region1.replace(/제주특별자치도/, "제주도");
-        region1 = region1.replace(/특별자치도/, "");
-        region1 = region1.replace(/특별자치시/, "");
-
         return {
           region_1depth_name: region1,
           region_2depth_name: region2,

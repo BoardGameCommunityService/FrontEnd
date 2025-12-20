@@ -6,9 +6,6 @@ export async function GET(request: NextRequest) {
     const x = searchParams.get("x");
     const y = searchParams.get("y");
 
-    console.log("=== coord2region API 호출 ===");
-    console.log("좌표:", { x, y });
-
     if (!x || !y) {
       console.error("좌표 없음");
       return NextResponse.json({ error: "좌표 정보가 필요합니다" }, { status: 400 });
@@ -54,9 +51,6 @@ export async function GET(request: NextRequest) {
 
     addressList = addressList.map((doc: any) => {
       let regionName = doc.region_1depth_name || doc.address_name || "";
-      regionName = regionName.replace(/제주특별자치도$/, "제주도");
-      regionName = regionName.replace(/특별자치도$/, "");
-      regionName = regionName.replace(/^경기도/, "경기");
 
       return {
         ...doc,
