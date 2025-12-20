@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "서버 설정 오류: API 키가 없습니다" }, { status: 500 });
     }
 
-    const url = `https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=${x}&y=${y}`;
+    const url = `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${x}&y=${y}`;
 
     const response = await fetch(url, {
       headers: {
@@ -46,16 +46,9 @@ export async function GET(request: NextRequest) {
     }
 
     const data = await response.json();
-
-    let addressList = data.documents.filter((doc: any) => doc.region_type === "H");
-
-    addressList = addressList.map((doc: any) => {
-      let regionName = doc.region_1depth_name || doc.address_name || "";
-
-      return {
-        ...doc,
-        region_1depth_name: regionName.trim(),
-      };
+    let addressList = data.documents.map((doc: any) => {
+      const address = doc.address;
+      return `${address.region_1depth_name} ${address.region_2depth_name}`;
     });
 
     return NextResponse.json({ documents: addressList });

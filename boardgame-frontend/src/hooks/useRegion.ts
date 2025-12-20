@@ -49,7 +49,7 @@ export function useRegion() {
 
       const { latitude, longitude } = position.coords;
 
-      const response = await fetch(`/api/location/coord2region?x=${longitude}&y=${latitude}`);
+      const response = await fetch(`/api/location/coord2address?x=${longitude}&y=${latitude}`);
 
       if (!response.ok) {
         throw new Error("위치 정보를 가져올 수 없습니다");
