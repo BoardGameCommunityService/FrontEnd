@@ -18,14 +18,14 @@ export default function Header() {
     setOpen(<RegionSelect />, "auto");
   };
 
-  const formatAddress = (address: string) => {
-    return address
-      .replace(/제주특별자치도/g, "제주도")
-      .replace(/특별자치도/g, "")
-      .replace(/특별자치시/g, "")
-      .replace(/경기도/g, "경기")
-      .trim();
-  };
+  // const formatAddress = (address: string) => {
+  //   return address
+  //     .replace(/제주특별자치도/g, "제주도")
+  //     .replace(/특별자치도/g, "")
+  //     .replace(/특별자치시/g, "")
+  //     .replace(/경기도/g, "경기")
+  //     .trim();
+  // };
 
   return (
     <header className="w-full px-5 py-3 mt-11 mb-3 text-xl font-bold flex justify-between">
@@ -33,7 +33,7 @@ export default function Header() {
 
       <div className="relative inline-block">
         <button onClick={handleRegionSelect} className="flex items-center gap-[2px] cursor-pointer outline-none">
-          <span>{formatAddress(selectedRegion)}</span>
+          <span>{selectedRegion}</span>
           <Image src="/icons/ic_dropdown.svg" width={24} height={24} alt="dropdown" />
         </button>
       </div>

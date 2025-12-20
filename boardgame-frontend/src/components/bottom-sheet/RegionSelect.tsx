@@ -30,14 +30,14 @@ export default function RegionSelect() {
     setRegionInput(e.target.value);
   };
 
-  const formatAddress = (address: string) => {
-    return address
-      .replace(/제주특별자치도/g, "제주도")
-      .replace(/특별자치도/g, "")
-      .replace(/특별자치시/g, "")
-      .replace(/경기도/g, "경기")
-      .trim();
-  };
+  // const formatAddress = (address: string) => {
+  //   return address
+  //     .replace(/제주특별자치도/g, "제주도")
+  //     .replace(/특별자치도/g, "")
+  //     .replace(/특별자치시/g, "")
+  //     .replace(/경기도/g, "경기")
+  //     .trim();
+  // };
 
   const handleRegionSelect = (locationString: string) => {
     setSelectedRegion(locationString.replace(/경기도/g, "경기")); // 전역 상태에 선택한 지역 저장
@@ -81,7 +81,7 @@ export default function RegionSelect() {
           <h3 className="text-xs">검색 결과</h3>
           <ul>
             {searchResults.map((result, index) => {
-              const locationString = [result.region_1depth_name, result.region_2depth_name].filter(Boolean).join(" ");
+              const locationString = `${result}`;
 
               return (
                 <li key={index} className="my-3 text-[#161616]">
@@ -90,7 +90,7 @@ export default function RegionSelect() {
                     onClick={() => handleRegionSelect(locationString)}
                     className="w-full text-left transition-colors cursor-pointer"
                   >
-                    {formatAddress(locationString)}
+                    {locationString}
                   </button>
                 </li>
               );
