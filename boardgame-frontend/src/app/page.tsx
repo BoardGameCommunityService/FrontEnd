@@ -14,10 +14,12 @@ import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import bottomLogo from "../../public/bottomLogo.svg";
 import plusIcon from "../../public/icons/ic_plus.svg";
+import { useAuthFetch } from "@/hooks/useAuthFetch";
 
 export default function Home() {
   const { ref, inView } = useInView({ threshold: 0 });
   const { data: session, status } = useSession();
+  const { authFetch } = useAuthFetch();
   const [postings, setPostings] = useState<Post[]>([]);
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -35,11 +37,7 @@ export default function Home() {
     }
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/users/me`, {
-        headers: {
-          Authorization: `Bearer ${session.user.accessToken}`,
-        },
-      });
+      const res = await authFetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/users/me`);
 
       if (!res.ok) throw new Error("지역 정보 fetch 에러");
 

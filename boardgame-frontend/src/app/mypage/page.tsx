@@ -7,10 +7,11 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useAuthFetch } from "@/hooks/useAuthFetch";
 
 export default function Page() {
   const { data: session } = useSession();
-  const token = session?.user.accessToken as string | undefined;
+  const { authFetch, isReady } = useAuthFetch();
 
   const { myPartData, setMyPartData, isFetched, setIsFetched } = useMyPageStore();
 
@@ -18,7 +19,7 @@ export default function Page() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!token) return;
+    if (!isReady) return;
 
     if (isFetched) return;
 
@@ -30,10 +31,9 @@ export default function Page() {
       setError(null);
 
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/my/participations/summary`, {
+        const res = await authFetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/my/participations/summary`, {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
           signal: abortController.signal,
         });
@@ -66,7 +66,7 @@ export default function Page() {
       mounted = false;
       abortController.abort();
     };
-  }, [token, isFetched]);
+  }, [isReady, isFetched, authFetch]);
 
   const { hostCount, approvedCount, pendingCount } = myPartData;
 

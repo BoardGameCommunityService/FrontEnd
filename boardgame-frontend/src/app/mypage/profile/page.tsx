@@ -10,10 +10,12 @@ import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { getSessionValue } from "@/util/getSession";
 import useModalStore from "@/stores/useModalStore";
+import { useAuthFetch } from "@/hooks/useAuthFetch";
 
 export default function Page() {
   const router = useRouter();
   const [userData, setUserData] = useState<UserDataType>();
+  const { authFetch, isReady } = useAuthFetch();
 
   const {
     register,
@@ -29,13 +31,12 @@ export default function Page() {
   const { setModal, setClose } = useModalStore();
 
   const onSubmit = (data: UserDataType) => {
-    if (status === "loading" || !session?.user?.accessToken) return;
+    if (status === "loading") return;
 
-    fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/users/me`, {
+    authFetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/users/me`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${session.user.accessToken}`,
       },
       body: JSON.stringify({
         nickname: data.nickname,
@@ -88,9 +89,8 @@ export default function Page() {
       () => setClose(),
       "회원탈퇴",
       async () => {
-        await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/auth/deactivate`, {
+        await authFetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/auth/deactivate`, {
           method: "POST",
-          headers: { Authorization: `Bearer ${session?.user.accessToken}` },
         })
           .then(async () => {
             setClose();
@@ -103,13 +103,9 @@ export default function Page() {
   };
 
   useEffect(() => {
-    if (status === "loading" || !session?.user?.accessToken) return;
+    if (!isReady) return;
 
-    fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/users/me`, {
-      headers: {
-        Authorization: `Bearer ${session.user.accessToken}`,
-      },
-    })
+    authFetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/users/me`)
       .then((res) => res.json())
       .then((data) => {
         setUserData({
@@ -119,7 +115,7 @@ export default function Page() {
         });
       })
       .catch((err) => console.error(err));
-  }, [session, status]);
+  }, [isReady, authFetch]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
