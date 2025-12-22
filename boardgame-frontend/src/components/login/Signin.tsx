@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
-import React from "react";
 import { signIn } from "next-auth/react";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function Signin() {
   const handleClickKakao = () => {
@@ -46,6 +46,33 @@ export default function Signin() {
           <Image src="/google.svg" alt="" width={22} height={22} className="absolute left-4" aria-hidden="true" />
           <span className="text-[16px] font-medium">구글로 로그인</span>
         </button>
+      </section>
+      <section className="mt-2 mb-15">
+        <p className="text-xs text-[#767676] text-center">
+          로그인하면{" "}
+          <Link
+            href="/terms/privacy"
+            className="underline underline-offset-2"
+            onClick={(e) => {
+              console.log("링크 클릭됨!");
+            }}
+          >
+            개인정보 처리 약관
+          </Link>{" "}
+          및{" "}
+          <Link
+            href="/terms/service"
+            className="underline underline-offset-2"
+            onClick={(e) => {
+              console.log("링크 클릭됨!");
+            }}
+          >
+            이용 약관
+          </Link>
+          에
+          <br />
+          동의하게 됩니다.
+        </p>
       </section>
     </main>
   );
