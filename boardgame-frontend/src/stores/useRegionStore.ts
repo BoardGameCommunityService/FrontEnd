@@ -44,7 +44,6 @@ const useRegionStore = create<SearchStore>()(
           console.error("지역 정보 로드 실패:", error);
           set({
             selectedRegion: "서울 강남구",
-            isInitialized: true,
           });
         }
       },
