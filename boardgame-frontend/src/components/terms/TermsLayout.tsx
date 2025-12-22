@@ -26,7 +26,7 @@ export default function TermsLayout({ title, intro, sections, footer }: TermsCon
         <Link href="/login">
           <Image src="/icons/ic_back.svg" width={24} height={24} alt="이전 페이지로 돌아가기" />
         </Link>
-        <p className="text-lg font-semibold text-[#161616]">{title}</p>
+        <h2 className="text-lg font-semibold text-[#161616]">{title}</h2>
       </section>
       <section className="mx-5 my-[11px] text-sm whitespace-pre-line text-[#363636]">
         <p>{intro}</p>
