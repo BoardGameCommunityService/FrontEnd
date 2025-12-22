@@ -1,7 +1,7 @@
 import NavigationBar from "@/components/common/NavigationBar";
 import React from "react";
 import RegionMeetingsList from "@/components/board/alim/RegionMeetingsList";
-import { serverAuthFetch } from "@/lib/serverAuthFetch";
+import { serverAuthFetch } from "@/util/serverAuthFetch";
 import { Post } from "@/types/post";
 
 export default async function Page() {

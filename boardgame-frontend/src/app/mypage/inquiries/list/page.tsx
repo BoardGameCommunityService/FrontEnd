@@ -1,7 +1,7 @@
 import InquiryList from "@/components/inquiry/InquiryList";
 import Image from "next/image";
 import Link from "next/link";
-import { serverAuthFetch } from "@/lib/serverAuthFetch";
+import { serverAuthFetch } from "@/util/serverAuthFetch";
 
 interface Inquiry {
   id: number;

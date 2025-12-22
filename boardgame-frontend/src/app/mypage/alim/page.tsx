@@ -2,7 +2,7 @@ import NavigationBar from "@/components/common/NavigationBar";
 import React from "react";
 import Notifications from "@/components/board/alim/Notifications";
 import { Notification } from "@/types/Notification";
-import { serverAuthFetch } from "@/lib/serverAuthFetch";
+import { serverAuthFetch } from "@/util/serverAuthFetch";
 
 export default async function Page() {
   const { data, error } = await serverAuthFetch<Notification>(

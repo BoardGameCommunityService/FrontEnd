@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { serverAuthFetch } from "@/lib/serverAuthFetch";
+import { serverAuthFetch } from "@/util/serverAuthFetch";
 
 export async function POST() {
   await serverAuthFetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/auth/logout`, {
