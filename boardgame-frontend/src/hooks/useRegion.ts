@@ -49,7 +49,7 @@ export function useRegion() {
 
       const { latitude, longitude } = position.coords;
 
-      const response = await fetch(`/api/location/coord2region?x=${longitude}&y=${latitude}`);
+      const response = await fetch(`/api/location/coord2address?x=${longitude}&y=${latitude}`);
 
       if (!response.ok) {
         throw new Error("위치 정보를 가져올 수 없습니다");
@@ -100,28 +100,6 @@ export function useRegion() {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  // 현재 위치 좌표 가져오기 (키워드 검색용)
-  const getCurrentPosition = (): Promise<{ x: number; y: number }> => {
-    return new Promise((resolve, reject) => {
-      if (!navigator.geolocation) {
-        reject(new Error("위치 서비스를 지원하지 않는 브라우저입니다."));
-        return;
-      }
-
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          resolve({
-            x: position.coords.longitude,
-            y: position.coords.latitude,
-          });
-        },
-        (error) => {
-          reject(new Error("위치 정보를 가져올 수 없습니다."));
-        }
-      );
-    });
   };
 
   // 키워드로 장소 검색

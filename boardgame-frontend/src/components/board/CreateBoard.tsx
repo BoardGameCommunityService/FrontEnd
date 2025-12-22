@@ -14,14 +14,14 @@ import useGameStore from "@/stores/post/useGameStore";
 import useBottomSheetStore from "@/stores/useBottomSheetStore";
 import dateFormatter, { formatDateTime } from "@/util/dateFormatter";
 
+import useMeetingDetail from "@/hooks/useMeetingDetail";
+import usePlaceStore from "@/stores/post/usePlaceStore";
+import useToastMessage from "@/stores/useToastMessage";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import usePlaceStore from "@/stores/post/usePlaceStore";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-import useMeetingDetail from "@/hooks/useMeetingDetail";
-import useToastMessage from "@/stores/useToastMessage";
 
 interface MeetingFormData {
   meetingId: number;
@@ -99,7 +99,7 @@ export default function CreateBoard({ id }: { id: number }) {
     data.gameNames = [...games];
     data.meetingPlace = meetingPlace;
     data.meetingAddress = meetingAddress;
-    data.regionCode = meetingAddress.split(" ")[0] + " " + meetingAddress.split(" ")[1];
+    data.regionCode = meetingAddress;
     data.meetingAt = `${year}-${month}-${day}T${hours}:${minutes}:00`;
     data.maxParticipants = people;
 
