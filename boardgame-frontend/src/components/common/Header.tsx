@@ -19,7 +19,11 @@ export default function Header() {
       <h1 className="sr-only">보드게임 친구 찾을때 보드메이트!</h1>
 
       <div className="relative inline-block">
-        <button onClick={handleRegionSelect} className="flex items-center gap-[2px] cursor-pointer outline-none">
+        <button
+          onClick={handleRegionSelect}
+          className="flex items-center gap-[2px] cursor-pointer outline-none"
+          type="button"
+        >
           <span>{selectedRegion}</span>
           <Image src="/icons/ic_dropdown.svg" width={24} height={24} alt="dropdown" />
         </button>
