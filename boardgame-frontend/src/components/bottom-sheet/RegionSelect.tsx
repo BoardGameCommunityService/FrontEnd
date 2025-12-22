@@ -30,15 +30,6 @@ export default function RegionSelect() {
     setRegionInput(e.target.value);
   };
 
-  // const formatAddress = (address: string) => {
-  //   return address
-  //     .replace(/제주특별자치도/g, "제주도")
-  //     .replace(/특별자치도/g, "")
-  //     .replace(/특별자치시/g, "")
-  //     .replace(/경기도/g, "경기")
-  //     .trim();
-  // };
-
   const handleRegionSelect = (locationString: string) => {
     setSelectedRegion(locationString.replace(/경기도/g, "경기")); // 전역 상태에 선택한 지역 저장
     setClose(); // 바텀시트 닫기

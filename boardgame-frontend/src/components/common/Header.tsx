@@ -6,10 +6,6 @@ import useRegionStore from "@/stores/useRegionStore";
 import Image from "next/image";
 import Link from "next/link";
 
-interface HeaderProps {
-  region: string;
-}
-
 export default function Header() {
   const { setOpen } = useBottomSheetStore();
   const { selectedRegion } = useRegionStore();
@@ -17,15 +13,6 @@ export default function Header() {
   const handleRegionSelect = () => {
     setOpen(<RegionSelect />, "auto");
   };
-
-  // const formatAddress = (address: string) => {
-  //   return address
-  //     .replace(/제주특별자치도/g, "제주도")
-  //     .replace(/특별자치도/g, "")
-  //     .replace(/특별자치시/g, "")
-  //     .replace(/경기도/g, "경기")
-  //     .trim();
-  // };
 
   return (
     <header className="w-full px-5 py-3 mt-11 mb-3 text-xl font-bold flex justify-between">

@@ -46,7 +46,6 @@ export async function GET(request: NextRequest) {
 
     //주소 중복제거
     const uniqueResults = Array.from(new Set(filteredResults));
-    console.log("data:", data, "address:", filteredResults, "uniqueAddress:", uniqueResults);
 
     return NextResponse.json({ documents: uniqueResults });
   } catch (error) {
