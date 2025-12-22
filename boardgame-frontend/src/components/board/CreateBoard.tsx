@@ -101,7 +101,7 @@ export default function CreateBoard({ id }: { id: number }) {
     data.gameNames = [...games];
     data.meetingPlace = meetingPlace;
     data.meetingAddress = meetingAddress;
-    data.regionCode = meetingAddress.split(" ")[0] + " " + meetingAddress.split(" ")[1];
+    data.regionCode = meetingAddress;
     data.meetingAt = `${year}-${month}-${day}T${hours}:${minutes}:00`;
     data.maxParticipants = people;
 

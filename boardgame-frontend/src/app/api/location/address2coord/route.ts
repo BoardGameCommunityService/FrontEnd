@@ -40,23 +40,11 @@ export async function GET(request: NextRequest) {
           region2 = doc.address?.region_2depth_name || "";
         }
 
-        region1 = region1.replace(/제주특별자치도/, "제주도");
-        region1 = region1.replace(/특별자치도/, "");
-        region1 = region1.replace(/특별자치시/, "");
-
-        return {
-          region_1depth_name: region1,
-          region_2depth_name: region2,
-        };
-      })
-      .filter((item: any) => item.region_1depth_name && item.region_2depth_name);
+        return `${region1} ${region2}`.trim();
+      });
 
     //주소 중복제거
-    const uniqueResults = Array.from(
-      new Map(
-        filteredResults.map((item: any) => [`${item.region_1depth_name}-${item.region_2depth_name}`, item])
-      ).values()
-    );
+    const uniqueResults = Array.from(new Set(filteredResults));
 
     return NextResponse.json({ documents: uniqueResults });
   } catch (error) {
