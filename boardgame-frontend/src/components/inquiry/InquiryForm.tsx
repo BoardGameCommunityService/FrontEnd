@@ -3,19 +3,17 @@
 import useToastMessage from "@/stores/useToastMessage";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { useAuthFetch } from "@/hooks/useAuthFetch";
 
 interface FormData {
   title: string;
   content: string;
 }
 
-interface InquiryFormProps {
-  accessToken?: string;
-}
-
-export default function InquiryForm({ accessToken }: InquiryFormProps) {
+export default function InquiryForm() {
   const router = useRouter();
   const { setToastMessage } = useToastMessage();
+  const { authFetch } = useAuthFetch();
 
   const {
     register,
@@ -30,15 +28,10 @@ export default function InquiryForm({ accessToken }: InquiryFormProps) {
   const currentLength = contentValue.length;
 
   const createInquiry = async (inquiry: FormData) => {
-    if (!accessToken) {
-      throw new Error("인증이 필요합니다.");
-    }
-
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/inquiries`, {
+    const response = await authFetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/inquiries`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify(inquiry),
     });

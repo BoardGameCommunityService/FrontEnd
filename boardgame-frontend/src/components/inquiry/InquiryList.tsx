@@ -3,6 +3,8 @@
 
 import Inquiry from "@/components/inquiry/Inquiry";
 import Image from "next/image";
+import { useAuthFetch } from "@/hooks/useAuthFetch";
+import { useState, useEffect } from "react";
 
 interface InquiryType {
   id: number;
@@ -14,9 +16,35 @@ interface InquiryType {
 
 interface InquiryListProps {
   inquiries: InquiryType[];
+  error?: string;
 }
 
-export default function InquiryList({ inquiries }: InquiryListProps) {
+export default function InquiryList({ inquiries: initialInquiries, error }: InquiryListProps) {
+  const { authFetch } = useAuthFetch();
+  const [inquiries, setInquiries] = useState(initialInquiries);
+
+  useEffect(() => {
+    // 서버에서 토큰 만료로 실패했으면 클라이언트에서 재시도
+    if (error === "TOKEN_EXPIRED") {
+      const retry = async () => {
+        try {
+          const res = await authFetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/inquiries/my`, {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          if (res.ok) {
+            const data = await res.json();
+            setInquiries(data);
+          }
+        } catch (error) {
+          console.error("재시도 실패:", error);
+        }
+      };
+      retry();
+    }
+  }, [error, authFetch]);
+
   return (
     <main className="flex-1 overflow-y-auto">
       {/* 문의 내역이 없을 때 */}

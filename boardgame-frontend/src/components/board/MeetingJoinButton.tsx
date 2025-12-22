@@ -7,6 +7,7 @@ import { Post } from "@/types/post";
 import useModalStore from "@/stores/useModalStore";
 import { useMyPageStore } from "@/stores/mypage/useMyPageStore";
 import { useParticipatedStore } from "@/stores/mypage/useParticipatedStore";
+import { useAuthFetch } from "@/hooks/useAuthFetch";
 
 interface Props extends Pick<Post, "participants" | "maxParticipants"> {
   id: number;
@@ -21,6 +22,7 @@ export default function MeetingJoinButton({ id, participants, maxParticipants }:
   const [isJoined, setIsJoined] = useState(false);
   const [buttonText, setButtonText] = useState("");
   const [buttonColor, setButtonColor] = useState(false);
+  const { authFetch } = useAuthFetch();
 
   const { setModal, setClose } = useModalStore();
 
@@ -37,11 +39,10 @@ export default function MeetingJoinButton({ id, participants, maxParticipants }:
 
     try {
       setIsLoading(true);
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings/${id}/participants`, {
+      const res = await authFetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings/${id}/participants`, {
         method: isJoined ? "DELETE" : "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${session.user.accessToken}`,
         },
       });
 

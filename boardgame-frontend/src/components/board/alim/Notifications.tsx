@@ -3,46 +3,65 @@
 import Image from "next/image";
 import { Notification, NotificationItem } from "@/types/Notification";
 import { useInView } from "react-intersection-observer";
-import { useState } from "react";
-import { useSession } from "next-auth/react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import useModalStore from "@/stores/useModalStore";
 import useToastMessage from "@/stores/useToastMessage";
+import { useAuthFetch } from "@/hooks/useAuthFetch";
 
-export default function Notifications({ initialData, size }: { initialData: Notification; size: number }) {
-  const { data: session, status } = useSession();
+export default function Notifications({
+  initialData,
+  size,
+}: {
+  initialData: Notification & { error?: string };
+  size: number;
+}) {
   const router = useRouter();
   const { setModal, setClose } = useModalStore();
   const { setToastMessage } = useToastMessage();
+  const { authFetch } = useAuthFetch();
 
-  const [notifications, setNotifications] = useState<NotificationItem[]>(initialData.items);
+  const [notifications, setNotifications] = useState<NotificationItem[]>(initialData.items || []);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
+  // 서버에서 토큰 만료로 실패했으면 클라이언트에서 재시도
+  useEffect(() => {
+    if (initialData.error === "TOKEN_EXPIRED") {
+      const retry = async () => {
+        try {
+          const res = await authFetch(
+            `${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/notifications?page=0&size=${size}`
+          );
+          if (res.ok) {
+            const result: Notification = await res.json();
+            setNotifications(result.items);
+          }
+        } catch (error) {
+          console.error("재시도 실패:", error);
+        }
+      };
+      retry();
+    }
+  }, [initialData.error, authFetch, size]);
+
   const { ref } = useInView({
     threshold: 0,
     onChange: async (inView) => {
-      if (inView && hasMore && !isLoading && notifications.length < initialData.total) {
+      if (inView && hasMore && !isLoading && notifications.length < (initialData.total || 0)) {
         await loadMore();
       }
     },
   });
 
   async function loadMore() {
-    if (status === "loading") return;
-
     try {
       const nextPage = page + 1;
 
       setIsLoading(true);
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/notifications?page=${nextPage}&size=${size}`,
-        {
-          headers: {
-            Authorization: `Bearer ${session?.user?.accessToken}`,
-          },
-        }
+      const res = await authFetch(
+        `${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/notifications?page=${nextPage}&size=${size}`
       );
 
       if (!res.ok) throw new Error("알림 목록 조회중 에러 발생");
@@ -54,7 +73,7 @@ export default function Notifications({ initialData, size }: { initialData: Noti
       setNotifications(newNotifications);
       setPage((prev) => prev + 1);
 
-      if (initialData.total <= newNotifications.length) {
+      if ((initialData.total || 0) <= newNotifications.length) {
         setHasMore(false);
       }
 
@@ -70,13 +89,10 @@ export default function Notifications({ initialData, size }: { initialData: Noti
 
   const handleApprove = async (resourceId: number, relatedUserId: number) => {
     try {
-      const res = await fetch(
+      const res = await authFetch(
         `${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings/${resourceId}/participants/${relatedUserId}/approve`,
         {
           method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${session?.user?.accessToken}`,
-          },
         }
       );
 
@@ -93,13 +109,10 @@ export default function Notifications({ initialData, size }: { initialData: Noti
 
   const handleReject = async (resourceId: number, relatedUserId: number) => {
     try {
-      const res = await fetch(
+      const res = await authFetch(
         `${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings/${resourceId}/participants/${relatedUserId}/deny`,
         {
           method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${session?.user?.accessToken}`,
-          },
         }
       );
 

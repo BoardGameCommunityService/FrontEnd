@@ -1,12 +1,9 @@
-import { auth } from "@/auth";
 import ToastMessage from "@/components/common/ToastMessage";
 import InquiryForm from "@/components/inquiry/InquiryForm";
 import Image from "next/image";
 import Link from "next/link";
 
 export default async function InquiriesListPage() {
-  const session = await auth();
-
   return (
     <div className="pt-11 bg-white h-screen flex flex-col">
       <header className="flex px-5 py-[11px] gap-[2px]">
@@ -16,7 +13,7 @@ export default async function InquiriesListPage() {
         <h1 className="font-semibold text-lg">문의하기</h1>
       </header>
       <main className="px-5 flex-1 overflow-y-auto">
-        <InquiryForm accessToken={session?.user?.accessToken} />
+        <InquiryForm />
       </main>
       <ToastMessage />
     </div>
