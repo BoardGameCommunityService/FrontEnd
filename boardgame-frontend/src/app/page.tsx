@@ -15,10 +15,12 @@ import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import bottomLogo from "../../public/bottomLogo.svg";
 import plusIcon from "../../public/icons/ic_plus.svg";
+import { useAuthFetch } from "@/hooks/useAuthFetch";
 
 export default function Home() {
   const { ref, inView } = useInView({ threshold: 0 });
   const { data: session, status } = useSession();
+  const { authFetch } = useAuthFetch();
   const [postings, setPostings] = useState<Post[]>([]);
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -43,7 +45,7 @@ export default function Home() {
       const { year, month, day } = dateFormatter(selectedDate.toISOString());
       const date = `${year}${month}${day}`;
 
-      const res = await fetch(
+      const res = await authFetch(
         `${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings?page=${pageNum}&size=15&date=${date}&regionCode=${selectedRegion}`
       );
 

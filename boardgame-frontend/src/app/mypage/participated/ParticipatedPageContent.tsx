@@ -6,18 +6,17 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import CardList from "@/components/common/CardList";
-import { useSession } from "next-auth/react";
 import { useState, useEffect, useMemo } from "react";
 import { useInView } from "react-intersection-observer";
 import { useParticipatedStore } from "@/stores/mypage/useParticipatedStore";
+import { useAuthFetch } from "@/hooks/useAuthFetch";
 
 export default function ParticipatedPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   //토큰
-  const { data: session } = useSession();
-  const token = session?.user.accessToken as string | undefined;
+  const { authFetch, isReady } = useAuthFetch();
 
   // 페치 관리
   const [loading, setLoading] = useState(true);
@@ -69,7 +68,7 @@ export default function ParticipatedPageContent() {
   }, [endPoint, setResults]);
 
   useEffect(() => {
-    if (!token) return;
+    if (!isReady) return;
     if (isFetched) return;
     if (!hasMore) return;
 
@@ -81,10 +80,9 @@ export default function ParticipatedPageContent() {
       setError(null);
 
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}${url}`, {
+        const res = await authFetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}${url}`, {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
           signal: abortController.signal,
         });
@@ -127,7 +125,7 @@ export default function ParticipatedPageContent() {
       mounted = false;
       abortController.abort();
     };
-  }, [token, url, endPoint, isFetched, appendResults, setApprovedResult, setResults, page, hasMore]);
+  }, [isReady, url, endPoint, isFetched, appendResults, setApprovedResult, setResults, page, hasMore, authFetch]);
 
   // 무한 스크롤
   useEffect(() => {

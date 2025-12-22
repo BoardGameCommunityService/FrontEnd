@@ -14,14 +14,15 @@ import useGameStore from "@/stores/post/useGameStore";
 import useBottomSheetStore from "@/stores/useBottomSheetStore";
 import dateFormatter, { formatDateTime } from "@/util/dateFormatter";
 
-import useMeetingDetail from "@/hooks/useMeetingDetail";
-import usePlaceStore from "@/stores/post/usePlaceStore";
-import useToastMessage from "@/stores/useToastMessage";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import usePlaceStore from "@/stores/post/usePlaceStore";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import useMeetingDetail from "@/hooks/useMeetingDetail";
+import useToastMessage from "@/stores/useToastMessage";
+import { useAuthFetch } from "@/hooks/useAuthFetch";
 
 interface MeetingFormData {
   meetingId: number;
@@ -47,6 +48,7 @@ export default function CreateBoard({ id }: { id: number }) {
   const router = useRouter();
   const { data: session, status } = useSession();
   const { setToastMessage } = useToastMessage();
+  const { authFetch, isReady } = useAuthFetch();
 
   const { register, handleSubmit, watch, reset } = useForm<MeetingFormData>({
     defaultValues: {
@@ -104,12 +106,11 @@ export default function CreateBoard({ id }: { id: number }) {
     data.maxParticipants = people;
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings${id ? `/${id}` : ""}`, {
+      const res = await authFetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings${id ? `/${id}` : ""}`, {
         method: id ? "PUT" : "POST",
         body: JSON.stringify(data),
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.user?.accessToken}`,
         },
       });
 

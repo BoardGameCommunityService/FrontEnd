@@ -6,6 +6,7 @@ import { useState } from "react";
 import { TERMS } from "../../content/terms/terms";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useAuthFetch } from "@/hooks/useAuthFetch";
 
 export default function Agreement() {
   // 동의 체크박스
@@ -46,6 +47,7 @@ export default function Agreement() {
   // 회원 가입 (세션 정보 가져와서 합쳐서 서버로 요청)
   const router = useRouter();
   const { data: session, status, update } = useSession();
+  const { authFetch } = useAuthFetch();
   const [loading, setLoading] = useState(false);
   const handleNext = async () => {
     if (!allChecked || loading) return;
@@ -89,23 +91,11 @@ export default function Agreement() {
         consent,
       };
 
-      // 인증 토큰은 useSession에서 읽기 (간단 타입 사용)
-      const user = session?.user as { accessToken?: string } | undefined;
-      const token = user?.accessToken as string | undefined;
-      if (!token) {
-        setLoading(false);
-        alert("세션에 인증 토큰이 없습니다. 다시 로그인해주세요.");
-        router.push("/login");
-        return;
-      }
-      const headers: Record<string, string> = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      };
-
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/auth/complete-signup`, {
+      const res = await authFetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/auth/complete-signup`, {
         method: "POST",
-        headers,
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(payload),
       });
 
