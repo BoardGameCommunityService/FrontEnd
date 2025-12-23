@@ -1,10 +1,4 @@
-import { LocationResult } from "@/types/location";
-
-interface LocationSearchResultsProps {
-  results: LocationResult[];
-  onSelect: (location: string) => void;
-  isLoading: boolean;
-}
+import { LocationSearchResultsProps } from "@/types/location";
 
 export default function LocationSearchResults({ results, onSelect, isLoading }: LocationSearchResultsProps) {
   if (isLoading) {
@@ -24,16 +18,14 @@ export default function LocationSearchResults({ results, onSelect, isLoading }: 
       <h3 className="text-xs">검색 결과</h3>
       <ul>
         {results.map((result, index) => {
-          const locationString = [result.region_1depth_name, result.region_2depth_name].filter(Boolean).join(" ");
-
           return (
             <li key={index} className="my-3 text-[#161616]">
               <button
                 type="button"
-                onClick={() => onSelect(locationString)}
+                onClick={() => onSelect(result)}
                 className="w-full text-left transition-colors cursor-pointer"
               >
-                {locationString}
+                {result}
               </button>
             </li>
           );
