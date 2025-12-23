@@ -23,12 +23,12 @@ export const proxy = auth((req) => {
           return NextResponse.next();
         }
       } else {
-        // 회원 추가정보 입력이 안끝났으면 home, login, signup, agreement만 허용
+        // 회원 추가정보 입력이 안끝났으면 home, login, signup, terms만 허용
         if (
           pathname === "/" ||
           pathname.startsWith("/login") ||
           pathname.startsWith("/signup") ||
-          pathname.startsWith("/agreement")
+          pathname.startsWith("/terms")
         ) {
           return NextResponse.next();
         } else {
@@ -40,14 +40,14 @@ export const proxy = auth((req) => {
       // 토큰이 살아있는 경우
       // 추가정보 입력이 완료된 경우
       if (session.user.profileCompleted === true) {
-        // login, signup, agreement 제외하고 모두 허용
-        if (pathname.startsWith("/login") || pathname.startsWith("/signup") || pathname.startsWith("/agreement")) {
+        // login, signup, terms 제외하고 모두 허용
+        if (pathname.startsWith("/login") || pathname.startsWith("/signup") || pathname.startsWith("/terms")) {
           return NextResponse.redirect(new URL("/", req.url));
         } else {
           return NextResponse.next();
         }
       } else {
-        if (pathname.startsWith("/login") || pathname.startsWith("/signup") || pathname.startsWith("/agreement")) {
+        if (pathname.startsWith("/login") || pathname.startsWith("/signup") || pathname.startsWith("/terms")) {
           return NextResponse.next();
         } else {
           return NextResponse.redirect(new URL("/signup", req.url));
@@ -60,7 +60,7 @@ export const proxy = auth((req) => {
       pathname === "/" ||
       pathname.startsWith("/login") ||
       pathname.startsWith("/signup") ||
-      pathname.startsWith("/agreement")
+      pathname.startsWith("/terms")
     ) {
       return NextResponse.next();
     } else {
