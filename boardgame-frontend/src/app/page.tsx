@@ -15,12 +15,11 @@ import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import bottomLogo from "../../public/bottomLogo.svg";
 import plusIcon from "../../public/icons/ic_plus.svg";
-import { useAuthFetch } from "@/hooks/useAuthFetch";
 
 export default function Home() {
   const { ref, inView } = useInView({ threshold: 0 });
   const { data: session, status } = useSession();
-  const { authFetch } = useAuthFetch();
+
   const [postings, setPostings] = useState<Post[]>([]);
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -34,8 +33,6 @@ export default function Home() {
   useEffect(() => {
     if (status === "authenticated" && session?.user?.accessToken) {
       initializeRegion(session.user.accessToken);
-    } else if (status === "unauthenticated") {
-      // 비로그인 상태면 기본값 사용 (이미 "서울 강남구"로 초기화됨)
     }
   }, [status, session?.user?.accessToken]);
 
@@ -45,8 +42,8 @@ export default function Home() {
       const { year, month, day } = dateFormatter(selectedDate.toISOString());
       const date = `${year}${month}${day}`;
 
-      const res = await authFetch(
-        `${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings?page=${pageNum}&size=15&date=${date}&regionCode=${selectedRegion}`
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings?page=${pageNum}&size=15&date=${date}`
       );
 
       if (!res.ok) throw new Error("데이터 fetch 에러");
@@ -71,13 +68,13 @@ export default function Home() {
   }
 
   useEffect(() => {
-    if (isInitialized) {
+    if (isInitialized || status === "unauthenticated") {
       setPostings([]);
       setPage(0);
       setHasMore(true);
       getData(0);
     }
-  }, [selectedDate, selectedRegion]);
+  }, [selectedDate, selectedRegion, status, isInitialized]);
 
   useEffect(() => {
     if (inView && !isLoading && hasMore && page > 0) {
