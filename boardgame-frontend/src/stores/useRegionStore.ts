@@ -1,4 +1,3 @@
-// stores/useRegionStore.ts
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -19,7 +18,6 @@ const useRegionStore = create<SearchStore>()(
       setSelectedRegion: (region: string) => {
         set({ selectedRegion: region });
       },
-
       initializeRegion: async (accessToken: string) => {
         // 이미 초기화됐으면 API 호출 안 함
         if (get().isInitialized) {
@@ -42,9 +40,6 @@ const useRegionStore = create<SearchStore>()(
           });
         } catch (error) {
           console.error("지역 정보 로드 실패:", error);
-          set({
-            selectedRegion: "서울 강남구",
-          });
         }
       },
     }),
