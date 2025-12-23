@@ -28,7 +28,7 @@ export default function Card({ id, location, title, currentMember, maxMember, ga
   const { month, day, weekday, hours, minutes } = dateFormatter(meetingDate);
   const dateFormat = `${month}/${day}(${weekday}) ${hours}:${minutes}`;
   return (
-    <article className="w-[335px] h-[116px] rounded-2xl p-4 bg-white">
+    <article className="w-[335px] py-4 rounded-2xl p-4 bg-white">
       <Link href={`/board/${id}`} className="flex flex-col gap-2">
         <div className="flex justify-between items-center gap-1">
           <div className="flex">
@@ -38,7 +38,7 @@ export default function Card({ id, location, title, currentMember, maxMember, ga
           <Badge>{dateFormat}</Badge>
         </div>
         <h2 className="font-medium text-[15px] text-[#161616]">{title}</h2>
-        <ul className="flex gap-1">
+        <ul className="flex gap-1 flex-wrap">
           <Badge>{`${currentMember}/${maxMember === 99 ? "무제한" : maxMember} 명`}</Badge>
           {Array.isArray(games) && games.map((game, index) => <Badge key={index}>{game}</Badge>)}
         </ul>
