@@ -43,7 +43,7 @@ export default function Home() {
       const date = `${year}${month}${day}`;
 
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings?page=${pageNum}&size=15&date=${date}`
+        `${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/meetings?page=${pageNum}&size=15&date=${date}&regionCode=${selectedRegion}`
       );
 
       if (!res.ok) throw new Error("데이터 fetch 에러");
