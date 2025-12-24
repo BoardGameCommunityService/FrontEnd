@@ -31,7 +31,7 @@ export default function RegionSelect() {
   };
 
   const handleRegionSelect = (locationString: string) => {
-    setSelectedRegion(locationString.replace(/경기도/g, "경기")); // 전역 상태에 선택한 지역 저장
+    setSelectedRegion(locationString); // 전역 상태에 선택한 지역 저장
     setClose(); // 바텀시트 닫기
   };
 
