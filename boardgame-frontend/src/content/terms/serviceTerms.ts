@@ -231,10 +231,4 @@ export const serviceContent = {
     },
   ],
   footer: "본 약관은 2025년 12월 20일부터 시행합니다.",
-  companyInfo: {
-    name: "보드메이트",
-    ceo: "[대표자명]",
-    address: "[사업장 주소]",
-    email: "[이메일 주소]",
-  },
 };

@@ -41,13 +41,13 @@ export const proxy = auth((req) => {
       // 추가정보 입력이 완료된 경우
       if (session.user.profileCompleted === true) {
         // login, signup, terms 제외하고 모두 허용
-        if (pathname.startsWith("/login") || pathname.startsWith("/signup") || pathname.startsWith("/terms")) {
+        if (pathname.startsWith("/login") || pathname.startsWith("/signup")) {
           return NextResponse.redirect(new URL("/", req.url));
         } else {
           return NextResponse.next();
         }
       } else {
-        if (pathname.startsWith("/login") || pathname.startsWith("/signup") || pathname.startsWith("/terms")) {
+        if (pathname.startsWith("/login") || pathname.startsWith("/signup")) {
           return NextResponse.next();
         } else {
           return NextResponse.redirect(new URL("/signup", req.url));

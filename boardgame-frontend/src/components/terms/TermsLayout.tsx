@@ -1,5 +1,7 @@
+"use client";
+
 import Image from "next/image";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface SubItem {
   text: string;
@@ -20,12 +22,13 @@ interface TermsContentProps {
 }
 
 export default function TermsLayout({ title, intro, sections, footer }: TermsContentProps) {
+  const router = useRouter();
   return (
     <>
       <section className="mx-5 my-[11px] flex gap-[2px]">
-        <Link href="/login">
+        <button type="button" onClick={() => router.back()}>
           <Image src="/icons/ic_back.svg" width={24} height={24} alt="이전 페이지로 돌아가기" />
-        </Link>
+        </button>
         <h2 className="text-lg font-semibold text-[#161616]">{title}</h2>
       </section>
       <section className="mx-5 my-[11px] text-sm whitespace-pre-line text-[#363636]">
