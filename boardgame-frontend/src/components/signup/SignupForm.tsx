@@ -1,14 +1,16 @@
 "use client";
 
 import Button from "@/components/common/Button";
-import TextInput from "@/components/common/TextInput";
 import GenderRadio from "@/components/common/GenderRadio";
+import TextInput from "@/components/common/TextInput";
+import useToastMessage from "@/stores/useToastMessage";
+import { UserDataType } from "@/types/UserDataType";
 import { getSessionValue } from "@/util/getSession";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { UserDataType } from "@/types/UserDataType";
 
 export default function SignupForm() {
   const [location, setLocation] = useState("");
@@ -35,11 +37,78 @@ export default function SignupForm() {
     sessionStorage.setItem("gender", gender);
     sessionStorage.setItem("region", location);
   };
+  const { data: session, status } = useSession();
+  const [loading, setLoading] = useState(false);
+  const { setToastMessage, setClose } = useToastMessage();
 
-  const onSubmit = () => {
-    saveFormDataToSession();
+  const onSubmit = async () => {
+    const { nickname = "", gender = "", location = "" } = getValues();
+    const consent = {
+      service: true,
+      privacy: true,
+    };
+    // 회원가입 완료 API 호출
+    // /api/auth/complete-signup
+    if (!nickname || !gender || !location) return;
+    setLoading(true);
+    try {
+      // 세션 로딩/인증 확인 (로딩 중엔 처리하지 않음)
+      if (status === "loading") {
+        setLoading(false);
+        return;
+      }
+      if (status === "unauthenticated") {
+        setLoading(false);
+        alert("소셜 로그인이 필요합니다. 다시 시도해주세요.");
+        router.push("/login");
+        return;
+      }
+      const query = {
+        nickname,
+        gender,
+        region: location,
+        consent,
+      };
 
-    router.push(`/agreement`);
+      // 인증 토큰은 useSession에서 읽기 (간단 타입 사용)
+      const user = session?.user as { accessToken?: string } | undefined;
+      const token = user?.accessToken as string | undefined;
+      if (!token) {
+        setLoading(false);
+        setToastMessage("failure", "세션에 인증 토큰이 없습니다. 다시 로그인해주세요.");
+        router.push("/login");
+        return;
+      }
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/auth/complete-signup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(query),
+      });
+
+      if (!res.ok) {
+        throw new Error(`서버 응답 에러: ${res.status}`);
+      }
+
+      // 성공 시 세션에 남은 임시 가입 데이터 정리
+      sessionStorage.removeItem("nickname");
+      sessionStorage.removeItem("gender");
+      sessionStorage.removeItem("region");
+
+      // profileCompleted 값을 true로 session 갱신 필요???
+
+      // 가입 완료 후 홈으로 이동
+      setToastMessage("success", "회원가입 완료!");
+      router.push("/");
+    } catch (err) {
+      console.error("complete-signup error:", err);
+      setToastMessage("failure", "회원가입 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleLocationClick = () => {
@@ -52,6 +121,92 @@ export default function SignupForm() {
     //TODO: 임시코드이며 추후 session에서 zustand로 변경 예정
     Promise.resolve(getSessionValue("region")).then((data) => setLocation(data));
   }, []);
+
+  ///=======================================
+  // const handleNext = async () => {
+  //   if (!allChecked || loading) return;
+  //   setLoading(true);
+  //   try {
+  //     // 세션 로딩/인증 확인 (로딩 중엔 처리하지 않음)
+  //     if (status === "loading") {
+  //       setLoading(false);
+  //       return;
+  //     }
+  //     if (status !== "authenticated") {
+  //       setLoading(false);
+  //       alert("소셜 로그인이 필요합니다. 다시 시도해주세요.");
+  //       router.push("/login");
+  //       return;
+  //     }
+
+  //     // 이전 signup 페이지에서 sessionStorage에 저장한 값 가져오기
+  //     const nickname = sessionStorage.getItem("nickname");
+  //     const gender = sessionStorage.getItem("gender");
+  //     const region = sessionStorage.getItem("region");
+
+  //     if (!nickname || !gender || !region) {
+  //       setLoading(false);
+  //       alert("추가 회원정보가 없어 소셜 로그인으로 이동합니다.");
+  //       router.push("/api/auth/signin");
+  //       return;
+  //     }
+
+  //     // consent는 프론트에서 boolean 값만 전송 (agreedAt은 서버에서 기록)
+  //     const consent = {
+  //       service: check.service,
+  //       privacy: check.privacy,
+  //     };
+
+  //     const payload = {
+  //       nickname,
+  //       gender,
+  //       region,
+  //       consent,
+  //     };
+
+  //     // 인증 토큰은 useSession에서 읽기 (간단 타입 사용)
+  //     const user = session?.user as { accessToken?: string } | undefined;
+  //     const token = user?.accessToken as string | undefined;
+  //     if (!token) {
+  //       setLoading(false);
+  //       alert("세션에 인증 토큰이 없습니다. 다시 로그인해주세요.");
+  //       router.push("/login");
+  //       return;
+  //     }
+  //     const headers: Record<string, string> = {
+  //       "Content-Type": "application/json",
+  //       Authorization: `Bearer ${token}`,
+  //     };
+
+  //     const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/auth/complete-signup`, {
+  //       method: "POST",
+  //       headers,
+  //       body: JSON.stringify(payload),
+  //     });
+
+  //     if (!res.ok) {
+  //       throw new Error(`서버 응답 에러: ${res.status}`);
+  //     }
+
+  //     // 성공 시 세션에 남은 임시 가입 데이터 정리
+  //     sessionStorage.removeItem("nickname");
+  //     sessionStorage.removeItem("gender");
+  //     sessionStorage.removeItem("region");
+
+  //     // profileCompleted 값을 true로 session 갱신
+  //     await update({ profileCompleted: true });
+
+  //     // 가입 완료 후 홈으로 이동
+  //     router.push("/");
+  //     alert("회원가입 완료!");
+  //   } catch (err) {
+  //     console.error("complete-signup error:", err);
+  //     alert("회원가입 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+  ///=======================================
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col justify-between flex-1">
