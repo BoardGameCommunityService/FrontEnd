@@ -179,14 +179,6 @@ export default function Page() {
               }
             />
             <Menu
-              title="위치 정보 이용 약관"
-              elements={
-                <Link href="/terms/privacy">
-                  <Image src="/icons/ic_right20.svg" alt="이동하기" width={20} height={20} />
-                </Link>
-              }
-            />
-            <Menu
               title="1:1 문의"
               isBottom={true}
               elements={
