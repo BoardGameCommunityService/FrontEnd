@@ -2,12 +2,12 @@
 
 import NavigationBar from "@/components/common/NavigationBar";
 import Menu from "@/components/mypage/Menu";
+import { useAuthFetch } from "@/hooks/useAuthFetch";
 import { useMyPageStore } from "@/stores/mypage/useMyPageStore";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useAuthFetch } from "@/hooks/useAuthFetch";
 
 export default function Page() {
   const { data: session } = useSession();
@@ -31,7 +31,7 @@ export default function Page() {
       setError(null);
 
       try {
-        const res = await authFetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/my/participations/summary`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/my/participations/summary`, {
           headers: {
             "Content-Type": "application/json",
           },
@@ -161,9 +161,31 @@ export default function Page() {
         <section className="mt-3">
           <h2 className="sr-only">마이페이지 메뉴 목록</h2>
           <ul className="flex flex-col gap-[1px]">
-            <Menu title="서비스 이용 약관" isTop={true} />
-            <Menu title="개인정보 처리 약관" />
-            <Menu title="위치 정보 이용 약관" />
+            <Menu
+              title="서비스 이용 약관"
+              isTop={true}
+              elements={
+                <Link href="/terms/privacy">
+                  <Image src="/icons/ic_right20.svg" alt="이동하기" width={20} height={20} />
+                </Link>
+              }
+            />
+            <Menu
+              title="개인정보 처리 약관"
+              elements={
+                <Link href="/terms/service">
+                  <Image src="/icons/ic_right20.svg" alt="이동하기" width={20} height={20} />
+                </Link>
+              }
+            />
+            <Menu
+              title="위치 정보 이용 약관"
+              elements={
+                <Link href="/terms/privacy">
+                  <Image src="/icons/ic_right20.svg" alt="이동하기" width={20} height={20} />
+                </Link>
+              }
+            />
             <Menu
               title="1:1 문의"
               isBottom={true}
