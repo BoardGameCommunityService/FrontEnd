@@ -31,7 +31,7 @@ export default function Page() {
       setError(null);
 
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/my/participations/summary`, {
+        const res = await authFetch(`${process.env.NEXT_PUBLIC_API_SERVER_HOST}/api/my/participations/summary`, {
           headers: {
             "Content-Type": "application/json",
           },
