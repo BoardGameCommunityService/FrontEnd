@@ -1,5 +1,5 @@
 export interface LocationSearchResultsProps {
-  results: String[];
-  onSelect: (location: String) => void;
+  results: string[];
+  onSelect: (location: string) => void;
   isLoading: boolean;
 }
