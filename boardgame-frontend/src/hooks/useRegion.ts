@@ -1,6 +1,5 @@
 "use client";
 
-import { LocationResult } from "@/types/location";
 import { useState } from "react";
 
 interface Place {
@@ -26,7 +25,7 @@ interface KeywordSearchResult {
 }
 
 export function useRegion() {
-  const [searchResults, setSearchResults] = useState<LocationResult[]>([]);
+  const [searchResults, setSearchResults] = useState<string[]>([]);
   const [places, setPlaces] = useState<Place[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -56,7 +55,7 @@ export function useRegion() {
       }
 
       const data = await response.json();
-      setSearchResults(data.documents || []);
+      setSearchResults((data.documents as string[]) || []);
 
       return data.documents;
     } catch (err) {
@@ -90,7 +89,7 @@ export function useRegion() {
 
       const data = await response.json();
       await minLoadingTime;
-      setSearchResults(data.documents || []);
+      setSearchResults((data.documents as string[]) || []);
 
       return data.documents;
     } catch (err) {
