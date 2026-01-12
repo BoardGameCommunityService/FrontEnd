@@ -6,6 +6,12 @@
 
 ## 프로젝트 소개
 
+## 배포
+
+Vercel을 통해 배포되고 있습니다.
+
+https://boardmates.vercel.app/login
+
 ### 서비스 개요
 
 -   보드게임 모임을 생성하고 참여할 수 있는 커뮤니티 서비스
@@ -208,29 +214,6 @@ src/
 └─────────────────────────────────────────────────────┘
 ```
 
-### 컴포넌트 계층 구조
-
-```
-RootLayout
-├── Providers (SessionProvider)
-│   ├── BottomSheet (Global)
-│   ├── Modal (Global)
-│   ├── ToastMessage (Global)
-│   └── Pages
-│       ├── HomePage
-│       │   └── CardList → Card
-│       ├── SearchPage
-│       │   ├── SearchClient
-│       │   ├── ChipGroup
-│       │   └── CardList
-│       ├── BoardDetailPage
-│       │   ├── Header
-│       │   ├── PlaceSection (KakaoMap)
-│       │   ├── MemberList
-│       │   └── MeetingJoinButton
-│       └── ...
-```
-
 ### API 통신 패턴
 
 ```typescript
@@ -340,11 +323,3 @@ pnpm start
 ```
 http://localhost:3000
 ```
-
----
-
-## 배포
-
-Vercel을 통해 배포되고 있습니다.
-
-https://boardmates.vercel.app/login
