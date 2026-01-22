@@ -218,29 +218,6 @@ src/
 └─────────────────────────────────────────────────────┘
 ```
 
-### 컴포넌트 계층 구조
-
-```
-RootLayout
-├── Providers (SessionProvider)
-│   ├── BottomSheet (Global)
-│   ├── Modal (Global)
-│   ├── ToastMessage (Global)
-│   └── Pages
-│       ├── HomePage
-│       │   └── CardList → Card
-│       ├── SearchPage
-│       │   ├── SearchClient
-│       │   ├── ChipGroup
-│       │   └── CardList
-│       ├── BoardDetailPage
-│       │   ├── Header
-│       │   ├── PlaceSection (KakaoMap)
-│       │   ├── MemberList
-│       │   └── MeetingJoinButton
-│       └── ...
-```
-
 ### API 통신 패턴
 
 ```typescript
